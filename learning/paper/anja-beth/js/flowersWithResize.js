@@ -22,9 +22,11 @@ window.onload = function(){
     
     var myTool = new Tool();
     
+    
+    
     //drag and drop code adapted from here http://stackoverflow.com/questions/16876253/paperjs-drag-and-drop-circle
     
-    //need to fill this array with things (flowers)
+    //Menu flower options
     var pink = new Raster('pink');
     var orange = new Raster('orange');
     var blue = new Raster('blue');
@@ -39,6 +41,9 @@ window.onload = function(){
         flowers[i].position = new Point(xPos, yPos)
         yPos += 150 //put them in a vertical line
     }
+    
+    //Flower scaling constant - determined via experimentation
+    var FLOWER_RESIZE = 1.05
 
     // Mouse tool state
     var menuChoice = -1;
@@ -56,6 +61,11 @@ window.onload = function(){
                     break;
                 }
             }
+        }
+        
+        //handle case where we've just finished resizing a flower
+        if(currentFlower){
+            
         }
     };
 
@@ -75,6 +85,7 @@ window.onload = function(){
         if(droppedFlower){
             //might need to do this later by seeing which DOM element we're on top of and resizing that, but that has its own problems, so going to do it w/ currentFlower for now
             //currentFlower.scale(3) -> EXPLODING FLOWERS!
+            currentFlower.scale(FLOWER_RESIZE)
         }
         
        
