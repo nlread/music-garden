@@ -1,4 +1,12 @@
+/*
+Current problems:
+- clicking to drop a flower works fine, but if you mouse down and drag, the current flower just disappears
+- also scaling isn't currently working
 
+Future things to fix
+- you can drop flowers on top of the menu, I should probably bound where you're allowed to drop them
+- probably should use higher-res flower images in the images dir and then just scale them when I create the rasters - better image quality when they're enlarged via dragging
+*/
 
 paper.install(window); //make paper scope global by injecting it into window - from here http://blog.lindsayelia.com/post/128346565323/making-paperjs-work-in-an-external-file
 
@@ -44,22 +52,30 @@ window.onload = function(){
                 //if you've hit a flower, make the dragging index equal to that flower
                 if (flowers[ix].contains(event.point)) {
                     menuChoice = ix;
-                    console.log(menuChoice);
+                    droppedFlower = false; //we're now about to drop a flower, done dealing with the old one
                     break;
                 }
             }
         }
+    };
 
+    myTool.onMouseDown = function(event){
         //clicked on a menu flower already
         if (menuChoice > -1) {
+            //clone and drop a flower at event point
             currentFlower = flowers[menuChoice].clone()
             currentFlower.scale(0.3)
             currentFlower.position = event.point //NTS: might need to reset currentFlower at some point?
             droppedFlower = true; //flag for the onMouseDrag method for resizing
         }
-    };
-
-    function onMouseDrag(event) {
+        
+    }
+    myTool.onMouseDrag = function(event) {
+        //we've just dropped a flower, now to resize it
+        if(droppedFlower){
+            //might need to do this later by seeing which DOM element we're on top of and resizing that, but that has its own problems, so going to do it w/ currentFlower for now
+            //currentFlower.scale(3) -> EXPLODING FLOWERS!
+        }
         
        
     };

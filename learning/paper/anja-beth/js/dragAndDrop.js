@@ -1,3 +1,10 @@
+/* Drag and drop flowers with cloning - abandoned the drag-and-drop mechanism because it made resizing awkward from a UX perspective, but keeping the code so I can come back to it if necessary */
+
+/*Current problems w/ this file:
+- cloning always clones the first menu flower clicked, even on subsequent clicks
+- subsequent clicks erase the previously-dropped cloned flower (there's only ever one at a time)
+*/
+
 paper.install(window); //make paper scope global by injecting it into window - from here http://blog.lindsayelia.com/post/128346565323/making-paperjs-work-in-an-external-file
 
 //run after window has loaded
@@ -52,6 +59,7 @@ window.onload = function(){
             //check if we already cloned it so that we don't get a million of them. if not, create a clone
             if(!createdClone){
                 currentFlower = flowers[draggingIndex].clone()
+                currentFlower.scale(0.5)
                 createdClone = true;
             }
             currentFlower.position = event.point; //BTS will need to reset this later to prevent moving the wrong things
