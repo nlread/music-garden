@@ -1,7 +1,5 @@
 /*
 Current problems:
-- clicking to drop a flower works fine, but if you mouse down and drag, the current flower just disappears
-- also scaling isn't currently working
 
 Future things to fix
 - you can drop flowers on top of the menu, I should probably bound where you're allowed to drop them
@@ -26,17 +24,24 @@ window.onload = function(){
     
     //drag and drop code adapted from here http://stackoverflow.com/questions/16876253/paperjs-drag-and-drop-circle
     
-    //Menu flower options
+    //Menu flower options w/ scaling for size
     var pink = new Raster('pink');
+    pink.scale(0.05)
     var orange = new Raster('orange');
+    orange.scale(0.1)
     var blue = new Raster('blue');
+    blue.scale(0.07)
     var purple = new Raster('purple');
+    purple.scale(0.1)
+    var menu = new Path.Rectangle(new Point(0, 0), new Size(100, 900))
+    menu.fillColor = '#c1f4f2';
+    menu.sendToBack();
     
     var flowers = [pink, orange, blue, purple];
     
     //position flowers along the left side of the canvas
-    xPos = 20
-    yPos = 20
+    xPos = 50
+    yPos = 50
     for(var i = 0; i < flowers.length; i++){
         flowers[i].position = new Point(xPos, yPos)
         yPos += 150 //put them in a vertical line
