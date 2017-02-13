@@ -4,6 +4,9 @@ Current problems:
 Future things to fix
 - you can drop flowers on top of the menu, I should probably bound where you're allowed to drop them
 - probably should use higher-res flower images in the images dir and then just scale them when I create the rasters - better image quality when they're enlarged via dragging
+- you can't make anything smaller
+- limit how big you can make the flowers?
+- look into let vs var
 */
 
 paper.install(window); //make paper scope global by injecting it into window - from here http://blog.lindsayelia.com/post/128346565323/making-paperjs-work-in-an-external-file
@@ -20,7 +23,7 @@ window.onload = function(){
     
     var myTool = new Tool();
     
-    
+
     
     //drag and drop code adapted from here http://stackoverflow.com/questions/16876253/paperjs-drag-and-drop-circle
     
@@ -40,8 +43,8 @@ window.onload = function(){
     var flowers = [pink, orange, blue, purple];
     
     //position flowers along the left side of the canvas
-    xPos = 50
-    yPos = 50
+    var xPos = 50
+    var yPos = 50
     for(var i = 0; i < flowers.length; i++){
         flowers[i].position = new Point(xPos, yPos)
         yPos += 150 //put them in a vertical line
@@ -54,6 +57,9 @@ window.onload = function(){
     var menuChoice = -1;
     var droppedFlower = false;
     var currentFlower;
+    var resizeOldFlower = false;
+    
+   
 
     myTool.onMouseUp = function(event) {
         //hit test to see if we are on top of a menu flower
@@ -68,13 +74,24 @@ window.onload = function(){
             }
         }
         
-        //handle case where we've just finished resizing a flower
-        if(currentFlower){
-            
+        //stop resizing after drag
+        if(resizeOldFlower){
+            resizeOldFlower = false;
         }
+        
     };
 
     myTool.onMouseDown = function(event){
+        //clicked on a cloned flower -> set flag to resize
+        if(project.hitTest(event.point)){
+            //currentFlower is the clicked one so that MouseDrag has access to it
+            currentFlower = project.hitTest(event.point).item;
+            resizeOldFlower = true;
+            //return so that you don't drop a new flower on top of one to resize
+            //NOTE: this does prevent dropping flowers on top of each other, so if that's a feature we want we'll have to work around it somehow
+            return;
+        }
+        
         //clicked on a menu flower already
         if (menuChoice > -1) {
             //clone and drop a flower at event point
@@ -87,12 +104,10 @@ window.onload = function(){
     }
     myTool.onMouseDrag = function(event) {
         //we've just dropped a flower, now to resize it
-        if(droppedFlower){
+        if(droppedFlower || resizeOldFlower){
             //might need to do this later by seeing which DOM element we're on top of and resizing that, but that has its own problems, so going to do it w/ currentFlower for now
-            //currentFlower.scale(3) -> EXPLODING FLOWERS!
             currentFlower.scale(FLOWER_RESIZE)
         }
-        
        
     };
 }
