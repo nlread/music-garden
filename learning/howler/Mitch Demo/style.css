@@ -1,0 +1,21 @@
+body{
+	background: linear-gradient(141deg, #0fb8ad 0%, #1fc8db 51%, #2cb5e8 75%);
+}
+
+.button input[type="button"] {
+    color:#066686;
+    font:2.4em Futura, ‘Century Gothic’, AppleGothic, sans-serif;
+    font-size:150%;
+    /*text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);*/
+    padding:10px;
+    background-color: #1EE3FF;
+    border-radius:5px;
+    cursor:pointer;
+    display:inline-block;
+    width:25%;
+
+
+}
+.button input[type="button"]:hover {
+    background-color:#6CEBFD;
+}

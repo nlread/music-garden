@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>howler sample</title>
+	<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+	<script type="text/javascript" src="howler.js"></script>
+
+
+	<script> type="text/javascript"
+
+	// Howler is added via a new howl object referencing the particular sound. You can set parameters here - loop, source, etc.
+		var ob = new Howl({
+			src:['Beach.wav'],
+			loop:true});
+	//Functions for button behavior
+		function playMusic(){
+			ob.play();
+		}
+		function stopMusic(){
+			ob.stop();
+		}
+	</script>
+</head>
+
+</style>
+<body>
+
+<!-- adding buttons here -->
+
+<div class= "button">
+	
+	<input type="button" onclick="playMusic()" value="play that">
+	<input type="button" onclick="stopMusic()"  value="stop that">
+
+</div>
+	
+
+</body>
+</html>
