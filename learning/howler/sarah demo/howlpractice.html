@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel ="stylesheet" type = "text/css" href = "howlpractice.css">
+
+</head>
+<body>
+    
+	<canvas id="canvas" resize>
+          <!-- images have to be here because Paper needs them to be preloaded - I put them inside the canvas bc I currently have the canvas set to fill the screen, but I'm not sure if that's necessary/right-->
+         <img src="images/blueflower.png" id="blue"> 
+        <img src="images/pinkflower.png" id="pink"> 
+        <img src="images/purpleflower.png" id="purple"> 
+        <img src="images/orangeflower.png" id="orange"> 
+    </canvas>
+    
+    
+    <!-- Scripts are supposed to go at the bottom of the body tag, apparently otherwise sometimes there are issues -->
+    
+    <script type="text/javascript" src="js/paper-full.min.js"></script>
+    <script type="text/javascript" src="js/howler.core.js"></script>
+    <!-- sarah -->
+    <!-- change this script to one of the JS files to see the demos -->
+    <script type="text/javascript" src="js/flowersWithResize.js"></script>
+    
+    
+    
+    
+	
+</body>
+</html>
