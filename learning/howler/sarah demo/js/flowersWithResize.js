@@ -55,6 +55,7 @@ window.onload = function(){
     var droppedFlower = false;
     var currentFlower;
     
+    //Set's up 4 sounds to be associated with each flower
     var sound1 = new Howl({
       src: ['sounds/Badge.m4a']
     });
@@ -67,8 +68,9 @@ window.onload = function(){
     var sound4 = new Howl({
       src: ['sounds/Beginning.m4a']
     });
-
-    sounds = [sound1,sound2,sound3,sound4];
+    
+    //List to be associated with flowers list
+    var sounds = [sound1,sound2,sound3,sound4];
 
     myTool.onMouseUp = function(event) {
         //hit test to see if we are on top of a menu flower
@@ -96,6 +98,7 @@ window.onload = function(){
             currentFlower = flowers[menuChoice].clone()
             currentFlower.scale(0.3)
             currentFlower.position = event.point //NTS: might need to reset currentFlower at some point?
+            //Adds the sound that is associated with the flower
             sounds[menuChoice].play();
             sounds[menuChoice].loop(true);
             droppedFlower = true; //flag for the onMouseDrag method for resizing
