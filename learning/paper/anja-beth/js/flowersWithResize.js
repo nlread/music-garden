@@ -4,14 +4,15 @@ Task list:
 
 
 Future things to fix
-- limit how big you can make the flowers?
+- limit how big you can make the flowers
+- make it so flowers can't overlap the menu (limit resizing)
 - look into let vs var
 - classes for menu, flowers on flower menu, flowers dropped
 */
 
 paper.install(window); //make paper scope global by injecting it into window - from here http://blog.lindsayelia.com/post/128346565323/making-paperjs-work-in-an-external-file
 
-/* this code cleanup isn't currently working, getting a referenceError undefined. It's something about closures, but I'm not sure how to fix it rn, so I'm just leaving it
+ /*this code cleanup isn't currently working, getting a referenceError undefined. It's something about closures, but I'm not sure how to fix it rn, so I'm just leaving it */
 
 setUpScreen = function(){
     //create canvas first using id
@@ -46,38 +47,15 @@ createFlowersMenu = function(){
     
     return(flowers)
 }
-*/
+
 
 window.onload = function(){
     //sanity check
     console.log("window loaded");
      //create canvas first using id
-    paper.setup('canvas')
+    setUpScreen();
+    flowersMenu = createFlowersMenu();
     
-    view.draw(); //helps speed up drawing
-    
-    //Menu flower options w/ scaling for size
-    var pink = new Raster('pink');
-    pink.scale(0.05)
-    var orange = new Raster('orange');
-    orange.scale(0.1)
-    var blue = new Raster('blue');
-    blue.scale(0.07)
-    var purple = new Raster('purple');
-    purple.scale(0.1)
-    var menu = new Path.Rectangle(new Point(0, 0), new Size(100, 900))
-    menu.fillColor = '#c1f4f2';
-    menu.sendToBack();
-    
-    var flowersMenu = [pink, orange, blue, purple];
-    
-    //position flowers along the left side of the canvas
-    var xPos = 50
-    var yPos = 50
-    for(var i = 0; i < flowersMenu.length; i++){
-        flowersMenu[i].position = new Point(xPos, yPos)
-        yPos += 150 //put them in a vertical line
-    }
     
     var myTool = new Tool();
     
