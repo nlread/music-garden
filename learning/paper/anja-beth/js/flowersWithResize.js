@@ -1,6 +1,8 @@
 /*
 Task list:
 - make it so you can make flowers smaller! (this involved figuring out how to scale based on event.delta, not just my approximation)
+- making it smaller is a lot more complicated - how do you decide when the user is trying to make it smaller vs. larger? it's probably based on whether they're moving towards or away from the image center, right? how do we figure that out?
+- make it so you can't resize menu flowers!
 
 
 Future things to fix
@@ -17,7 +19,9 @@ window.onload = function(){
     console.log("window loaded");
      //create canvas first using id
     setUpScreen();
-    flowersMenu = createFlowersMenu();
+    menuItems = createFlowersMenu();
+    flowersMenu = menuItems[0]
+    menuRect = menuItems[1]
     
     var myTool = new Tool();
     
@@ -53,13 +57,14 @@ window.onload = function(){
     myTool.onMouseDown = function(event){
         //clicked on a cloned flower -> set flag to resize
         if(project.hitTest(event.point)){
-            itemClicked = project.hitTest(event.point).item();
-            //TO FIX: you can resize menu flowers. I know how to fix this with a for loop, but that's a really inelegant way to do it right here, so I'm leaving the bug for now and fixing it when we refactor
-            if(itemClicked != menu){
-                //currentFlower is the clicked one so that MouseDrag has access to it
+            pointClicked = project.hitTest(event.point).point;
+            //TO FIX: you can resize menu flowers. I know how to fix this with a for loop (just check if itemClic, but that's a really inelegant way to do it right here, so I'm leaving the bug for now and fixing it when we refactor
+            if(!menuRect.contains(pointClicked)){
+                //currentFlower is the clicked one so that MouseDrag has access to it - this line must not be working
                 currentFlower = project.hitTest(event.point).item;
                 resizeOldFlower = true;
             }
+           
             //return so that you don't drop a new flower on top of one to resize
             //NOTE: this does prevent dropping flowers on top of each other, so if that's a feature we want we'll have to work around it somehow
             return;
@@ -79,8 +84,8 @@ window.onload = function(){
     myTool.onMouseDrag = function(event) {
         //we've just dropped a flower, now to resize it
         if(droppedFlower || resizeOldFlower){
-            //might need to do this later by seeing which DOM element we're on top of and resizing that, but that has its own problems, so going to do it w/ currentFlower for now
-            currentFlower.scale(FLOWER_RESIZE)
+            console.log(event.deltaf)
+            currentFlower.scale(FLOWER_RESIZE);
         }
     };
 }
@@ -108,7 +113,7 @@ createFlowersMenu = function(){
     
     var allFlowersArray = [pink, orange, blue, purple]
     var flowers = positionFlowers(allFlowersArray);
-    return(flowers)
+    return([flowers, menu])
 }
 
 positionFlowers = function(flowersArray){
