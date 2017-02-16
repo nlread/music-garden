@@ -2,7 +2,9 @@
 Task list:
 - make it so you can make flowers smaller! (this involved figuring out how to scale based on event.delta, not just my approximation)
 - making it smaller is a lot more complicated - how do you decide when the user is trying to make it smaller vs. larger? it's probably based on whether they're moving towards or away from the image center, right? how do we figure that out?
-- make it so you can't resize menu flowers!
+-	What about distance?? If distance to center is increasing, scale up, if it’s decreasing, scale down
+-	Could do this by just getting the points and calculating the distance (but how do you decide at what interval to do it? Can you even do it at an interval?)
+
 
 
 Future things to fix
@@ -10,6 +12,7 @@ Future things to fix
 - make it so flowers can't overlap the menu (limit resizing)
 - look into let vs var
 - classes(?) for menu, flowers on flower menu, flowers dropped
+- once you have classes/items, you can add event handlers specifically to them (path.onDrag) instead of having a tool handle all of them, which might make code simpler (altho idk if we can apply it to a whole class of items, we might need an array of all the flowers on the screen or something like that)
 */
 
 paper.install(window); //make paper scope global by injecting it into window - from here http://blog.lindsayelia.com/post/128346565323/making-paperjs-work-in-an-external-file
@@ -59,7 +62,6 @@ window.onload = function(){
         if(project.hitTest(event.point)){
             
             pointClicked = event.point;
-            console.log(pointClicked)
            
             if(!(menuRect.contains(pointClicked))){
                 currentFlower = event.item;
@@ -76,7 +78,7 @@ window.onload = function(){
             //clone and drop a flower at event point
             currentFlower = flowersMenu[menuChoice].clone()
             currentFlower.scale(0.3)
-            currentFlower.position = event.point //NTS: might need to reset currentFlower at some point?
+            currentFlower.position = event.point 
             droppedFlower = true; //flag for the onMouseDrag method for resizing
         }
         
@@ -85,7 +87,12 @@ window.onload = function(){
     myTool.onMouseDrag = function(event) {
         //we've just dropped a flower, now to resize it
         if(droppedFlower || resizeOldFlower){
-        
+            flowerCenter = currentFlower.position;
+            mousePos = event.point;
+            currentDist = pointDistance(mousePos, flowerCenter);
+            console.log(currentDist)
+            //not sure how to check the distance on like successive iterations?
+
             currentFlower.scale(FLOWER_RESIZE);
         }
     };
@@ -110,20 +117,24 @@ createFlowersMenu = function(){
     menu.fillColor = '#c1f4f2';
     menu.sendToBack();
     
-    /*note to self - might need to return menu at some point so we have access to it, can javascript return two things? or can we attach them somehow? make the menu the parent? */
-    
     var allFlowersArray = [pink, orange, blue, purple]
     var flowers = positionFlowers(allFlowersArray);
-    return([flowers, menu])
+    return([flowers, menu]) //we need access to both for choosing flowers and making sure we can't drop flowers on menu
 }
 
 positionFlowers = function(flowersArray){
-    //position flowers along the left side of the canvas
     var xPos = 50
     var yPos = 50
     for(var i = 0; i < flowersArray.length; i++){
-        flowersArray[i].position = new Point(xPos, yPos)
-        yPos += 150 //put them in a vertical line
+        flowersArray[i].position = new Point(xPos, yPos);
+        yPos += 150;
     }
-    return(flowersArray)  
+    return(flowersArray)  ;
+}
+
+//helper function - used to determine whether to increase or decrease flower size
+pointDistance = function(point1, point2){
+    distance = Math.sqrt(Math.pow((point2.x - point1.x), 2) + Math.pow((point2.y - point2.x), 2));
+    
+    return(distance);
 }
