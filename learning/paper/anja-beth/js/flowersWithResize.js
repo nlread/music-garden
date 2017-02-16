@@ -55,13 +55,14 @@ window.onload = function(){
     };
 
     myTool.onMouseDown = function(event){
-        //clicked on a cloned flower -> set flag to resize
+        //clicked on something -> see if we need to resize an old flower
         if(project.hitTest(event.point)){
-            pointClicked = project.hitTest(event.point).point;
-            //TO FIX: you can resize menu flowers. I know how to fix this with a for loop (just check if itemClic, but that's a really inelegant way to do it right here, so I'm leaving the bug for now and fixing it when we refactor
-            if(!menuRect.contains(pointClicked)){
-                //currentFlower is the clicked one so that MouseDrag has access to it - this line must not be working
-                currentFlower = project.hitTest(event.point).item;
+            
+            pointClicked = event.point;
+            console.log(pointClicked)
+           
+            if(!(menuRect.contains(pointClicked))){
+                currentFlower = event.item;
                 resizeOldFlower = true;
             }
            
@@ -84,7 +85,7 @@ window.onload = function(){
     myTool.onMouseDrag = function(event) {
         //we've just dropped a flower, now to resize it
         if(droppedFlower || resizeOldFlower){
-            console.log(event.deltaf)
+        
             currentFlower.scale(FLOWER_RESIZE);
         }
     };
