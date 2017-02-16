@@ -89,9 +89,20 @@ window.onload = function(){
         if(droppedFlower || resizeOldFlower){
             flowerCenter = currentFlower.position;
             mousePos = event.point;
+            prevMousePos = event.lastPoint;
+            prevDist = pointDistance(prevMousePos, flowerCenter);
             currentDist = pointDistance(mousePos, flowerCenter);
-            console.log(currentDist)
-            //not sure how to check the distance on like successive iterations?
+            change = currentDist - prevDist
+            
+            //scale values currently determined via experimentation, still need to figure out how to actually do it based on the mouse position
+            if(change > 0){
+                currentFlower.scale(1.05)
+            }
+            else if(change < 0){
+                currentFlower.scale(0.78)
+                
+            }
+            //not sure how to check the distance on successive iterations - can I save it between calls to this function?
 
             currentFlower.scale(FLOWER_RESIZE);
         }
