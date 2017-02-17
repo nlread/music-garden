@@ -87,6 +87,8 @@ window.onload = function(){
     myTool.onMouseDrag = function(event) {
         //we've just dropped a flower, now to resize it
         if(droppedFlower || resizeOldFlower){
+            
+            //determine whether distance from center of flower is increasing or decreasing in order to decide whether to make it larger or smaller
             flowerCenter = currentFlower.position;
             mousePos = event.point;
             prevMousePos = event.lastPoint;
