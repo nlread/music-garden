@@ -1,0 +1,21 @@
+#paperCanvas {
+    width: 100%;
+    height: 100vh;
+    background-color: plum;
+    position: absolute;
+    border: solid thick black;
+}
+
+#modelCanvas {
+    width: 400px;
+    height: 400px;
+    float: right;
+    position: relative;
+    background-color: steelblue;
+    border: solid thick black;
+}
+
+button {
+    background-color: dodgerblue;
+    border: solid black thick;
+}
