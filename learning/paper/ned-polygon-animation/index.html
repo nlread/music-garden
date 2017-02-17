@@ -1,11 +1,18 @@
 <html>
     <head>
-        <link rel="stylesheet" src="css/style.css" />
+        <link rel="stylesheet" href="css/style.css" />
         <script type="text/javascript" src="js/jquery-3.1.1.js"></script>
         <script type="text/javascript" src="js/paper-full.js"></script>
         <script type="text/javascript" src="js/main.js"></script>
     </head>
     <body onload="setup()">
+        
+        <div id="buttons">
+            <button id="create" onclick="createObjects()">Create</button>
+            <button id="prep" onclick="prepChanges()">Prep</button>
+            <button id="apply" onclick="applyTransform()">Apply</button>
+        </div>
         <canvas id="paperCanvas" resize></canvas>
+        <canvas id="modelCanvas" resize></canvas>
     </body>
 </html>
