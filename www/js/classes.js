@@ -65,3 +65,17 @@ class Component {
         this._scaleFactor.y *= factorY;
     }
 }
+
+/*currently, my flowers are Paper.js Rasters - there's no double inheritance, but I do need to keep access to those raster methods, I think (scale, etc) - not sure how to do that */
+
+class Plant extends Component{
+    
+    constructor(image, sound){
+        this.img = image;
+        this.sound = sound
+        
+        this.playSound(){
+            //loop sound - default
+        }
+    }
+}
