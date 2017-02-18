@@ -1,18 +1,15 @@
-/*
-Task list:
-- make it so you can make flowers smaller! (this involved figuring out how to scale based on event.delta, not just my approximation)
-- making it smaller is a lot more complicated - how do you decide when the user is trying to make it smaller vs. larger? it's probably based on whether they're moving towards or away from the image center, right? how do we figure that out?
--	What about distance?? If distance to center is increasing, scale up, if it’s decreasing, scale down
--	Could do this by just getting the points and calculating the distance (but how do you decide at what interval to do it? Can you even do it at an interval?)
-
+/*Task list:
+- limit how big you can make the flowers
+- make it so flowers can't overlap the menu (limit resizing)
+- make flowers inherit from component/make plant class
 
 
 Future things to fix
-- limit how big you can make the flowers
-- make it so flowers can't overlap the menu (limit resizing)
+- make flowers scale based on actual mouse distance, not just estimated constants
 - look into let vs var
 - classes(?) for menu, flowers on flower menu, flowers dropped
 - once you have classes/items, you can add event handlers specifically to them (path.onDrag) instead of having a tool handle all of them, which might make code simpler (altho idk if we can apply it to a whole class of items, we might need an array of all the flowers on the screen or something like that)
+
 */
 
 paper.install(window); //make paper scope global by injecting it into window - from here http://blog.lindsayelia.com/post/128346565323/making-paperjs-work-in-an-external-file
@@ -64,7 +61,9 @@ window.onload = function(){
             pointClicked = event.point;
            
             if(!(menuRect.contains(pointClicked))){
-                currentFlower = event.item;
+                
+                currentFlower = event.item; //this line will have to change w/ the new class structure
+                console.log(currentFlower);
                 resizeOldFlower = true;
             }
            
