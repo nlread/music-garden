@@ -1,4 +1,4 @@
-class Compontent {
+class Component {
     
     constructor(paperPath) {
         this.paperPath = paperPath;
@@ -18,7 +18,7 @@ class Compontent {
         this.paperPath.translate(deltaPos.x, deltaPos.y);
     }
     
-    function translate(x, y) {
+    translate(x, y) {
         this._position.x = x;
         this._position.y = y;
         this.paperPath.translate(new Point(x, y));
