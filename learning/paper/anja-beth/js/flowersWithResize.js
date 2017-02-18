@@ -2,6 +2,7 @@
 Task list:
 - limit how big you can make the flowers
 - make it so flowers can't overlap the menu (limit resizing)
+- make flowers inherit from component/make plant class
 
 
 Future things to fix
