@@ -62,23 +62,8 @@ window.onload = function(){
     }
     
     myTool.onMouseDrag = function(event) {
-        //we've just dropped a flower, now to resize it
         if(mouseStates.droppedFlower || mouseStates.resizeOldFlower){
-            flowerCenter = mouseStates.currentFlower.img.position;
-            mousePos = event.point;
-            prevMousePos = event.lastPoint;
-            prevDist = pointDistance(prevMousePos, flowerCenter);
-            currentDist = pointDistance(mousePos, flowerCenter);
-            change = currentDist - prevDist
-            
-            //scale values currently determined via experimentation, still need to figure out how to actually do it based on the mouse position
-            if(change > 0){
-                mouseStates.currentFlower.img.scale(resize.grow)
-            }
-            else if(change < 0){
-                mouseStates.currentFlower.img.scale(resize.shrink)
-                
-            }
+            scaleFlower(event);
         }
     };
 }
@@ -139,6 +124,7 @@ stopResize = function(){
 }
   
 
+//drop a clone of a menu flower
 dropFlower = function(clickEvent, flowersMenu){
     //clone and drop a flower at event point
     mouseStates.currentFlower = new Flower(null, flowersMenu[mouseStates.menuChoice].clone()) //null is for the path since Component is path-based, also omitting sound argument for now
@@ -147,6 +133,25 @@ dropFlower = function(clickEvent, flowersMenu){
     mouseStates.droppedFlower = true; 
         
 }
+
+//scale a flower based on whether mouse distance to flower center is increasing or decreasing
+scaleFlower = function(clickEvent){
+    flowerCenter = mouseStates.currentFlower.img.position;
+    mousePos = clickEvent.point;
+    prevMousePos = clickEvent.lastPoint;
+    prevDist = pointDistance(prevMousePos, flowerCenter);
+    currentDist = pointDistance(mousePos, flowerCenter);
+    change = currentDist - prevDist
+
+    if(change > 0){
+        mouseStates.currentFlower.img.scale(resize.grow)
+    }
+    else if(change < 0){
+        mouseStates.currentFlower.img.scale(resize.shrink)
+
+    }
+}
+
 //helper function - used to determine whether to increase or decrease flower size
 pointDistance = function(point1, point2){
     distance = Math.sqrt(Math.pow((point2.x - point1.x), 2) + Math.pow((point2.y - point2.x), 2));
