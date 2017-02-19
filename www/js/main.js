@@ -17,22 +17,26 @@ paper.install(window); //make paper scope global by injecting it into window - f
 window.onload = function(){
     //sanity check
     console.log("window loaded");
+    
      //create canvas first using id
-    setUpScreen();
-    menuItems = createFlowersMenu();
-    flowersMenu = menuItems[0]
-    menuRect = menuItems[1]
+    setUpScreen(); 
+    
+    var menuItems = createFlowersMenu();
+    var flowersMenu = menuItems[0]
+    var menuRect = menuItems[1]
     
     var myTool = new Tool();
     
     //Flower scaling constant - determined via experimentation
     var FLOWER_RESIZE = 1.05
 
-    // Mouse tool state
-    var menuChoice = -1;
-    var droppedFlower = false;
-    var currentFlower;
-    var resizeOldFlower = false;
+    var mouseStates = {
+        menuChoice: -1,
+        droppedFlower: false,
+        currentFlower: null,
+        resizeOldFlower: false
+    };
+    
 
     myTool.onMouseUp = function(event) {
         //hit test to see if we are on top of a menu flower
@@ -40,16 +44,16 @@ window.onload = function(){
             for (var ix = 0; ix < flowersMenu.length; ix++) {
                 //if you've hit a flower, make the dragging index equal to that flower
                 if (flowersMenu[ix].contains(event.point)) {
-                    menuChoice = ix;
-                    droppedFlower = false; //we're now about to drop a flower, done dealing with the old one
+                    mouseStates.menuChoice = ix;
+                    mouseStates.droppedFlower = false; //we're now about to drop a flower, done dealing with the old one
                     break;
                 }
             }
         }
         
         //stop resizing after drag
-        if(resizeOldFlower){
-            resizeOldFlower = false;
+        if(mouseStates.resizeOldFlower){
+            mouseStates.resizeOldFlower = false;
         }
         
     };
@@ -57,14 +61,11 @@ window.onload = function(){
     myTool.onMouseDown = function(event){
         //clicked on something -> see if we need to resize an old flower
         if(project.hitTest(event.point)){
-            
             pointClicked = event.point;
            
             if(!(menuRect.contains(pointClicked))){
-                
-                currentFlower = event.item; //this line will have to change w/ the new class structure
-                console.log(currentFlower);
-                resizeOldFlower = true;
+                mouseStates.currentFlower = new Flower(null,event.item); //Note: not sure if this will work - will it create a new object or keep the pointer to the old one?
+                mouseStates.resizeOldFlower = true;
             }
            
             //return so that you don't drop a new flower on top of one to resize
@@ -73,20 +74,20 @@ window.onload = function(){
         }
         
         //clicked on a menu flower already
-        if (menuChoice > -1) {
+        if (mouseStates.menuChoice > -1) {
             //clone and drop a flower at event point
-            currentFlower = flowersMenu[menuChoice].clone()
-            currentFlower.scale(0.3)
-            currentFlower.position = event.point 
-            droppedFlower = true; //flag for the onMouseDrag method for resizing
+            mouseStates.currentFlower = new Flower(null, flowersMenu[mouseStates.menuChoice].clone()) //null is for the path since Component is path-based, also omitting sound argument for now
+            mouseStates.currentFlower.img.scale(0.3) //Note: all code with ".img." is so that we can work with the rasters, if we move to path-based this will change
+            mouseStates.currentFlower.img.position = event.point 
+            mouseStates.droppedFlower = true; //flag for the onMouseDrag method for resizing
         }
         
     }
     
     myTool.onMouseDrag = function(event) {
         //we've just dropped a flower, now to resize it
-        if(droppedFlower || resizeOldFlower){
-            flowerCenter = currentFlower.position;
+        if(mouseStates.droppedFlower || mouseStates.resizeOldFlower){
+            flowerCenter = mouseStates.currentFlower.img.position;
             mousePos = event.point;
             prevMousePos = event.lastPoint;
             prevDist = pointDistance(prevMousePos, flowerCenter);
@@ -95,15 +96,12 @@ window.onload = function(){
             
             //scale values currently determined via experimentation, still need to figure out how to actually do it based on the mouse position
             if(change > 0){
-                currentFlower.scale(1.05)
+                mouseStates.currentFlower.img.scale(1.05)
             }
             else if(change < 0){
-                currentFlower.scale(0.78)
+                mouseStates.currentFlower.img.scale(0.78)
                 
             }
-            //not sure how to check the distance on successive iterations - can I save it between calls to this function?
-
-            currentFlower.scale(FLOWER_RESIZE);
         }
     };
 }
@@ -115,6 +113,7 @@ setUpScreen = function(){
 
 createFlowersMenu = function(){
     //scaling for size since images are large
+    //menu flowers are just rasters, not Components, because they don't need to be moved/chanegd
     var pink = new Raster('pink');
     pink.scale(0.05)
     var orange = new Raster('orange');
@@ -129,7 +128,7 @@ createFlowersMenu = function(){
     
     var allFlowersArray = [pink, orange, blue, purple]
     var flowers = positionFlowers(allFlowersArray);
-    return([flowers, menu]) //we need access to both for choosing flowers and making sure we can't drop flowers on menu
+    return([flowers, menu])
 }
 
 positionFlowers = function(flowersArray){

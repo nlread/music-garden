@@ -1,11 +1,15 @@
 class Component {
     
     constructor(paperPath) {
-        this.paperPath = paperPath;
+        //null check enables having components with only Rasters and not Paths
+        if(paperPath != null){
+            this.paperPath = paperPath;
         
-        this._position = paperPath.getPosition().clone();
-        this._orientation = paperPath.getRotation();
-        this._scaleFactor = paperPath.getScaling().clone();
+            this._position = paperPath.getPosition().clone();
+            this._orientation = paperPath.getRotation();
+            this._scaleFactor = paperPath.getScaling().clone();
+        }
+        
     }
     
     // Not needed as paperPath keeps track of its position? 
@@ -66,16 +70,27 @@ class Component {
     }
 }
 
-/*currently, my flowers are Paper.js Rasters - there's no double inheritance, but I do need to keep access to those raster methods, I think (scale, etc) - not sure how to do that */
 
 class Plant extends Component{
     
-    constructor(image, sound){
-        this.img = image;
+    //takes both a path and a raster for now so it can extend component, but should amend that to just one or the other later
+    constructor(paperPath, raster, sound){
+        super(paperPath);
+        //so it has access to oaper's Raster properties
+        this.img = raster;
+        //in the future this could be set automatically depending on plant type - can you have default parameters like you can in Python?
         this.sound = sound
         
-        this.playSound(){
+        this.playSound = function(){
             //loop sound - default
-        }
-    }
+        };
+    };
+}
+
+class Flower extends Plant{
+    //later, this will have more specific animation/sound characteristics, placeholder for now
+    
+    constructor(paperPath, raster, sound){
+        super(paperPath, raster, sound);
+    };
 }
