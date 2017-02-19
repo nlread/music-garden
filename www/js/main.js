@@ -99,7 +99,7 @@ window.onload = function(){
                 mouseStates.currentFlower.img.scale(1.05)
             }
             else if(change < 0){
-                mouseStates.currentFlower.img.scale(0.78)
+                mouseStates.currentFlower.img.scale(0.95)
                 
             }
         }
