@@ -25,12 +25,9 @@ var mouseStates = {
     resizeOldFlower: false
 };
 
-
-
 window.onload = function(){
     //sanity check
     console.log("window loaded");
-    
     setUpScreen(); 
     
     var menuItems = createFlowersMenu();
@@ -39,11 +36,8 @@ window.onload = function(){
     
     var myTool = new Tool();
     
-
     myTool.onMouseUp = function(event) {
-        
         getMenuChoice(event, flowersMenu);
-       
         stopResize();
     };
 
@@ -62,15 +56,9 @@ window.onload = function(){
             return;
         }
         
-        //clicked on a menu flower already
-        if (mouseStates.menuChoice > -1) {
-            //clone and drop a flower at event point
-            mouseStates.currentFlower = new Flower(null, flowersMenu[mouseStates.menuChoice].clone()) //null is for the path since Component is path-based, also omitting sound argument for now
-            mouseStates.currentFlower.img.scale(0.3) //Note: all code with ".img." is so that we can work with the rasters, if we move to path-based this will change
-            mouseStates.currentFlower.img.position = event.point 
-            mouseStates.droppedFlower = true; //flag for the onMouseDrag method for resizing
+        if(mouseStates.menuChoice > -1){
+            dropFlower(event, flowersMenu);
         }
-        
     }
     
     myTool.onMouseDrag = function(event) {
@@ -150,6 +138,15 @@ stopResize = function(){
     }
 }
   
+
+dropFlower = function(clickEvent, flowersMenu){
+    //clone and drop a flower at event point
+    mouseStates.currentFlower = new Flower(null, flowersMenu[mouseStates.menuChoice].clone()) //null is for the path since Component is path-based, also omitting sound argument for now
+    mouseStates.currentFlower.img.scale(0.3) //Note: all code with ".img." is so that we can work with the rasters, if we move to path-based this will change
+    mouseStates.currentFlower.img.position = clickEvent.point 
+    mouseStates.droppedFlower = true; 
+        
+}
 //helper function - used to determine whether to increase or decrease flower size
 pointDistance = function(point1, point2){
     distance = Math.sqrt(Math.pow((point2.x - point1.x), 2) + Math.pow((point2.y - point2.x), 2));
