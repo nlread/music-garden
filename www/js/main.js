@@ -1,24 +1,36 @@
 /*Task list:
 - limit how big you can make the flowers
 - make it so flowers can't overlap the menu (limit resizing)
-- make flowers inherit from component/make plant class
 
 
 Future things to fix
 - make flowers scale based on actual mouse distance, not just estimated constants
 - look into let vs var
-- classes(?) for menu, flowers on flower menu, flowers dropped
 - once you have classes/items, you can add event handlers specifically to them (path.onDrag) instead of having a tool handle all of them, which might make code simpler (altho idk if we can apply it to a whole class of items, we might need an array of all the flowers on the screen or something like that)
 
 */
 
 paper.install(window); //make paper scope global by injecting it into window - from here http://blog.lindsayelia.com/post/128346565323/making-paperjs-work-in-an-external-file
 
+//Declare global constants + variables
+var resize = {
+    shrink: 0.95,
+    grow: 1.05
+}
+
+var mouseStates = {
+    menuChoice: -1,
+    droppedFlower: false,
+    currentFlower: null,
+    resizeOldFlower: false
+};
+
+
+
 window.onload = function(){
     //sanity check
     console.log("window loaded");
     
-     //create canvas first using id
     setUpScreen(); 
     
     var menuItems = createFlowersMenu();
@@ -27,35 +39,12 @@ window.onload = function(){
     
     var myTool = new Tool();
     
-    //Flower scaling constant - determined via experimentation
-    var FLOWER_RESIZE = 1.05
-
-    var mouseStates = {
-        menuChoice: -1,
-        droppedFlower: false,
-        currentFlower: null,
-        resizeOldFlower: false
-    };
-    
 
     myTool.onMouseUp = function(event) {
-        //hit test to see if we are on top of a menu flower
-        if (flowersMenu.length > 0) {
-            for (var ix = 0; ix < flowersMenu.length; ix++) {
-                //if you've hit a flower, make the dragging index equal to that flower
-                if (flowersMenu[ix].contains(event.point)) {
-                    mouseStates.menuChoice = ix;
-                    mouseStates.droppedFlower = false; //we're now about to drop a flower, done dealing with the old one
-                    break;
-                }
-            }
-        }
         
-        //stop resizing after drag
-        if(mouseStates.resizeOldFlower){
-            mouseStates.resizeOldFlower = false;
-        }
-        
+        getMenuChoice(event, flowersMenu);
+       
+        stopResize();
     };
 
     myTool.onMouseDown = function(event){
@@ -96,10 +85,10 @@ window.onload = function(){
             
             //scale values currently determined via experimentation, still need to figure out how to actually do it based on the mouse position
             if(change > 0){
-                mouseStates.currentFlower.img.scale(1.05)
+                mouseStates.currentFlower.img.scale(resize.grow)
             }
             else if(change < 0){
-                mouseStates.currentFlower.img.scale(0.95)
+                mouseStates.currentFlower.img.scale(resize.shrink)
                 
             }
         }
@@ -109,6 +98,7 @@ window.onload = function(){
 setUpScreen = function(){
     paper.setup('canvas') //create canvas using id
     view.draw(); //helps speed up drawing
+    
 }
 
 createFlowersMenu = function(){
@@ -141,6 +131,25 @@ positionFlowers = function(flowersArray){
     return(flowersArray)  ;
 }
 
+//Figures out which menu flower user clicked on
+getMenuChoice = function(clickEvent, flowersMenu){
+    if (flowersMenu.length > 0) {
+            for (var ix = 0; ix < flowersMenu.length; ix++) {
+                if (flowersMenu[ix].contains(clickEvent.point)) {
+                    mouseStates.menuChoice = ix;
+                    mouseStates.droppedFlower = false; 
+                    break;
+                }
+            }
+        }
+}
+
+stopResize = function(){
+    if(mouseStates.resizeOldFlower){
+        mouseStates.resizeOldFlower = false;
+    }
+}
+  
 //helper function - used to determine whether to increase or decrease flower size
 pointDistance = function(point1, point2){
     distance = Math.sqrt(Math.pow((point2.x - point1.x), 2) + Math.pow((point2.y - point2.x), 2));
