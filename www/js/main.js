@@ -1,7 +1,7 @@
 /*Task list:
 - limit how big you can make the flowers
 - make it so flowers can't overlap the menu (limit resizing)
-
+- dragging on the menu still changes flower size, also should make it so you can only scale a flower if you first click on the flower itself
 
 Future things to fix
 - make flowers scale based on actual mouse distance, not just estimated constants
@@ -126,10 +126,9 @@ stopResize = function(){
 
 //drop a clone of a menu flower
 dropFlower = function(clickEvent, flowersMenu){
-    //clone and drop a flower at event point
     mouseStates.currentFlower = new Flower(null, flowersMenu[mouseStates.menuChoice].clone()) //null is for the path since Component is path-based, also omitting sound argument for now
     mouseStates.currentFlower.img.scale(0.3) //Note: all code with ".img." is so that we can work with the rasters, if we move to path-based this will change
-    mouseStates.currentFlower.img.position = clickEvent.point 
+    mouseStates.currentFlower.img.position = clickEvent.point - drawingPos
     mouseStates.droppedFlower = true; 
         
 }
