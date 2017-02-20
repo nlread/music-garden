@@ -128,7 +128,7 @@ stopResize = function(){
 dropFlower = function(clickEvent, flowersMenu){
     mouseStates.currentFlower = new Flower(null, flowersMenu[mouseStates.menuChoice].clone()) //null is for the path since Component is path-based, also omitting sound argument for now
     mouseStates.currentFlower.img.scale(0.3) //Note: all code with ".img." is so that we can work with the rasters, if we move to path-based this will change
-    mouseStates.currentFlower.img.position = clickEvent.point - drawingPos
+    mouseStates.currentFlower.img.position = clickEvent.point
     mouseStates.droppedFlower = true; 
         
 }
