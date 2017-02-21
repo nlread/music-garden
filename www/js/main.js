@@ -1,11 +1,6 @@
 /*Task list:
-- limit how big you can make the flowers
-- make it so flowers can't overlap the menu (limit resizing)
-- dragging on the menu still changes flower size, also should make it so you can only scale a flower if you first click on the flower itself
 
 Future things to fix
-- make flowers scale based on actual mouse distance, not just estimated constants
-- look into let vs var
 - once you have classes/items, you can add event handlers specifically to them (path.onDrag) instead of having a tool handle all of them, which might make code simpler (altho idk if we can apply it to a whole class of items, we might need an array of all the flowers on the screen or something like that)
 
 */
@@ -25,16 +20,31 @@ var mouseStates = {
     resizeOldFlower: false
 };
 
+//namespace to be filled in onload with menu choice divs - outside of main function so that they're globally accessible
+var menuChoices = {
+  
+}
+
+var currentMenuChoice;
+
 window.onload = function(){
     //sanity check
     console.log("window loaded");
     setUpScreen(); 
+    initializeGlobals();
     
     var menuItems = createFlowersMenu();
     var flowersMenu = menuItems[0]
     var menuRect = menuItems[1]
     
     var myTool = new Tool();
+    
+    //set current choice to the image of the flower clicked on in the menu
+    $('.menuChoice').on('click', function(){
+        //currently currentMenuChoice is just the url of the image (including 127.0.0.1)
+        currentMenuChoice = event.target.src;
+        
+    });
     
     myTool.onMouseUp = function(event) {
         getMenuChoice(event, flowersMenu);
@@ -71,6 +81,14 @@ window.onload = function(){
 setUpScreen = function(){
     paper.setup('canvas') //create canvas using id
     view.draw(); //helps speed up drawing
+    
+}
+
+initializeGlobals = function(){
+    menuChoices.choice1 = document.getElementById("choice1");
+    menuChoices.choice2 = document.getElementById("choice2");
+    menuChoices.choice3 = document.getElementById("choice3");
+    menuChoices.choice4 = document.getElementById("choice4");
     
 }
 
