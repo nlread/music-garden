@@ -1,10 +1,4 @@
-/*Task list:
-- currently the first time you click on the menu it drops a flower at the origin, should stop that from happening
 
-Future things to fix
-- once you have classes/items, you can add event handlers specifically to them (path.onDrag) instead of having a tool handle all of them, which might make code simpler (altho idk if we can apply it to a whole class of items, we might need an array of all the flowers on the screen or something like that)
-
-*/
 
 paper.install(window); //make paper scope global by injecting it into window - from here http://blog.lindsayelia.com/post/128346565323/making-paperjs-work-in-an-external-file
 
@@ -30,6 +24,7 @@ var menuChoices = {}
 
 var currentMenuChoice;
 
+//ONLOAD
 window.onload = function(){
     //sanity check
     console.log("window loaded");
@@ -56,11 +51,8 @@ window.onload = function(){
         //clicked on something -> see if we need to resize an old flower
         if(project.hitTest(event.point)){
             pointClicked = event.point;
-           
-            
             mouseStates.currentFlower = new Flower(null,event.item); 
             mouseStates.resizeOldFlower = true;
-            
             //return so that you don't drop a new flower on top of one to resize
             //NOTE: this does prevent dropping flowers on top of each other, so if that's a feature we want we'll have to work around it somehow
             return;
@@ -78,6 +70,7 @@ window.onload = function(){
     };
 }
 
+//HELPER FUNCTIONS
 setUpScreen = function(){
     paper.setup('canvas') //create canvas using id
     view.draw(); //helps speed up drawing
