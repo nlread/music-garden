@@ -89,17 +89,18 @@ class PhysicsPlant extends Component {
             let seg = this.paperPath.segments[i];
             
             // Handle Velocity
-            let dPosV = seg.point.multiply(props.velocity.multiply(dTime));
+            let dPosV = props.velocity.multiply(dTime);
             
             // Handle Acceleration
-            let dPosA = seg.point.multiply(props.acceleration.multiply(dTime * dTime));
+            let dPosA = props.acceleration.multiply(dTime * dTime);
 
             seg.point = seg.point.add(dPosV).add(dPosA);
             
-        
-            props.velocity = props.velocity.multiply(.97).add(props.acceleration.multiply(dTime));
-            props.acceleration = force.add(props.base.subtract(seg.point).multiply(1));
-            console.log(force + " " +  props.base.subtract(seg.point).multiply(1));
+            if(i==4)
+                console.log(props.acceleration);
+            
+            props.velocity = props.velocity.add(props.acceleration.multiply(dTime)).multiply(.97);
+            props.acceleration = force.add(props.base.subtract(seg.point).multiply(9));
         }
     }
     
@@ -114,13 +115,13 @@ class SegmentProperties {
         }
         
         if(arguments.length >= 2) {
-            this.velocity = velocity;
+            this.velocity = velocity.clone();
         } else {
             this.velocity = new Point(0, 0);
         }
         
         if(arguments.length >= 3) {
-            this.acceleration = acceleration;
+            this.acceleration = acceleration.clone();
         } else {
             this.acceleration = new Point(0, 0);
         }

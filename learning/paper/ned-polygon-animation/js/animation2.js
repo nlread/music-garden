@@ -66,7 +66,7 @@ function onMouseDown(event) {
 }
 
 function onMouseUp(event) {
-    let forceVector = event.point.subtract(downPoint).multiply(1);
+    let forceVector = event.point.subtract(downPoint).multiply(5);
     applyForce(forceVector.x, forceVector.y);
 }
 

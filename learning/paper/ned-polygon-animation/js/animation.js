@@ -64,15 +64,15 @@ function onFrame(frameEvent) {
         segment.point.x += leafVelocities[i].x * dTime + leafAccelerations[i].x * dTime * dTime;
         segment.point.y += leafVelocities[i].y * dTime + leafAccelerations[i].y * dTime * dTime;
 
+
+        leafVelocities[i].x *= .97;
+        leafVelocities[i].y *= .97;
+        
         leafVelocities[i].x += leafAccelerations[i].x * dTime;
         leafVelocities[i].y += leafAccelerations[i].y * dTime;
-
-        leafVelocities[i].x *= .94;
-        leafVelocities[i].y *= .94;
-        
         let base = leafBasePositions[i];
-        leafAccelerations[i].x = (base.x - segment.point.x) * 5;
-        leafAccelerations[i].y = (base.y - segment.point.y) * 5;
+        leafAccelerations[i].x = (base.x - segment.point.x) * 8;
+        leafAccelerations[i].y = (base.y - segment.point.y) * 8;
     
         for(let forceIndex=0; forceIndex<forces.length; forceIndex++) {
             let force = forces[forceIndex];
@@ -106,7 +106,7 @@ function onMouseDown(event) {
 }
 
 function onMouseUp(event) {
-    let forceVector = event.point.subtract(downPoint).multiply(5);
+    let forceVector = event.point.subtract(downPoint).multiply(10);
     applyForce(forceVector.x, forceVector.y);
 }
 
