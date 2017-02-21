@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel ="stylesheet" type = "text/css" href = "css/paperpractice.css">
+<link rel ="stylesheet" type = "text/css" href = "css/style.css">
+
+<!-- moved scripts up here because they weren't loading in the proper order -->
 <script type="text/javascript" src="lib/paper-full.js"></script>
 <script type="text/javascript" src ="lib/jquery-3.1.1.js"></script>
 <script type="text/javascript" src ="js/classes.js"></script>
@@ -10,7 +12,12 @@
 
 </head>
 <body>
-    
+    <div id="menu">
+        <div id="choice1" class="menuChoice"><img src="img/blueflower.png" id="blue"></div>
+        <div id="choice2" class="menuChoice"><img src="img/pinkflower.png" id="pink"> </div>
+        <div id="choice3" class="menuChoice"><img src="img/purpleflower.png" id="purple"> </div>
+        <div id="choice4" class="menuChoice"><img src="img/orangeflower.png" id="orange"></div>
+    </div>
 	<canvas id="canvas" resize>
           <!-- images have to be here because Paper needs them to be preloaded - I put them inside the canvas bc I currently have the canvas set to fill the screen, but I'm not sure if that's necessary/right-->
          <img src="img/blueflower.png" id="blue"> 
@@ -18,12 +25,6 @@
         <img src="img/purpleflower.png" id="purple"> 
         <img src="img/orangeflower.png" id="orange"> 
     </canvas>
-    
-    
-    <!-- Scripts are supposed to go at the bottom of the body tag, otherwise sometimes there are issues -->
-    
    
-    
-	
 </body>
 </html>

@@ -1,19 +1,10 @@
-/*Task list:
-- limit how big you can make the flowers
-- make it so flowers can't overlap the menu (limit resizing)
 
-
-Future things to fix
-- make flowers scale based on actual mouse distance, not just estimated constants
-- look into let vs var
-- once you have classes/items, you can add event handlers specifically to them (path.onDrag) instead of having a tool handle all of them, which might make code simpler (altho idk if we can apply it to a whole class of items, we might need an array of all the flowers on the screen or something like that)
-
-*/
 
 paper.install(window); //make paper scope global by injecting it into window - from here http://blog.lindsayelia.com/post/128346565323/making-paperjs-work-in-an-external-file
 
-//Declare global constants + variables
+//DECLARE GLOBAL CONSTANTS AND VARIABLES
 var resize = {
+    initFlowerSize: 0.1,
     shrink: 0.95,
     grow: 1.05
 }
@@ -25,19 +16,51 @@ var mouseStates = {
     resizeOldFlower: false
 };
 
+//this is the flower that will eventually track with the mouse - not currently in use
+//var draggingFlower;
+
+//namespace to be filled in onload with menu choice divs - outside of main function so that they're globally accessible
+var menuChoices = {}
+
+var currentMenuChoice;
+
+//ONLOAD
 window.onload = function(){
     //sanity check
     console.log("window loaded");
-    setUpScreen(); 
     
-    var menuItems = createFlowersMenu();
-    var flowersMenu = menuItems[0]
-    var menuRect = menuItems[1]
+    setUpScreen(); 
+    initializeGlobals();
     
     var myTool = new Tool();
     
+    //set current choice to the image of the flower clicked on in the menu
+    $('.menuChoice').on('click', function(){
+        currentMenuChoice = event.target.src;
+        //draggingFlower = new Raster(currentMenuChoice).scale(0.1); - could bring this back later when we want a flower to track with the mouse, but that's going to require more work
+        //sweet, putting it at (0, 0) puts it at canvas 0,0 not window 0,0
+        //also, it thinks that events that occur off the canvas (i.e. on the menu) occur at (0,0), so the next line always drops flowers at (0,0) - might make mouse tracking tricky
+        mouseStates.droppedFlower = false;       
+    });
+    
+    //Menu choice animations
+    $('.menuChoice').on('mousedown', function(){
+        $(event.target).animate({
+            height: "100%",
+            width: "100%" 
+            }, 100
+        );
+    });
+    
+    $('.menuChoice').on('mouseup', function(){
+        $(event.target).animate({
+            height: "95%",
+            width: "95%" 
+            }, 100
+        );
+    });
+    
     myTool.onMouseUp = function(event) {
-        getMenuChoice(event, flowersMenu);
         stopResize();
     };
 
@@ -45,19 +68,15 @@ window.onload = function(){
         //clicked on something -> see if we need to resize an old flower
         if(project.hitTest(event.point)){
             pointClicked = event.point;
-           
-            if(!(menuRect.contains(pointClicked))){
-                mouseStates.currentFlower = new Flower(null,event.item); //Note: not sure if this will work - will it create a new object or keep the pointer to the old one?
-                mouseStates.resizeOldFlower = true;
-            }
-           
+            mouseStates.currentFlower = new Flower(null,event.item); 
+            mouseStates.resizeOldFlower = true;
             //return so that you don't drop a new flower on top of one to resize
             //NOTE: this does prevent dropping flowers on top of each other, so if that's a feature we want we'll have to work around it somehow
             return;
         }
         
-        if(mouseStates.menuChoice > -1){
-            dropFlower(event, flowersMenu);
+        if(currentMenuChoice){
+            dropFlower(event);
         }
     }
     
@@ -68,53 +87,19 @@ window.onload = function(){
     };
 }
 
+//HELPER FUNCTIONS
 setUpScreen = function(){
     paper.setup('canvas') //create canvas using id
     view.draw(); //helps speed up drawing
     
 }
 
-createFlowersMenu = function(){
-    //scaling for size since images are large
-    //menu flowers are just rasters, not Components, because they don't need to be moved/chanegd
-    var pink = new Raster('pink');
-    pink.scale(0.05)
-    var orange = new Raster('orange');
-    orange.scale(0.1)
-    var blue = new Raster('blue');
-    blue.scale(0.07)
-    var purple = new Raster('purple');
-    purple.scale(0.1)
-    var menu = new Path.Rectangle(new Point(0, 0), new Size(100, 900))
-    menu.fillColor = '#c1f4f2';
-    menu.sendToBack();
+initializeGlobals = function(){
+    menuChoices.choice1 = document.getElementById("choice1");
+    menuChoices.choice2 = document.getElementById("choice2");
+    menuChoices.choice3 = document.getElementById("choice3");
+    menuChoices.choice4 = document.getElementById("choice4");
     
-    var allFlowersArray = [pink, orange, blue, purple]
-    var flowers = positionFlowers(allFlowersArray);
-    return([flowers, menu])
-}
-
-positionFlowers = function(flowersArray){
-    var xPos = 50
-    var yPos = 50
-    for(var i = 0; i < flowersArray.length; i++){
-        flowersArray[i].position = new Point(xPos, yPos);
-        yPos += 150;
-    }
-    return(flowersArray)  ;
-}
-
-//Figures out which menu flower user clicked on
-getMenuChoice = function(clickEvent, flowersMenu){
-    if (flowersMenu.length > 0) {
-            for (var ix = 0; ix < flowersMenu.length; ix++) {
-                if (flowersMenu[ix].contains(clickEvent.point)) {
-                    mouseStates.menuChoice = ix;
-                    mouseStates.droppedFlower = false; 
-                    break;
-                }
-            }
-        }
 }
 
 stopResize = function(){
@@ -125,11 +110,10 @@ stopResize = function(){
   
 
 //drop a clone of a menu flower
-dropFlower = function(clickEvent, flowersMenu){
-    //clone and drop a flower at event point
-    mouseStates.currentFlower = new Flower(null, flowersMenu[mouseStates.menuChoice].clone()) //null is for the path since Component is path-based, also omitting sound argument for now
-    mouseStates.currentFlower.img.scale(0.3) //Note: all code with ".img." is so that we can work with the rasters, if we move to path-based this will change
-    mouseStates.currentFlower.img.position = clickEvent.point 
+dropFlower = function(clickEvent){
+    mouseStates.currentFlower = new Flower(null, new Raster(currentMenuChoice).scale(resize.initFlowerSize)) //null is for the path since Component is path-based, also omitting sound argument for now
+    mouseStates.currentFlower.img.scale(0.3) //Note: all code with ".img." is so that we can work with the rasters, if we move to path or vector-based this will change
+    mouseStates.currentFlower.img.position = clickEvent.point
     mouseStates.droppedFlower = true; 
         
 }
@@ -144,7 +128,9 @@ scaleFlower = function(clickEvent){
     change = currentDist - prevDist
 
     if(change > 0){
-        mouseStates.currentFlower.img.scale(resize.grow)
+        if(!(mouseStates.currentFlower.img.bounds.width > (project.view.size.width / 2))){
+           mouseStates.currentFlower.img.scale(resize.grow)
+        }
     }
     else if(change < 0){
         mouseStates.currentFlower.img.scale(resize.shrink)

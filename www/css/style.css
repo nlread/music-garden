@@ -1,0 +1,29 @@
+/* this is from here http://stackoverflow.com/questions/28896260/paper-js-wont-resize-the-canvas-correctly, to make the canvas full-screen */
+
+html,
+body {
+    margin: 0;
+    overflow: hidden;
+    height: 100%;
+}
+
+/* Scale canvas with resize attribute to full size */
+canvas[resize] {
+    width: 90%;
+    height: 100%;
+    float: right;
+}
+
+#menu{
+    width: 10%;
+    height: 100%;
+    float: left;
+    background-color: #cac9fc 
+}
+
+/*make menu images centered and the width of their parent div */
+#menu div img{
+    height: 95%;
+    width: 95%;
+    margin: auto;
+}
