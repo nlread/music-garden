@@ -36,10 +36,6 @@ window.onload = function(){
     setUpScreen(); 
     initializeGlobals();
     
-    var menuItems = createFlowersMenu();
-    var flowersMenu = menuItems[0]
-    var menuRect = menuItems[1]
-    
     var myTool = new Tool();
     
     //set current choice to the image of the flower clicked on in the menu
@@ -61,18 +57,17 @@ window.onload = function(){
         if(project.hitTest(event.point)){
             pointClicked = event.point;
            
-            if(!(menuRect.contains(pointClicked))){
-                mouseStates.currentFlower = new Flower(null,event.item); 
-                mouseStates.resizeOldFlower = true;
-            }
-           
+            
+            mouseStates.currentFlower = new Flower(null,event.item); 
+            mouseStates.resizeOldFlower = true;
+            
             //return so that you don't drop a new flower on top of one to resize
             //NOTE: this does prevent dropping flowers on top of each other, so if that's a feature we want we'll have to work around it somehow
             return;
         }
         
         if(currentMenuChoice){
-            dropFlower(event, flowersMenu);
+            dropFlower(event);
         }
     }
     
@@ -96,38 +91,6 @@ initializeGlobals = function(){
     menuChoices.choice4 = document.getElementById("choice4");
     
 }
-
-createFlowersMenu = function(){
-    //scaling for size since images are large
-    //menu flowers are just rasters, not Components, because they don't need to be moved/chanegd
-    var pink = new Raster('pink');
-    pink.scale(0.05)
-    var orange = new Raster('orange');
-    orange.scale(0.1)
-    var blue = new Raster('blue');
-    blue.scale(0.07)
-    var purple = new Raster('purple');
-    purple.scale(0.1)
-    var menu = new Path.Rectangle(new Point(0, 0), new Size(100, 900))
-    menu.fillColor = '#c1f4f2';
-    menu.sendToBack();
-    
-    var allFlowersArray = [pink, orange, blue, purple]
-    var flowers = positionFlowers(allFlowersArray);
-    return([flowers, menu])
-}
-
-positionFlowers = function(flowersArray){
-    var xPos = 50
-    var yPos = 50
-    for(var i = 0; i < flowersArray.length; i++){
-        flowersArray[i].position = new Point(xPos, yPos);
-        yPos += 150;
-    }
-    return(flowersArray)  ;
-}
-
-
 
 stopResize = function(){
     if(mouseStates.resizeOldFlower){
