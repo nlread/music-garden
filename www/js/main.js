@@ -8,8 +8,9 @@ Future things to fix
 
 paper.install(window); //make paper scope global by injecting it into window - from here http://blog.lindsayelia.com/post/128346565323/making-paperjs-work-in-an-external-file
 
-//Declare global constants + variables
+//DECLARE GLOBAL CONSTANTS AND VARIABLES
 var resize = {
+    initFlowerSize: 0.1,
     shrink: 0.95,
     grow: 1.05
 }
@@ -21,18 +22,18 @@ var mouseStates = {
     resizeOldFlower: false
 };
 
-//this is the flower that tracks with the mouse 
-var draggingFlower;
+//this is the flower that will eventually track with the mouse - not currently in use
+//var draggingFlower;
+
 //namespace to be filled in onload with menu choice divs - outside of main function so that they're globally accessible
-var menuChoices = {
-  
-}
+var menuChoices = {}
 
 var currentMenuChoice;
 
 window.onload = function(){
     //sanity check
     console.log("window loaded");
+    
     setUpScreen(); 
     initializeGlobals();
     
@@ -41,10 +42,9 @@ window.onload = function(){
     //set current choice to the image of the flower clicked on in the menu
     $('.menuChoice').on('click', function(){
         currentMenuChoice = event.target.src;
-        draggingFlower = new Raster(currentMenuChoice).scale(0.1);
+        //draggingFlower = new Raster(currentMenuChoice).scale(0.1); - could bring this back later when we want a flower to track with the mouse, but that's going to require more work
         //sweet, putting it at (0, 0) puts it at canvas 0,0 not window 0,0
         //also, it thinks that events that occur off the canvas (i.e. on the menu) occur at (0,0), so the next line always drops flowers at (0,0) - might make mouse tracking tricky
-        draggingFlower.position = event.position;
         mouseStates.droppedFlower = false;
     });
     
@@ -101,8 +101,8 @@ stopResize = function(){
 
 //drop a clone of a menu flower
 dropFlower = function(clickEvent){
-    mouseStates.currentFlower = new Flower(null, draggingFlower.clone()) //null is for the path since Component is path-based, also omitting sound argument for now
-    mouseStates.currentFlower.img.scale(0.3) //Note: all code with ".img." is so that we can work with the rasters, if we move to path-based this will change
+    mouseStates.currentFlower = new Flower(null, new Raster(currentMenuChoice).scale(resize.initFlowerSize)) //null is for the path since Component is path-based, also omitting sound argument for now
+    mouseStates.currentFlower.img.scale(0.3) //Note: all code with ".img." is so that we can work with the rasters, if we move to path or vector-based this will change
     mouseStates.currentFlower.img.position = clickEvent.point
     mouseStates.droppedFlower = true; 
         
