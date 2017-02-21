@@ -128,7 +128,9 @@ scaleFlower = function(clickEvent){
     change = currentDist - prevDist
 
     if(change > 0){
-        mouseStates.currentFlower.img.scale(resize.grow)
+        if(!(mouseStates.currentFlower.img.bounds.width > (project.view.size.width / 2))){
+           mouseStates.currentFlower.img.scale(resize.grow)
+        }
     }
     else if(change < 0){
         mouseStates.currentFlower.img.scale(resize.shrink)
