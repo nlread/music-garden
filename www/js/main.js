@@ -40,7 +40,24 @@ window.onload = function(){
         //draggingFlower = new Raster(currentMenuChoice).scale(0.1); - could bring this back later when we want a flower to track with the mouse, but that's going to require more work
         //sweet, putting it at (0, 0) puts it at canvas 0,0 not window 0,0
         //also, it thinks that events that occur off the canvas (i.e. on the menu) occur at (0,0), so the next line always drops flowers at (0,0) - might make mouse tracking tricky
-        mouseStates.droppedFlower = false;
+        mouseStates.droppedFlower = false;       
+    });
+    
+    //Menu choice animations
+    $('.menuChoice').on('mousedown', function(){
+        $(event.target).animate({
+            height: "100%",
+            width: "100%" 
+            }, 100
+        );
+    });
+    
+    $('.menuChoice').on('mouseup', function(){
+        $(event.target).animate({
+            height: "95%",
+            width: "95%" 
+            }, 100
+        );
     });
     
     myTool.onMouseUp = function(event) {
