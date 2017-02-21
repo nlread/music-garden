@@ -1,4 +1,5 @@
 /*Task list:
+- currently the first time you click on the menu it drops a flower at the origin, should stop that from happening
 
 Future things to fix
 - once you have classes/items, you can add event handlers specifically to them (path.onDrag) instead of having a tool handle all of them, which might make code simpler (altho idk if we can apply it to a whole class of items, we might need an array of all the flowers on the screen or something like that)
@@ -44,14 +45,14 @@ window.onload = function(){
     //set current choice to the image of the flower clicked on in the menu
     $('.menuChoice').on('click', function(){
         currentMenuChoice = event.target.src;
-        var dragFlower = new Raster(currentMenuChoice).scale(0.1);
+        draggingFlower = new Raster(currentMenuChoice).scale(0.1);
         //sweet, putting it at (0, 0) puts it at canvas 0,0 not window 0,0
         //also, it thinks that events that occur off the canvas (i.e. on the menu) occur at (0,0), so the next line always drops flowers at (0,0) - might make mouse tracking tricky
-        dragFlower.position = event.position;
+        draggingFlower.position = event.position;
+        mouseStates.droppedFlower = false;
     });
     
     myTool.onMouseUp = function(event) {
-        getMenuChoice(event, flowersMenu);
         stopResize();
     };
 
@@ -61,7 +62,7 @@ window.onload = function(){
             pointClicked = event.point;
            
             if(!(menuRect.contains(pointClicked))){
-                mouseStates.currentFlower = new Flower(null,event.item); //Note: not sure if this will work - will it create a new object or keep the pointer to the old one?
+                mouseStates.currentFlower = new Flower(null,event.item); 
                 mouseStates.resizeOldFlower = true;
             }
            
@@ -70,7 +71,7 @@ window.onload = function(){
             return;
         }
         
-        if(mouseStates.menuChoice > -1){
+        if(currentMenuChoice){
             dropFlower(event, flowersMenu);
         }
     }
@@ -126,18 +127,7 @@ positionFlowers = function(flowersArray){
     return(flowersArray)  ;
 }
 
-//Figures out which menu flower user clicked on
-getMenuChoice = function(clickEvent, flowersMenu){
-    if (flowersMenu.length > 0) {
-            for (var ix = 0; ix < flowersMenu.length; ix++) {
-                if (flowersMenu[ix].contains(clickEvent.point)) {
-                    mouseStates.menuChoice = ix;
-                    mouseStates.droppedFlower = false; 
-                    break;
-                }
-            }
-        }
-}
+
 
 stopResize = function(){
     if(mouseStates.resizeOldFlower){
@@ -147,8 +137,8 @@ stopResize = function(){
   
 
 //drop a clone of a menu flower
-dropFlower = function(clickEvent, flowersMenu){
-    mouseStates.currentFlower = new Flower(null, flowersMenu[mouseStates.menuChoice].clone()) //null is for the path since Component is path-based, also omitting sound argument for now
+dropFlower = function(clickEvent){
+    mouseStates.currentFlower = new Flower(null, draggingFlower.clone()) //null is for the path since Component is path-based, also omitting sound argument for now
     mouseStates.currentFlower.img.scale(0.3) //Note: all code with ".img." is so that we can work with the rasters, if we move to path-based this will change
     mouseStates.currentFlower.img.position = clickEvent.point
     mouseStates.droppedFlower = true; 
