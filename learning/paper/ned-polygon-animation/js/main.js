@@ -2,13 +2,15 @@ let objects;
 let modelPaths;
 let modelScope;
 
+console.log(paper);
+
 class Object {
     
     constructor(paperPath) {
         this.paperPath = paperPath;
         this.baseCurves = $.extend(true, [], paperPath.curves);        
         this.baseSegments = []
-        
+
         for(let i=0; i<paperPath.segments.length; i++) {
             this.baseSegments.push(paperPath.segments[i].clone());
         }
