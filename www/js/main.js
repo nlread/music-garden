@@ -20,6 +20,8 @@ var mouseStates = {
     resizeOldFlower: false
 };
 
+//this is the flower that tracks with the mouse 
+var draggingFlower;
 //namespace to be filled in onload with menu choice divs - outside of main function so that they're globally accessible
 var menuChoices = {
   
@@ -41,9 +43,11 @@ window.onload = function(){
     
     //set current choice to the image of the flower clicked on in the menu
     $('.menuChoice').on('click', function(){
-        //currently currentMenuChoice is just the url of the image (including 127.0.0.1)
         currentMenuChoice = event.target.src;
-        
+        var dragFlower = new Raster(currentMenuChoice).scale(0.1);
+        //sweet, putting it at (0, 0) puts it at canvas 0,0 not window 0,0
+        //also, it thinks that events that occur off the canvas (i.e. on the menu) occur at (0,0), so the next line always drops flowers at (0,0) - might make mouse tracking tricky
+        dragFlower.position = event.position;
     });
     
     myTool.onMouseUp = function(event) {
