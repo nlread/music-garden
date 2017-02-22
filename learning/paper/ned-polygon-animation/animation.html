@@ -3,16 +3,23 @@
         <link rel="stylesheet" href="css/style.css" />
         <script type="text/javascript" src="js/jquery-3.1.1.js"></script>
         <script type="text/javascript" src="js/paper-full.js"></script>
-        <script type="text/javascript" src="js/main.js"></script>
+        <script type="text/javascript" src="js/classes.js"></script>
+        <script type="text/javascript" src="js/animation2.js"></script>
     </head>
     <body onload="setup()">
+        <div hidden>
+            <svg id="leafModel" xmlns="http://www.w3.org/2000/svg" width="210" height="297" viewBox="0 0 744.1 1052.4">
+                <path d="M271.9 4 5.8 758.3 278.4 1040.8 554.2 742.3Z" style="fill:none;stroke-width:1px;stroke:#000"/>
+            </svg>
+        </div>
         <h1>Dog</h1>
+<!--
          <div id="buttons">
             <button id="create" onclick="createObjects()">Create</button>
             <button id="prep" onclick="prepChanges()">Prep</button>
             <button id="apply" onclick="applyTransform()">Apply</button>
         </div>
+-->
         <canvas id="paperCanvas" resize></canvas>
-        <canvas id="modelCanvas" resize></canvas>
     </body>
 </html>

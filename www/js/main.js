@@ -1,10 +1,4 @@
-/*Task list:
-- currently the first time you click on the menu it drops a flower at the origin, should stop that from happening
 
-Future things to fix
-- once you have classes/items, you can add event handlers specifically to them (path.onDrag) instead of having a tool handle all of them, which might make code simpler (altho idk if we can apply it to a whole class of items, we might need an array of all the flowers on the screen or something like that)
-
-*/
 
 paper.install(window); //make paper scope global by injecting it into window - from here http://blog.lindsayelia.com/post/128346565323/making-paperjs-work-in-an-external-file
 
@@ -30,6 +24,7 @@ var menuChoices = {}
 
 var currentMenuChoice;
 
+//ONLOAD
 window.onload = function(){
     //sanity check
     console.log("window loaded");
@@ -45,7 +40,24 @@ window.onload = function(){
         //draggingFlower = new Raster(currentMenuChoice).scale(0.1); - could bring this back later when we want a flower to track with the mouse, but that's going to require more work
         //sweet, putting it at (0, 0) puts it at canvas 0,0 not window 0,0
         //also, it thinks that events that occur off the canvas (i.e. on the menu) occur at (0,0), so the next line always drops flowers at (0,0) - might make mouse tracking tricky
-        mouseStates.droppedFlower = false;
+        mouseStates.droppedFlower = false;       
+    });
+    
+    //Menu choice animations
+    $('.menuChoice').on('mousedown', function(){
+        $(event.target).animate({
+            height: "100%",
+            width: "100%" 
+            }, 100
+        );
+    });
+    
+    $('.menuChoice').on('mouseup', function(){
+        $(event.target).animate({
+            height: "95%",
+            width: "95%" 
+            }, 100
+        );
     });
     
     myTool.onMouseUp = function(event) {
@@ -56,11 +68,8 @@ window.onload = function(){
         //clicked on something -> see if we need to resize an old flower
         if(project.hitTest(event.point)){
             pointClicked = event.point;
-           
-            
             mouseStates.currentFlower = new Flower(null,event.item); 
             mouseStates.resizeOldFlower = true;
-            
             //return so that you don't drop a new flower on top of one to resize
             //NOTE: this does prevent dropping flowers on top of each other, so if that's a feature we want we'll have to work around it somehow
             return;
@@ -78,6 +87,7 @@ window.onload = function(){
     };
 }
 
+//HELPER FUNCTIONS
 setUpScreen = function(){
     paper.setup('canvas') //create canvas using id
     view.draw(); //helps speed up drawing
@@ -118,7 +128,9 @@ scaleFlower = function(clickEvent){
     change = currentDist - prevDist
 
     if(change > 0){
-        mouseStates.currentFlower.img.scale(resize.grow)
+        if(!(mouseStates.currentFlower.img.bounds.width > (project.view.size.width / 2))){
+           mouseStates.currentFlower.img.scale(resize.grow)
+        }
     }
     else if(change < 0){
         mouseStates.currentFlower.img.scale(resize.shrink)

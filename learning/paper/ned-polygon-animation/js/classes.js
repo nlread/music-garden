@@ -18,7 +18,7 @@ class Component {
         this.paperPath.translate(deltaPos.x, deltaPos.y);
     }
     
-    translate(x, y) {
+    translate(x, y) {   
         this._position.x = x;
         this._position.y = y;
         this.paperPath.translate(new Point(x, y));
@@ -63,5 +63,68 @@ class Component {
         
         this._scaleFactor.x *= factorX;
         this._scaleFactor.y *= factorY;
+    }
+}
+
+class PhysicsPlant extends Component {
+    
+    
+    constructor(paperPath, staticSegments) {
+        super(paperPath);
+        this.staticSegments = staticSegments;
+        
+        this.propsSet = [];
+        for(let i=0; i<paperPath.segments.length; i++) {
+            let props = new SegmentProperties(paperPath.segments[i].point)
+            this.propsSet.push(props);
+        }
+    }
+    
+    applyForce(dTime, force) {
+        for(let i=0; i<this.propsSet.length; i++) {
+            if (this.staticSegments.includes(i)) {
+                continue;
+            }
+            let props = this.propsSet[i];
+            let seg = this.paperPath.segments[i];
+            
+            // Handle Velocity
+            let dPosV = props.velocity.multiply(dTime);
+            
+            // Handle Acceleration
+            let dPosA = props.acceleration.multiply(dTime * dTime);
+
+            seg.point = seg.point.add(dPosV).add(dPosA);
+            
+            if(i==4)
+                console.log(props.acceleration);
+            
+            props.velocity = props.velocity.add(props.acceleration.multiply(dTime)).multiply(.97);
+            props.acceleration = force.add(props.base.subtract(seg.point).multiply(9));
+        }
+    }
+    
+}
+
+class SegmentProperties {
+    constructor(basePoint, velocity, acceleration) {
+        if(arguments.length >= 1) {
+            this.base = basePoint.clone();
+        } else {
+            throw 'no base point provided';
+        }
+        
+        if(arguments.length >= 2) {
+            this.velocity = velocity.clone();
+        } else {
+            this.velocity = new Point(0, 0);
+        }
+        
+        if(arguments.length >= 3) {
+            this.acceleration = acceleration.clone();
+        } else {
+            this.acceleration = new Point(0, 0);
+        }
+        
     }
 }
