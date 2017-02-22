@@ -1,5 +1,5 @@
 //Set's up 4 sounds to be associated with each flower
-var Music = function(){
+var Music = {
     let sound1 = new Howl({
         src: ['sounds/Badge.m4a']
     });
@@ -14,10 +14,10 @@ var Music = function(){
     });
 
     //Set's up 4 sounds to be associated with each flower
-    let sounds = [sound1,sound2,sound3,sound4];
+    let sounds : [sound1,sound2,sound3,sound4]
 
     //Adds the sound that is associated with the flower
-    let play = function(menuChoice){
+    let play : function(menuChoice){
         sounds[menuChoice].play();
         sounds[menuChoice].loop(true);
     }
