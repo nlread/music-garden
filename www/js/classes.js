@@ -94,3 +94,12 @@ class Flower extends Plant{
         super(paperPath, raster, sound);
     };
 }
+
+class Music {
+    
+    constructor(sounds){
+        //list of sounds that we want to use
+        this.sounds = sounds;
+    }
+    
+}
