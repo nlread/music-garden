@@ -1,30 +1,122 @@
 /*
-Current problems:
+Task list:
+- limit how big you can make the flowers
+- make it so flowers can't overlap the menu (limit resizing)
+- make flowers inherit from component/make plant class
+
 
 Future things to fix
-- you can drop flowers on top of the menu, I should probably bound where you're allowed to drop them
-- probably should use higher-res flower images in the images dir and then just scale them when I create the rasters - better image quality when they're enlarged via dragging
+- make flowers scale based on actual mouse distance, not just estimated constants
+- look into let vs var
+- classes(?) for menu, flowers on flower menu, flowers dropped
+- once you have classes/items, you can add event handlers specifically to them (path.onDrag) instead of having a tool handle all of them, which might make code simpler (altho idk if we can apply it to a whole class of items, we might need an array of all the flowers on the screen or something like that)
 */
 
 paper.install(window); //make paper scope global by injecting it into window - from here http://blog.lindsayelia.com/post/128346565323/making-paperjs-work-in-an-external-file
 
-//run after window has loaded
 window.onload = function(){
     //sanity check
     console.log("window loaded");
-    
-    //create canvas first using id
-    paper.setup('canvas')
-    
-    view.draw(); //helps speed up drawing
+     //create canvas first using id
+    setUpScreen();
+    menuItems = createFlowersMenu();
+    flowersMenu = menuItems[0]
+    menuRect = menuItems[1]
     
     var myTool = new Tool();
+    var muse = Music();
     
+    //Flower scaling constant - determined via experimentation
+    var FLOWER_RESIZE = 1.05
+
+    // Mouse tool state
+    var menuChoice = -1;
+    var droppedFlower = false;
+    var currentFlower;
+    var resizeOldFlower = false;
+
+    myTool.onMouseUp = function(event) {
+        //hit test to see if we are on top of a menu flower
+        if (flowersMenu.length > 0) {
+            for (var ix = 0; ix < flowersMenu.length; ix++) {
+                //if you've hit a flower, make the dragging index equal to that flower
+                if (flowersMenu[ix].contains(event.point)) {
+                    menuChoice = ix;
+                    droppedFlower = false; //we're now about to drop a flower, done dealing with the old one
+                    break;
+                }
+            }
+        }
+        
+        //stop resizing after drag
+        if(resizeOldFlower){
+            resizeOldFlower = false;
+        }
+        
+    };
+
+    myTool.onMouseDown = function(event){
+        //clicked on something -> see if we need to resize an old flower
+        if(project.hitTest(event.point)){
+            
+            pointClicked = event.point;
+           
+            if(!(menuRect.contains(pointClicked))){
+                currentFlower = event.item;
+                resizeOldFlower = true;
+            }
+           
+            //return so that you don't drop a new flower on top of one to resize
+            //NOTE: this does prevent dropping flowers on top of each other, so if that's a feature we want we'll have to work around it somehow
+            return;
+        }
+        
+        //clicked on a menu flower already
+        if (menuChoice > -1) {
+            //clone and drop a flower at event point
+            currentFlower = flowersMenu[menuChoice].clone()
+            currentFlower.scale(0.3)
+            currentFlower.position = event.point 
+            music.play(menuChoice);
+            droppedFlower = true; //flag for the onMouseDrag method for resizing
+        }
+        
+    }
     
-    
-    //drag and drop code adapted from here http://stackoverflow.com/questions/16876253/paperjs-drag-and-drop-circle
-    
-    //Menu flower options w/ scaling for size
+    myTool.onMouseDrag = function(event) {
+        //we've just dropped a flower, now to resize it
+        if(droppedFlower || resizeOldFlower){
+            
+            //determine whether distance from center of flower is increasing or decreasing in order to decide whether to make it larger or smaller
+            flowerCenter = currentFlower.position;
+            mousePos = event.point;
+            prevMousePos = event.lastPoint;
+            prevDist = pointDistance(prevMousePos, flowerCenter);
+            currentDist = pointDistance(mousePos, flowerCenter);
+            change = currentDist - prevDist
+            
+            //scale values currently determined via experimentation, still need to figure out how to actually do it based on the mouse position
+            if(change > 0){
+                currentFlower.scale(1.05)
+            }
+            else if(change < 0){
+                currentFlower.scale(0.78)
+                
+            }
+            //not sure how to check the distance on successive iterations - can I save it between calls to this function?
+
+            currentFlower.scale(FLOWER_RESIZE);
+        }
+    };
+}
+
+setUpScreen = function(){
+    paper.setup('canvas') //create canvas using id
+    view.draw(); //helps speed up drawing
+}
+
+createFlowersMenu = function(){
+    //scaling for size since images are large
     var pink = new Raster('pink');
     pink.scale(0.05)
     var orange = new Raster('orange');
@@ -37,83 +129,24 @@ window.onload = function(){
     menu.fillColor = '#c1f4f2';
     menu.sendToBack();
     
-    var flowers = [pink, orange, blue, purple];
-    
-    //position flowers along the left side of the canvas
-    xPos = 50
-    yPos = 50
-    for(var i = 0; i < flowers.length; i++){
-        flowers[i].position = new Point(xPos, yPos)
-        yPos += 150 //put them in a vertical line
-    }
-    
-    //Flower scaling constant - determined via experimentation
-    var FLOWER_RESIZE = 1.05
-
-    // Mouse tool state
-    var menuChoice = -1;
-    var droppedFlower = false;
-    var currentFlower;
-    
-    //Set's up 4 sounds to be associated with each flower
-    var sound1 = new Howl({
-      src: ['sounds/Badge.m4a']
-    });
-    var sound2 = new Howl({
-      src: ['sounds/Berry.m4a']
-    });
-    var sound3 = new Howl({
-      src: ['sounds/Start.m4a']
-    });
-    var sound4 = new Howl({
-      src: ['sounds/Beginning.m4a']
-    });
-    
-    //List to be associated with flowers list
-    var sounds = [sound1,sound2,sound3,sound4];
-
-    myTool.onMouseUp = function(event) {
-        //hit test to see if we are on top of a menu flower
-        if (flowers.length > 0) {
-            for (var ix = 0; ix < flowers.length; ix++) {
-                //if you've hit a flower, make the dragging index equal to that flower
-                if (flowers[ix].contains(event.point)) {
-                    menuChoice = ix;
-                    droppedFlower = false; //we're now about to drop a flower, done dealing with the old one
-                    break;
-                }
-            }
-        }
-        
-        //handle case where we've just finished resizing a flower
-        if(currentFlower){
-            
-        }
-    };
-
-    myTool.onMouseDown = function(event){
-        //clicked on a menu flower already
-        if (menuChoice > -1) {
-            //clone and drop a flower at event point
-            currentFlower = flowers[menuChoice].clone()
-            currentFlower.scale(0.3)
-            currentFlower.position = event.point //NTS: might need to reset currentFlower at some point?
-            //Adds the sound that is associated with the flower
-            sounds[menuChoice].play();
-            sounds[menuChoice].loop(true);
-            droppedFlower = true; //flag for the onMouseDrag method for resizing
-        }
-        
-    }
-    myTool.onMouseDrag = function(event) {
-        //we've just dropped a flower, now to resize it
-        if(droppedFlower){
-            //might need to do this later by seeing which DOM element we're on top of and resizing that, but that has its own problems, so going to do it w/ currentFlower for now
-            //currentFlower.scale(3) -> EXPLODING FLOWERS!
-            currentFlower.scale(FLOWER_RESIZE)
-        }
-        
-       
-    };
+    var allFlowersArray = [pink, orange, blue, purple]
+    var flowers = positionFlowers(allFlowersArray);
+    return([flowers, menu]) //we need access to both for choosing flowers and making sure we can't drop flowers on menu
 }
 
+positionFlowers = function(flowersArray){
+    var xPos = 50
+    var yPos = 50
+    for(var i = 0; i < flowersArray.length; i++){
+        flowersArray[i].position = new Point(xPos, yPos);
+        yPos += 150;
+    }
+    return(flowersArray)  ;
+}
+
+//helper function - used to determine whether to increase or decrease flower size
+pointDistance = function(point1, point2){
+    distance = Math.sqrt(Math.pow((point2.x - point1.x), 2) + Math.pow((point2.y - point2.x), 2));
+    
+    return(distance);
+}
