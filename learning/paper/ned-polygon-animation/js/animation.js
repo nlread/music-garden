@@ -71,9 +71,18 @@ function onFrame(frameEvent) {
         leafVelocities[i].x += leafAccelerations[i].x * dTime;
         leafVelocities[i].y += leafAccelerations[i].y * dTime;
         let base = leafBasePositions[i];
-        leafAccelerations[i].x = (base.x - segment.point.x) * 8;
-        leafAccelerations[i].y = (base.y - segment.point.y) * 8;
-    
+        leafAccelerations[i].x = Math.exp(Math.max(1, .05 *  Math.abs((base.x - segment.point.x)))) * 4;
+        if(base.x - segment.point.x < 0) {
+            leafAccelerations[i].x *= -1;
+        }
+        
+        leafAccelerations[i].y = Math.exp(Math.max(1, .05 * Math.abs((base.y - segment.point.y)))) * 4;
+        if(base.y - segment.point.y < 0) {
+            leafAccelerations[i].y *= -1;
+        }
+          
+        
+        console.log(base.x - segment.point.x);
         for(let forceIndex=0; forceIndex<forces.length; forceIndex++) {
             let force = forces[forceIndex];
             leafAccelerations[i].x += force.x;

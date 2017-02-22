@@ -16,7 +16,7 @@ function setup() {
     polyPath.strokeColor = 'black';
     polyPath.fillColor = 'steelblue';
     polyPath.setPosition(400, 400);
-    movingPlants.push(new PhysicsPlant(polyPath, [2, 3]));
+    movingPlants.push(new PhysicsPlant(polyPath, [2, 4, 3 ]));
         
     project.activeLayer.addChild(leafPath);
     project.activeLayer.addChild(polyPath);
@@ -66,7 +66,7 @@ function onMouseDown(event) {
 }
 
 function onMouseUp(event) {
-    let forceVector = event.point.subtract(downPoint).multiply(5);
+    let forceVector = event.point.subtract(downPoint).multiply(30);
     applyForce(forceVector.x, forceVector.y);
 }
 
@@ -74,6 +74,6 @@ function onMouseUp(event) {
 function applyForce(xForce, yForce) {
     let force = new Point(xForce, yForce);
     force.timeElapsed = 0;
-    force.timeApplyFor = .7;
+    force.timeApplyFor = .1;
     forces.push(force);
 }
