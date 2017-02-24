@@ -17,10 +17,10 @@ var mouseStates = {
 };
 
 var imageSources = {
-        "http://127.0.0.1:63924/img/blueflower.png": "mp3/track1Individuals/Op1.mp3",
-        "http://127.0.0.1:63924/img/orangeflower.png": "mp3/track1Individuals/Op2.mp3",
-        "http://127.0.0.1:63924/img/pinkflower.png": "mp3/track1Individuals/Au1.mp3",
-        "http://127.0.0.1:63924/img/purpleflower.png": "mp3/track1Individuals/Op4.mp3",
+        "img/blueflower.png": "mp3/track1Individuals/Op1.mp3",
+        "img/orangeflower.png": "mp3/track1Individuals/Op2.mp3",
+        "img/pinkflower.png": "mp3/track1Individuals/Au1.mp3",
+        "img/purpleflower.png": "mp3/track1Individuals/Op4.mp3",
 };
 
 //this is the flower that will eventually track with the mouse - not currently in use
@@ -117,8 +117,9 @@ stopResize = function(){
 
 //drop a clone of a menu flower
 dropFlower = function(clickEvent){
-    newFlower =  new Flower(null, new Raster(currentMenuChoice).scale(resize.initFlowerSize), new Music(imageSources[currentMenuChoice])) //null is for the path since Component is path-based, also omitting sound argument for now
-    //Start playing the sound for the flower. Maybe we should have a way to keep track of the flowers that are in the canvas?
+    newFlower =  new Flower(null, new Raster(currentMenuChoice).scale(resize.initFlowerSize), new Music(imageSources[currentMenuChoice.substring(23)])) //null is for the path since Component is path-based, also omitting sound argument for now
+    //Hacky fix of getting substring fo currentMenuChoice, maybe have currentMenuChoice hold multiple parts.
+    //Maybe we should have a way to keep track of the flowers that are in the canvas?
     newFlower.playSound();
     mouseStates.currentFlower = newFlower
     mouseStates.currentFlower.img.scale(0.3) //Note: all code with ".img." is so that we can work with the rasters, if we move to path or vector-based this will change
@@ -139,11 +140,12 @@ scaleFlower = function(clickEvent){
     if(change > 0){
         if(!(mouseStates.currentFlower.img.bounds.width > (project.view.size.width / 2))){
            mouseStates.currentFlower.img.scale(resize.grow)
+           //mouseStates.currentFlower.img.togleVolume(1.5);
         }
     }
     else if(change < 0){
         mouseStates.currentFlower.img.scale(resize.shrink)
-
+        //mouseStates.currentFlower.img.togleVolume(.5);
     }
 }
 
