@@ -34,7 +34,6 @@ var currentMenuChoice = {
     name: "" //flower name - "pink", "blue", etc
 }
 
-
 //ONLOAD
 window.onload = function(){
     //sanity check
@@ -47,28 +46,29 @@ window.onload = function(){
     
     //set current choice to the image of the flower clicked on in the menu
     $('.menuChoice').on('click', function(){
-        currentMenuChoice.src = event.target.src;
-        //NOTE: the below relies on images being named _____flower, which will probably change later
-        currentMenuChoice.name = event.target.src.match(/\/(\w+)flower/)[1]
-        //draggingFlower = new Raster(currentMenuChoice).scale(0.1); - could bring this back later when we want a flower to track with the mouse, but that's going to require more work
-        mouseStates.droppedFlower = false;       
-    });
-    
-    //Menu choice animations
-    $('.menuChoice').on('mousedown', function(){
+        //shrink old menu choice but first make sure it's not null
+        if(currentMenuChoice.src){
+            //relies on current image naming scheme of ___flower.png
+            console.log(document.getElementById(currentMenuChoice.src.match(/\/(\w+)flower/)[1]))
+            $(document.getElementById(currentMenuChoice.src.match(/\/(\w+)flower/)[1])).animate({
+            height: "95%",
+            width: "95%" 
+            }, 100
+            );
+        }
+        
+        //increase size of new menu choice
         $(event.target).animate({
             height: "100%",
             width: "100%" 
             }, 100
         );
-    });
-    
-    $('.menuChoice').on('mouseup', function(){
-        $(event.target).animate({
-            height: "95%",
-            width: "95%" 
-            }, 100
-        );
+        
+        currentMenuChoice.src = event.target.src;
+        //NOTE: the below relies on images being named _____flower, which will probably change later
+        currentMenuChoice.name = event.target.src.match(/\/(\w+)flower/)[1]
+        //draggingFlower = new Raster(currentMenuChoice).scale(0.1); - could bring this back later when we want a flower to track with the mouse, but that's going to require more work
+        mouseStates.droppedFlower = false;       
     });
     
     myTool.onMouseUp = function(event) {
