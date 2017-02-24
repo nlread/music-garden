@@ -140,15 +140,15 @@ animateMenuChoice = function(){
 
 //drop a clone of a menu flower
 dropFlower = function(clickEvent){
-    console.log(currentMenuChoice.name);
-    newFlower =  new Flower(null, new Raster(currentMenuChoice.src).scale(resize.initFlowerSize), new Music(imageSources[currentMenuChoice.name])) //null is for the path since Component is path-based, also omitting sound argument for now
-    //Maybe we should have a way to keep track of the flowers that are in the canvas?
-    newFlower.playSound();
-    mouseStates.currentFlower = newFlower
-    mouseStates.currentFlower.img.scale(0.3) //Note: all code with ".img." is so that we can work with the rasters, if we move to path or vector-based this will change
-    mouseStates.currentFlower.img.position = clickEvent.point
-    mouseStates.droppedFlower = true;
-        
+    if(project.view.bounds.contains(clickEvent)){
+        newFlower =  new Flower(null, new Raster(currentMenuChoice.src).scale(resize.initFlowerSize), new Music(imageSources[currentMenuChoice.name])) //null is for the path since Component is path-based, also omitting sound argument for now
+        //Maybe we should have a way to keep track of the flowers that are in the canvas?
+        newFlower.playSound();
+        mouseStates.currentFlower = newFlower
+        mouseStates.currentFlower.img.scale(0.3) //Note: all code with ".img." is so that we can work with the rasters, if we move to path or vector-based this will change
+        mouseStates.currentFlower.img.position = clickEvent.point
+        mouseStates.droppedFlower = true;      
+    } 
 }
 
 //scale a flower based on whether mouse distance to flower center is increasing or decreasing
