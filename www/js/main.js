@@ -117,6 +117,7 @@ stopResize = function(){
 
 //drop a clone of a menu flower
 dropFlower = function(clickEvent){
+    console.log(currentMenuChoice.substring(23));
     newFlower =  new Flower(null, new Raster(currentMenuChoice).scale(resize.initFlowerSize), new Music(imageSources[currentMenuChoice.substring(23)])) //null is for the path since Component is path-based, also omitting sound argument for now
     //Hacky fix of getting substring fo currentMenuChoice, maybe have currentMenuChoice hold multiple parts.
     //Maybe we should have a way to keep track of the flowers that are in the canvas?
