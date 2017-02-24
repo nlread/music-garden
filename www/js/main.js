@@ -44,44 +44,9 @@ window.onload = function(){
     
     var myTool = new Tool();
     
-    //set current choice to the image of the flower clicked on in the menu
-    $('.menuChoice').on('click', function(){
-        //shrink old menu choice but first make sure it's not null
-        if(currentMenuChoice.src){
-            //regex relies on current image naming scheme of ___flower.png
-            oldMenuChoice = document.getElementById(currentMenuChoice.src.match(/\/(\w+)flower/)[1])
-            $(oldMenuChoice).animate({
-            height: "95%",
-            width: "95%" 
-            }, 100
-            );
-            
-            //unhighlight color
-            $(oldMenuChoice.parentElement).animate({
-            backgroundColor: "#cac9fc"
-            }, 100
-        );
-        }
+    //NTS: why does animateMenuChoice not need ()?
+    $('.menuChoice').on('click', makeMenuChoice);
         
-        //increase size of new menu choice
-        $(event.target).animate({
-            height: "100%",
-            width: "100%"
-            }, 100
-        );
-        
-        //highlight color
-        $(event.target.parentElement).animate({
-            backgroundColor: "#aca4ea"
-            }, 100
-        );
-        currentMenuChoice.src = event.target.src;
-        //NOTE: the below relies on images being named _____flower, which will probably change later
-        currentMenuChoice.name = event.target.src.match(/\/(\w+)flower/)[1]
-        //draggingFlower = new Raster(currentMenuChoice).scale(0.1); - could bring this back later when we want a flower to track with the mouse, but that's going to require more work
-        mouseStates.droppedFlower = false;       
-    });
-    
     myTool.onMouseUp = function(event) {
         stopResize();
     };
@@ -129,12 +94,54 @@ stopResize = function(){
     }
 }
   
+makeMenuChoice = function(){
+    animateMenuChoice();
+    
+    //reassign state variables
+    currentMenuChoice.src = event.target.src;
+    //NOTE: the below relies on images being named _____flower, which will probably change later
+    currentMenuChoice.name = event.target.src.match(/\/(\w+)flower/)[1]
+    //draggingFlower = new Raster(currentMenuChoice).scale(0.1); - could bring this back later when we want a flower to track with the mouse, but that's going to require more work
+    mouseStates.droppedFlower = false;       
+    
+}
+
+animateMenuChoice = function(){
+    //shrink old menu choice but first make sure it's not null
+    if(currentMenuChoice.src){
+        //regex relies on current image naming scheme of ___flower.png
+        oldMenuChoice = document.getElementById(currentMenuChoice.src.match(/\/(\w+)flower/)[1])
+        $(oldMenuChoice).animate({
+        height: "95%",
+        width: "95%" 
+        }, 100
+        );
+
+        //unhighlight color
+        $(oldMenuChoice.parentElement).animate({
+        backgroundColor: "#cac9fc"
+        }, 100
+    );
+    }
+
+    //increase size of new menu choice
+    $(event.target).animate({
+        height: "100%",
+        width: "100%"
+        }, 100
+    );
+
+    //highlight color
+    $(event.target.parentElement).animate({
+        backgroundColor: "#aca4ea"
+        }, 100
+    );  
+}
 
 //drop a clone of a menu flower
 dropFlower = function(clickEvent){
     console.log(currentMenuChoice.name);
     newFlower =  new Flower(null, new Raster(currentMenuChoice.src).scale(resize.initFlowerSize), new Music(imageSources[currentMenuChoice.name])) //null is for the path since Component is path-based, also omitting sound argument for now
-    //Hacky fix of getting substring fo currentMenuChoice, maybe have currentMenuChoice hold multiple parts.
     //Maybe we should have a way to keep track of the flowers that are in the canvas?
     newFlower.playSound();
     mouseStates.currentFlower = newFlower
