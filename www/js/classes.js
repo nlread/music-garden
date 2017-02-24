@@ -89,7 +89,9 @@ class Plant extends Component{
         };
         
         this.togleVolume = function(x){
-            this.music.sound.volume(0.5*x);
+            this.volume = this.music.sound.volume()*x;
+            console.log(this.volume);
+            this.music.sound.volume(this.volume);
         };
     };
 }
@@ -101,6 +103,8 @@ class Flower extends Plant{
         super(paperPath, raster, music);
     };
 }
+
+//I'm not sure if this class is necessary. we could easily make the sound in plant
 
 class Music {
 
