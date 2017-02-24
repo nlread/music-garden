@@ -48,22 +48,33 @@ window.onload = function(){
     $('.menuChoice').on('click', function(){
         //shrink old menu choice but first make sure it's not null
         if(currentMenuChoice.src){
-            //relies on current image naming scheme of ___flower.png
-            console.log(document.getElementById(currentMenuChoice.src.match(/\/(\w+)flower/)[1]))
-            $(document.getElementById(currentMenuChoice.src.match(/\/(\w+)flower/)[1])).animate({
+            //regex relies on current image naming scheme of ___flower.png
+            oldMenuChoice = document.getElementById(currentMenuChoice.src.match(/\/(\w+)flower/)[1])
+            $(oldMenuChoice).animate({
             height: "95%",
             width: "95%" 
             }, 100
             );
+            
+            //unhighlight color
+            $(oldMenuChoice.parentElement).animate({
+            backgroundColor: "#cac9fc"
+            }, 100
+        );
         }
         
         //increase size of new menu choice
         $(event.target).animate({
             height: "100%",
-            width: "100%" 
+            width: "100%"
             }, 100
         );
         
+        //highlight color
+        $(event.target.parentElement).animate({
+            backgroundColor: "#aca4ea"
+            }, 100
+        );
         currentMenuChoice.src = event.target.src;
         //NOTE: the below relies on images being named _____flower, which will probably change later
         currentMenuChoice.name = event.target.src.match(/\/(\w+)flower/)[1]
