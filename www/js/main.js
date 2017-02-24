@@ -29,7 +29,11 @@ var imageSources = {
 //namespace to be filled in onload with menu choice divs - outside of main function so that they're globally accessible
 var menuChoices = {}
 
-var currentMenuChoice;
+var currentMenuChoice = {
+    src: "", //actual image source
+    name: "" //flower name - "pink", "blue", etc
+}
+
 
 //ONLOAD
 window.onload = function(){
@@ -43,10 +47,10 @@ window.onload = function(){
     
     //set current choice to the image of the flower clicked on in the menu
     $('.menuChoice').on('click', function(){
-        currentMenuChoice = event.target.src;
+        currentMenuChoice.src = event.target.src;
+        //NOTE: the below relies on images being named _____flower, which will probably change later
+        currentMenuChoice.name = event.target.src.match(/\/(\w+)flower/)[1]
         //draggingFlower = new Raster(currentMenuChoice).scale(0.1); - could bring this back later when we want a flower to track with the mouse, but that's going to require more work
-        //sweet, putting it at (0, 0) puts it at canvas 0,0 not window 0,0
-        //also, it thinks that events that occur off the canvas (i.e. on the menu) occur at (0,0), so the next line always drops flowers at (0,0) - might make mouse tracking tricky
         mouseStates.droppedFlower = false;       
     });
     
@@ -117,7 +121,7 @@ stopResize = function(){
 
 //drop a clone of a menu flower
 dropFlower = function(clickEvent){
-    newFlower =  new Flower(null, new Raster(currentMenuChoice).scale(resize.initFlowerSize), new Music(imageSources[currentMenuChoice.substring(23)])) //null is for the path since Component is path-based, also omitting sound argument for now
+    newFlower =  new Flower(null, new Raster(currentMenuChoice).scale(resize.initFlowerSize), new Music(imageSources[currentMenuChoice.src.substring(23)])) //null is for the path since Component is path-based, also omitting sound argument for now
     //Hacky fix of getting substring fo currentMenuChoice, maybe have currentMenuChoice hold multiple parts.
     //Maybe we should have a way to keep track of the flowers that are in the canvas?
     newFlower.playSound();
