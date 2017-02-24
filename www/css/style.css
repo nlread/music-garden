@@ -10,7 +10,7 @@ body {
 /* Scale canvas with resize attribute to full size */
 canvas[resize] {
     width: 90%;
-    height: 95%;
+    height: 92%;
     float: right;
 }
 
@@ -18,7 +18,7 @@ canvas[resize] {
     width: 10%;
     height: 100%;
     float: left;
-    background-color: #cac9fc 
+    background-color: #bdfffd 
 }
 
 /*make menu images centered and the width of their parent div */
@@ -29,8 +29,8 @@ canvas[resize] {
 }
 
 #toolbar{
-    height: 5%;
+    height: 8%;
     width: 90%;
-    float: right; /*i don't really understand css positioning but this seems to work */
-    background-color: red;
+    float: right; /*i don't really understand css positioning but this seems to work - it's a little weird on resize though (so are the canvas and menu), that's something to work on */
+    background-color: #07beb8;
 }

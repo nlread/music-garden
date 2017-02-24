@@ -119,7 +119,7 @@ animateMenuChoice = function(){
 
         //unhighlight color
         $(oldMenuChoice.parentElement).animate({
-        backgroundColor: "#cac9fc"
+        backgroundColor: "#bdfffd"
         }, 100
     );
     }
@@ -133,7 +133,7 @@ animateMenuChoice = function(){
 
     //highlight color
     $(event.target.parentElement).animate({
-        backgroundColor: "#aca4ea"
+        backgroundColor: "#73efeb"
         }, 100
     );  
 }
