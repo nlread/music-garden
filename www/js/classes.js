@@ -74,15 +74,22 @@ class Component {
 class Plant extends Component{
     
     //takes both a path and a raster for now so it can extend component, but should amend that to just one or the other later
-    constructor(paperPath, raster, sound){
+    constructor(paperPath, raster, music){
         super(paperPath);
         //so it has access to oaper's Raster properties
         this.img = raster;
         //in the future this could be set automatically depending on plant type - can you have default parameters like you can in Python?
-        this.sound = sound
+        this.music = music;
         
+        //plays the music of the plant, setting it to loop and the volume at 0.5
         this.playSound = function(){
-            //loop sound - default
+            this.music.sound.play();
+            this.music.sound.loop(true);
+            this.music.sound.volume(0.5);
+        };
+        
+        this.togleVolume = function(x){
+            this.music.sound.volume(0.5*x);
         };
     };
 }
@@ -90,16 +97,18 @@ class Plant extends Component{
 class Flower extends Plant{
     //later, this will have more specific animation/sound characteristics, placeholder for now
     
-    constructor(paperPath, raster, sound){
-        super(paperPath, raster, sound);
+    constructor(paperPath, raster, music){
+        super(paperPath, raster, music);
     };
 }
 
 class Music {
-    
-    constructor(sounds){
-        //list of sounds that we want to use
-        this.sounds = sounds;
-    }
+
+    constructor(source){
+        this.source = source;
+        this.sound = new Howl({
+            src: [source]
+        });
+    };
     
 }
