@@ -65,7 +65,6 @@ window.onload = function(){
     };
 
     myTool.onMouseDown = function(event){
-        //clicked on something -> see if we need to resize an old flower
         if(project.hitTest(event.point)){
             pointClicked = event.point;
             mouseStates.currentFlower = new Flower(null,event.item); 
@@ -141,6 +140,5 @@ scaleFlower = function(clickEvent){
 //helper function - used to determine whether to increase or decrease flower size
 pointDistance = function(point1, point2){
     distance = Math.sqrt(Math.pow((point2.x - point1.x), 2) + Math.pow((point2.y - point2.x), 2));
-    
     return(distance);
 }
