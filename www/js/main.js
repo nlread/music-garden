@@ -23,6 +23,12 @@ var imageSources = {
         "purple": "mp3/track1Individuals/Op4.mp3",
 };
 
+var colors = {
+    menuColor: "#bdfffd",
+    menuSelectColor: "#73efeb",
+    toolbarColor: "#07beb8"
+}
+
 //this is the flower that will eventually track with the mouse - not currently in use
 //var draggingFlower;
 
@@ -119,7 +125,7 @@ animateMenuChoice = function(){
 
         //unhighlight color
         $(oldMenuChoice.parentElement).animate({
-        backgroundColor: "#bdfffd"
+        backgroundColor: colors.MenuColor
         }, 100
     );
     }
@@ -133,7 +139,7 @@ animateMenuChoice = function(){
 
     //highlight color
     $(event.target.parentElement).animate({
-        backgroundColor: "#73efeb"
+        backgroundColor: colors.menuSelectColor
         }, 100
     );  
 }

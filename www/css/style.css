@@ -34,3 +34,25 @@ canvas[resize] {
     float: right; /*i don't really understand css positioning but this seems to work - it's a little weird on resize though (so are the canvas and menu), that's something to work on */
     background-color: #07beb8;
 }
+
+#toolbar #removeButton{
+    /*really I want the button to be a square no matter the screen size, but I'm not sure how to do that right now */
+    height: 100%;
+    width: 8%;
+    text-align: center;
+}
+
+/*alignment helper to get images to center vertically - from here http://jsfiddle.net/kizu/4RPFa/4570/ */
+.align-helper{
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+#toolbar #removeButton img{
+    height: 80%;
+    width: 80%;
+    vertical-align: middle;
+    margin: auto;  
+}
+
