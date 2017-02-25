@@ -52,6 +52,10 @@ window.onload = function(){
     
     //NTS: why does animateMenuChoice not need ()?
     $('.menuChoice').on('click', makeMenuChoice);
+    
+    $('#removeButton').on('click', function(){
+        console.log("clicked remove button");
+    })
         
     myTool.onMouseUp = function(event) {
         stopResize();
@@ -125,7 +129,7 @@ animateMenuChoice = function(){
 
         //unhighlight color
         $(oldMenuChoice.parentElement).animate({
-        backgroundColor: colors.MenuColor
+        backgroundColor: colors.menuColor
         }, 100
     );
     }
