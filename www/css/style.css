@@ -10,7 +10,7 @@ body {
 /* Scale canvas with resize attribute to full size */
 canvas[resize] {
     width: 90%;
-    height: 100%;
+    height: 92%;
     float: right;
 }
 
@@ -18,7 +18,7 @@ canvas[resize] {
     width: 10%;
     height: 100%;
     float: left;
-    background-color: #cac9fc 
+    background-color: #bdfffd 
 }
 
 /*make menu images centered and the width of their parent div */
@@ -27,3 +27,32 @@ canvas[resize] {
     width: 95%;
     margin: auto;
 }
+
+#toolbar{
+    height: 8%;
+    width: 90%;
+    float: right; /*i don't really understand css positioning but this seems to work - it's a little weird on resize though (so are the canvas and menu), that's something to work on */
+    background-color: #07beb8;
+}
+
+#toolbar #removeButton{
+    /*really I want the button to be a square no matter the screen size, but I'm not sure how to do that right now */
+    height: 100%;
+    width: 8%;
+    text-align: center;
+}
+
+/*alignment helper to get images to center vertically - from here http://jsfiddle.net/kizu/4RPFa/4570/ */
+.align-helper{
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+#toolbar #removeButton img{
+    height: 80%;
+    width: 80%;
+    vertical-align: middle;
+    margin: auto;  
+}
+

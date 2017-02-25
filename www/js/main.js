@@ -23,6 +23,12 @@ var imageSources = {
         "purple": "mp3/track1Individuals/Op4.mp3",
 };
 
+var colors = {
+    menuColor: "#bdfffd",
+    menuSelectColor: "#73efeb",
+    toolbarColor: "#07beb8"
+}
+
 //this is the flower that will eventually track with the mouse - not currently in use
 //var draggingFlower;
 
@@ -34,7 +40,6 @@ var currentMenuChoice = {
     name: "" //flower name - "pink", "blue", etc
 }
 
-
 //ONLOAD
 window.onload = function(){
     //sanity check
@@ -45,32 +50,9 @@ window.onload = function(){
     
     var myTool = new Tool();
     
-    //set current choice to the image of the flower clicked on in the menu
-    $('.menuChoice').on('click', function(){
-        currentMenuChoice.src = event.target.src;
-        //NOTE: the below relies on images being named _____flower, which will probably change later
-        currentMenuChoice.name = event.target.src.match(/\/(\w+)flower/)[1]
-        //draggingFlower = new Raster(currentMenuChoice).scale(0.1); - could bring this back later when we want a flower to track with the mouse, but that's going to require more work
-        mouseStates.droppedFlower = false;       
-    });
-    
-    //Menu choice animations
-    $('.menuChoice').on('mousedown', function(){
-        $(event.target).animate({
-            height: "100%",
-            width: "100%" 
-            }, 100
-        );
-    });
-    
-    $('.menuChoice').on('mouseup', function(){
-        $(event.target).animate({
-            height: "95%",
-            width: "95%" 
-            }, 100
-        );
-    });
-    
+    //NTS: why does animateMenuChoice not need ()?
+    $('.menuChoice').on('click', makeMenuChoice);
+        
     myTool.onMouseUp = function(event) {
         stopResize();
     };
@@ -118,19 +100,61 @@ stopResize = function(){
     }
 }
   
+makeMenuChoice = function(){
+    animateMenuChoice();
+    
+    //reassign state variables
+    currentMenuChoice.src = event.target.src;
+    //NOTE: the below relies on images being named _____flower, which will probably change later
+    currentMenuChoice.name = event.target.src.match(/\/(\w+)flower/)[1]
+    //draggingFlower = new Raster(currentMenuChoice).scale(0.1); - could bring this back later when we want a flower to track with the mouse, but that's going to require more work
+    mouseStates.droppedFlower = false;       
+    
+}
+
+animateMenuChoice = function(){
+    //shrink old menu choice but first make sure it's not null
+    if(currentMenuChoice.src){
+        //regex relies on current image naming scheme of ___flower.png
+        oldMenuChoice = document.getElementById(currentMenuChoice.src.match(/\/(\w+)flower/)[1])
+        $(oldMenuChoice).animate({
+        height: "95%",
+        width: "95%" 
+        }, 100
+        );
+
+        //unhighlight color
+        $(oldMenuChoice.parentElement).animate({
+        backgroundColor: colors.MenuColor
+        }, 100
+    );
+    }
+
+    //increase size of new menu choice
+    $(event.target).animate({
+        height: "100%",
+        width: "100%"
+        }, 100
+    );
+
+    //highlight color
+    $(event.target.parentElement).animate({
+        backgroundColor: colors.menuSelectColor
+        }, 100
+    );  
+}
 
 //drop a clone of a menu flower
 dropFlower = function(clickEvent){
-    console.log(currentMenuChoice.name);
-    newFlower =  new Flower(null, new Raster(currentMenuChoice.src).scale(resize.initFlowerSize), new Music(imageSources[currentMenuChoice.name])) //null is for the path since Component is path-based, also omitting sound argument for now
-    //Hacky fix of getting substring fo currentMenuChoice, maybe have currentMenuChoice hold multiple parts.
-    //Maybe we should have a way to keep track of the flowers that are in the canvas?
-    newFlower.playSound();
-    mouseStates.currentFlower = newFlower
-    mouseStates.currentFlower.img.scale(0.3) //Note: all code with ".img." is so that we can work with the rasters, if we move to path or vector-based this will change
-    mouseStates.currentFlower.img.position = clickEvent.point
-    mouseStates.droppedFlower = true;
-        
+    if(project.view.bounds.contains(clickEvent)){
+        newFlower =  new Flower(null, new Raster(currentMenuChoice.src).scale(resize.initFlowerSize), new Music(imageSources[currentMenuChoice.name])) //null is for the path since Component is path-based, also omitting sound argument for now
+        //Maybe we should have a way to keep track of the flowers that are in the canvas?
+        newFlower.playSound();
+        mouseStates.currentFlower = newFlower
+        mouseStates.currentFlower.img.scale(0.3) //Note: all code with ".img." is so that we can work with the rasters, if we move to path or vector-based this will change
+        mouseStates.currentFlower.img.position = clickEvent.point
+        mouseStates.droppedFlower = true;      
+    } 
 }
 
 //scale a flower based on whether mouse distance to flower center is increasing or decreasing
