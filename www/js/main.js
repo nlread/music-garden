@@ -55,11 +55,13 @@ window.onload = function(){
     $('.menuChoice').on('click', makeMenuChoice);
     
     $('#removeButton').on('click', function(){
+        console.log(event.target)
         highlightToolbarButton(event.target);
         mouseStates.removeFlower = true;
     })
     
     $('#sendToBackButton').on('click', function(){
+        console.log(event.target)
         highlightToolbarButton(event.target);
         mouseStates.sendToBack = true; 
     })
@@ -178,6 +180,7 @@ highlightToolbarButton = function(buttonClicked){
 
 unHighlightToolbarButton = function(button){
     //doesn't use the parent element because button unhighlights aren't triggered by actually clicking on the button - so the button gets passed in directly by id
+    console.log(button)
      $(button).animate({
         backgroundColor: colors.toolbarColor
         }, 100
