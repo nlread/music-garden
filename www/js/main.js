@@ -205,8 +205,11 @@ scaleFlower = function(clickEvent){
         }
     }
     else if(change < 0){
-        mouseStates.currentFlower.img.scale(resize.shrink)
-        //mouseStates.currentFlower.img.togleVolume(.5);
+        //current fix for teeny flowers - should be solved if/when we move to distance-based sizing, but fixing for now
+        if(!(mouseStates.currentFlower.img.bounds.width < (project.view.size.width / 20))){
+            mouseStates.currentFlower.img.scale(resize.shrink)
+            //mouseStates.currentFlower.img.togleVolume(.5);
+        }
     }
 }
 
