@@ -27,7 +27,8 @@ var imageSources = {
 var colors = {
     menuColor: "#bdfffd",
     menuSelectColor: "#73efeb",
-    toolbarColor: "#07beb8"
+    toolbarColor: "#07beb8",
+    toolbarSelectColor: "#8be0dd"
 }
 
 //this is the flower that will eventually track with the mouse - not currently in use
@@ -55,6 +56,7 @@ window.onload = function(){
     $('.menuChoice').on('click', makeMenuChoice);
     
     $('#removeButton').on('click', function(){
+        highlightToolbarButton(event.target);
         removeFlower = true;
     })
         
@@ -70,6 +72,7 @@ window.onload = function(){
             if(removeFlower){
                 mouseStates.currentFlower.img.remove();
                 removeFlower = false; //you have to click the button every time you want to remove a flower - we could change this
+                unHighlightToolbarButton(document.getElementById('removeButton'));
             }
             else{
                  mouseStates.resizeOldFlower = true;
@@ -155,6 +158,22 @@ animateMenuChoice = function(){
         backgroundColor: colors.menuSelectColor
         }, 100
     );  
+}
+
+highlightToolbarButton = function(buttonClicked){
+    $(buttonClicked.parentElement).animate({
+        backgroundColor: colors.toolbarSelectColor
+        }, 100
+    ); 
+}
+
+unHighlightToolbarButton = function(buttonClicked){
+    //doesn't use the parent element because button unhighlights aren't triggered by actually clicking on the button - so the button gets passed in directly by id
+     $(buttonClicked).animate({
+        backgroundColor: colors.toolbarColor
+        }, 100
+    ); 
+    
 }
 
 //drop a clone of a menu flower
