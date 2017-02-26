@@ -1,5 +1,3 @@
-
-
 paper.install(window); //make paper scope global by injecting it into window - from here http://blog.lindsayelia.com/post/128346565323/making-paperjs-work-in-an-external-file
 
 //DECLARE GLOBAL CONSTANTS AND VARIABLES
@@ -34,7 +32,7 @@ var colors = {
 //this is the flower that will eventually track with the mouse - not currently in use
 //var draggingFlower;
 
-//namespace to be filled in onload with menu choice divs - outside of main function so that they're globally accessible
+//namespace to be filled in onload with menu choice divs
 var menuChoices = {}
 
 var currentMenuChoice = {
@@ -97,8 +95,8 @@ window.onload = function(){
 
 //HELPER FUNCTIONS
 setUpScreen = function(){
-    paper.setup('canvas') //create canvas using id
-    view.draw(); //helps speed up drawing
+    paper.setup('canvas')
+    view.draw(); 
     
 }
 
