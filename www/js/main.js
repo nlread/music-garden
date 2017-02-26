@@ -13,7 +13,8 @@ var mouseStates = {
     menuChoice: -1,
     droppedFlower: false,
     currentFlower: null,
-    resizeOldFlower: false
+    resizeOldFlower: false,
+    removeFlower: false
 };
 
 var imageSources = {
@@ -54,7 +55,7 @@ window.onload = function(){
     $('.menuChoice').on('click', makeMenuChoice);
     
     $('#removeButton').on('click', function(){
-        console.log("clicked remove button");
+        removeFlower = true;
     })
         
     myTool.onMouseUp = function(event) {
@@ -62,10 +63,18 @@ window.onload = function(){
     };
 
     myTool.onMouseDown = function(event){
+        
         if(project.hitTest(event.point)){
             pointClicked = event.point;
-            mouseStates.currentFlower = new Flower(null,event.item); 
-            mouseStates.resizeOldFlower = true;
+            mouseStates.currentFlower = new Flower(null,event.item);
+            if(removeFlower){
+                mouseStates.currentFlower.img.remove();
+                removeFlower = false; //you have to click the button every time you want to remove a flower - we could change this
+            }
+            else{
+                 mouseStates.resizeOldFlower = true;
+            }
+        
             //return so that you don't drop a new flower on top of one to resize
             //NOTE: this does prevent dropping flowers on top of each other, so if that's a feature we want we'll have to work around it somehow
             return;
