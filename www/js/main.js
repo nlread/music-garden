@@ -12,7 +12,8 @@ var mouseStates = {
     droppedFlower: false,
     currentFlower: null,
     resizeOldFlower: false,
-    removeFlower: false
+    removeFlower: false,
+    sendToBack: false
 };
 
 var imageSources = {
@@ -55,7 +56,12 @@ window.onload = function(){
     
     $('#removeButton').on('click', function(){
         highlightToolbarButton(event.target);
-        removeFlower = true;
+        mouseStates.removeFlower = true;
+    })
+    
+    $('#sendToBackButton').on('click', function(){
+        highlightToolbarButton(event.target);
+        mouseStates.sendToBack = true; 
     })
         
     myTool.onMouseUp = function(event) {
@@ -67,10 +73,15 @@ window.onload = function(){
         if(project.hitTest(event.point)){
             pointClicked = event.point;
             mouseStates.currentFlower = new Flower(null,event.item);
-            if(removeFlower){
+            if(mouseStates.removeFlower){
                 mouseStates.currentFlower.img.remove();
-                removeFlower = false; //you have to click the button every time you want to remove a flower - we could change this
+                mouseStates.removeFlower = false; //you have to click the button every time you want to remove a flower - we could change this
                 unHighlightToolbarButton(document.getElementById('removeButton'));
+            }
+            else if(mouseStates.sendToBack){
+                mouseStates.currentFlower.img.sendToBack();
+                mouseStates.sendToBack = false;
+                unHighlightToolbarButton(document.getElementById('sendToBackButton'))
             }
             else{
                  mouseStates.resizeOldFlower = true;
@@ -165,9 +176,9 @@ highlightToolbarButton = function(buttonClicked){
     ); 
 }
 
-unHighlightToolbarButton = function(buttonClicked){
+unHighlightToolbarButton = function(button){
     //doesn't use the parent element because button unhighlights aren't triggered by actually clicking on the button - so the button gets passed in directly by id
-     $(buttonClicked).animate({
+     $(button).animate({
         backgroundColor: colors.toolbarColor
         }, 100
     ); 
