@@ -2,7 +2,7 @@ paper.install(window); //make paper scope global by injecting it into window - f
 
 //DECLARE GLOBAL CONSTANTS AND VARIABLES
 var resize = {
-    initFlowerSize: 0.1,
+    initFlowerSize: 0.2,
     shrink: 0.95,
     grow: 1.05
 }
