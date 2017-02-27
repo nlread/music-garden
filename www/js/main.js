@@ -16,7 +16,7 @@ var mouseStates = {
     sendToBack: false
 };
 
-var imageSources = {
+var soundSources = {
         "green": "mp3/track1Individuals/Op1.mp3",
         "red": "mp3/track1Individuals/Op2.mp3",
         "jade": "mp3/track1Individuals/Au1.mp3",
@@ -191,8 +191,7 @@ unHighlightToolbarButton = function(button){
 //drop a clone of a menu flower
 dropFlower = function(clickEvent){
     if(project.view.bounds.contains(clickEvent)){
-        console.log(imageSources[currentMenuChoice.name])
-        newFlower =  new Flower(null, new Raster(currentMenuChoice.src).scale(resize.initFlowerSize), new Music(imageSources[currentMenuChoice.name])) //null is for the path since Component is path-based, also omitting sound argument for now
+        newFlower =  new Flower(null, new Raster(currentMenuChoice.src).scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name])) //null is for the path since Component is path-based, also omitting sound argument for now
         //Maybe we should have a way to keep track of the flowers that are in the canvas?
         newFlower.playSound();
         mouseStates.currentFlower = newFlower
