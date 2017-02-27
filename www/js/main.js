@@ -70,7 +70,6 @@ window.onload = function(){
     myTool.onMouseDown = function(event){
         
         if(project.hitTest(event.point)){
-            console.log("clicked on something");
             pointClicked = event.point;
             mouseStates.currentFlower = new Flower(null,event.item);
             if(mouseStates.removeFlower){
@@ -79,7 +78,6 @@ window.onload = function(){
                 unHighlightToolbarButton(document.getElementById('removeButton'));
             }
             else if(mouseStates.sendToBack){
-                console.log("sending back");
                 mouseStates.currentFlower.img.sendToBack();
                 mouseStates.sendToBack = false;
                 unHighlightToolbarButton(document.getElementById('sendToBackButton'))
@@ -171,19 +169,24 @@ animateMenuChoice = function(){
 }
 
 highlightToolbarButton = function(buttonClicked){
-    $(buttonClicked.parentElement).animate({
+    $(buttonClicked).animate({
         backgroundColor: colors.toolbarSelectColor
         }, 100
     ); 
 }
 
 unHighlightToolbarButton = function(button){
-    //doesn't use the parent element because button unhighlights aren't triggered by actually clicking on the button - so the button gets passed in directly by id
      $(button).animate({
         backgroundColor: colors.toolbarColor
         }, 100
     ); 
     
+    //also change the background of the image
+    $(button.children[1]).animate(
+    {
+        backgroundColor: colors.toolbarColor
+        }, 100
+    );
 }
 
 //drop a clone of a menu flower
@@ -201,7 +204,6 @@ dropFlower = function(clickEvent){
             mouseStates.currentFlower.img.scale(0.3)
             mouseStates.currentFlower.img.position = clickEvent.point
             mouseStates.droppedFlower = true;
-            console.log(newFlower);
         });        
     } 
 }
