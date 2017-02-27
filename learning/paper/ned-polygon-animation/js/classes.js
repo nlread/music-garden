@@ -119,7 +119,6 @@ class PhysicsPlant extends Component {
                 forceTotalAtPoint = forceTotalAtPoint.add(forceGenerators[f].getForce(seg.point));
             }
             
-//            console.log(forceTotalAtPoint);
             // Handle Velocity
             let dPosV = props.velocity.multiply(dTime);
             
@@ -168,6 +167,10 @@ class ForceGenerator {
     getForce(point) {
         return this.forceVector;
     }
+
+    doesEffect(point) {
+        return true;
+    }
     
     update(dTime) {
         this.timeElapsed += dTime;
@@ -187,6 +190,35 @@ class UniformCircularForce extends ForceGenerator {
     }
     
     getForce(point) {
-        return point.subtract(this.forceOrigin).multiply(this.forceMagnitude);
+        if (this.doesEffect(point)) {
+            return point.subtract(this.forceOrigin).multiply(this.forceMagnitude);
+        } else { 
+            return new Point(0, 0);
+        }
     }
+}
+
+class MovingCircularForce extends UniformCircularForce {
+
+    constructor(forceOrigin, forceMagnitude, speed, gap, timeValidFor) {
+        super(forceOrigin, forceMagnitude, timeValidFor);
+        this.speed = speed;
+        this.gap = gap;
+        this.leadingDist = 0;
+    }
+
+    update(dTime) {
+        super.update(dTime);
+        this.leadingDist += dTime * this.speed;
+        
+    }
+
+    doesEffect(point) {
+        point = point.subtract(this.forceOrigin);
+        let dist =  point.x * point.x + point.y * point.y
+        let leadingContains = dist < Math.pow(this.leadingDist, 2);
+        let trailingContains = dist < Math.pow(this.leadingDist - this.gap, 2);
+        return leadingContains && !trailingContains;
+    }
+
 }

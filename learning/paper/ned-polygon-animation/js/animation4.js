@@ -7,21 +7,23 @@ function setup() {
     console.log('setting up');
     paper.setup('paperCanvas');
     
-    leafGroup = project.importSVG(document.getElementById('leafModel'), {'insert': false});
-    leafPath = leafGroup.children[1]; 
-    leafPath.setPosition(100, 100);
-    leafPath.strokeColor = 'green';
-    movingPlants.push(new PhysicsPlant(leafPath, [0]));
+        leafGroup = project.importSVG(document.getElementById('leafModel'), {'insert': false});
+        leafPath = leafGroup.children[1]; 
+    for(let i=0; i<6; i++) {
+        let oneLeaf = leafPath.clone();
+        oneLeaf.setPosition(100 + 120 * i, 150);
+        oneLeaf.strokeColor = 'green';
+        movingPlants.push(new PhysicsPlant(oneLeaf, [0]));
+        project.activeLayer.addChild(oneLeaf);
+    }
     
     polyPath = Path.RegularPolygon(new Point(0, 0), 7, 100);
     polyPath.strokeColor = 'black';
     polyPath.fillColor = 'steelblue';
     polyPath.setPosition(400, 400);
     movingPlants.push(new PhysicsPlant(polyPath, [2, 3]));
-        
-    project.activeLayer.addChild(leafPath);
     project.activeLayer.addChild(polyPath);
-    
+            
     tool = new Tool();
     tool.onMouseDown = onMouseDown;
     tool.onMouseUp = onMouseUp;
@@ -76,7 +78,6 @@ function onMouseUp(event) {
 
 
 function applyForce(startPoint, magnitude) {
-    let forceGen = new UniformCircularForce(startPoint, magnitude, .7);
+    let forceGen = new MovingCircularForce(startPoint, magnitude, 500, 100, 6);
     forceGenerators.push(forceGen);
-    console.log('creating force');
 }
