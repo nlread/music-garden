@@ -83,6 +83,7 @@ class Plant extends Component{
         
         //plays the music of the plant, setting it to loop and the volume at 0.5
         this.playSound = function(){
+            console.log(this.music.sound)
             this.music.sound.play();
             this.music.sound.loop(true);
             this.music.sound.volume(0.5);

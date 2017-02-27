@@ -17,10 +17,10 @@ var mouseStates = {
 };
 
 var imageSources = {
-        "blue": "mp3/track1Individuals/Op1.mp3",
-        "orange": "mp3/track1Individuals/Op2.mp3",
-        "pink": "mp3/track1Individuals/Au1.mp3",
-        "purple": "mp3/track1Individuals/Op4.mp3",
+        "green": "mp3/track1Individuals/Op1.mp3",
+        "red": "mp3/track1Individuals/Op2.mp3",
+        "jade": "mp3/track1Individuals/Au1.mp3",
+        "succulent": "mp3/track1Individuals/Op4.mp3",
 };
 
 var colors = {
@@ -191,6 +191,7 @@ unHighlightToolbarButton = function(button){
 //drop a clone of a menu flower
 dropFlower = function(clickEvent){
     if(project.view.bounds.contains(clickEvent)){
+        console.log(imageSources[currentMenuChoice.name])
         newFlower =  new Flower(null, new Raster(currentMenuChoice.src).scale(resize.initFlowerSize), new Music(imageSources[currentMenuChoice.name])) //null is for the path since Component is path-based, also omitting sound argument for now
         //Maybe we should have a way to keep track of the flowers that are in the canvas?
         newFlower.playSound();
