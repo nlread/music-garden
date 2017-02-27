@@ -1,5 +1,3 @@
-
-
 paper.install(window); //make paper scope global by injecting it into window - from here http://blog.lindsayelia.com/post/128346565323/making-paperjs-work-in-an-external-file
 
 //DECLARE GLOBAL CONSTANTS AND VARIABLES
@@ -13,7 +11,9 @@ var mouseStates = {
     menuChoice: -1,
     droppedFlower: false,
     currentFlower: null,
-    resizeOldFlower: false
+    resizeOldFlower: false,
+    removeFlower: false,
+    sendToBack: false
 };
 
 var imageSources = {
@@ -26,13 +26,14 @@ var imageSources = {
 var colors = {
     menuColor: "#bdfffd",
     menuSelectColor: "#73efeb",
-    toolbarColor: "#07beb8"
+    toolbarColor: "#07beb8",
+    toolbarSelectColor: "#8be0dd"
 }
 
 //this is the flower that will eventually track with the mouse - not currently in use
 //var draggingFlower;
 
-//namespace to be filled in onload with menu choice divs - outside of main function so that they're globally accessible
+//namespace to be filled in onload with menu choice divs
 var menuChoices = {}
 
 var currentMenuChoice = {
@@ -52,16 +53,42 @@ window.onload = function(){
     
     //NTS: why does animateMenuChoice not need ()?
     $('.menuChoice').on('click', makeMenuChoice);
+    
+    $('#removeButton').on('click', function(){
+        console.log(event.target)
+        highlightToolbarButton(event.target);
+        mouseStates.removeFlower = true;
+    })
+    
+    $('#sendToBackButton').on('click', function(){
+        console.log(event.target)
+        highlightToolbarButton(event.target);
+        mouseStates.sendToBack = true; 
+    })
         
     myTool.onMouseUp = function(event) {
         stopResize();
     };
 
     myTool.onMouseDown = function(event){
+        
         if(project.hitTest(event.point)){
             pointClicked = event.point;
-            mouseStates.currentFlower = new Flower(null,event.item); 
-            mouseStates.resizeOldFlower = true;
+            mouseStates.currentFlower = new Flower(null,event.item);
+            if(mouseStates.removeFlower){
+                mouseStates.currentFlower.img.remove();
+                mouseStates.removeFlower = false; //you have to click the button every time you want to remove a flower - we could change this
+                unHighlightToolbarButton(document.getElementById('removeButton'));
+            }
+            else if(mouseStates.sendToBack){
+                mouseStates.currentFlower.img.sendToBack();
+                mouseStates.sendToBack = false;
+                unHighlightToolbarButton(document.getElementById('sendToBackButton'))
+            }
+            else{
+                 mouseStates.resizeOldFlower = true;
+            }
+        
             //return so that you don't drop a new flower on top of one to resize
             //NOTE: this does prevent dropping flowers on top of each other, so if that's a feature we want we'll have to work around it somehow
             return;
@@ -81,8 +108,8 @@ window.onload = function(){
 
 //HELPER FUNCTIONS
 setUpScreen = function(){
-    paper.setup('canvas') //create canvas using id
-    view.draw(); //helps speed up drawing
+    paper.setup('canvas')
+    view.draw(); 
     
 }
 
@@ -125,7 +152,7 @@ animateMenuChoice = function(){
 
         //unhighlight color
         $(oldMenuChoice.parentElement).animate({
-        backgroundColor: colors.MenuColor
+        backgroundColor: colors.menuColor
         }, 100
     );
     }
@@ -142,6 +169,23 @@ animateMenuChoice = function(){
         backgroundColor: colors.menuSelectColor
         }, 100
     );  
+}
+
+highlightToolbarButton = function(buttonClicked){
+    $(buttonClicked.parentElement).animate({
+        backgroundColor: colors.toolbarSelectColor
+        }, 100
+    ); 
+}
+
+unHighlightToolbarButton = function(button){
+    //doesn't use the parent element because button unhighlights aren't triggered by actually clicking on the button - so the button gets passed in directly by id
+    console.log(button)
+     $(button).animate({
+        backgroundColor: colors.toolbarColor
+        }, 100
+    ); 
+    
 }
 
 //drop a clone of a menu flower
@@ -173,8 +217,11 @@ scaleFlower = function(clickEvent){
         }
     }
     else if(change < 0){
-        mouseStates.currentFlower.img.scale(resize.shrink)
-        //mouseStates.currentFlower.img.togleVolume(.5);
+        //current fix for teeny flowers - should be solved if/when we move to distance-based sizing, but fixing for now
+        if(!(mouseStates.currentFlower.img.bounds.width < (project.view.size.width / 20))){
+            mouseStates.currentFlower.img.scale(resize.shrink)
+            //mouseStates.currentFlower.img.togleVolume(.5);
+        }
     }
 }
 

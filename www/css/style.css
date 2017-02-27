@@ -35,11 +35,12 @@ canvas[resize] {
     background-color: #07beb8;
 }
 
-#toolbar #removeButton{
+#toolbar #removeButton, #sendToBackButton{
     /*really I want the button to be a square no matter the screen size, but I'm not sure how to do that right now */
     height: 100%;
     width: 8%;
     text-align: center;
+    float: left;
 }
 
 /*alignment helper to get images to center vertically - from here http://jsfiddle.net/kizu/4RPFa/4570/ */
@@ -49,7 +50,7 @@ canvas[resize] {
     vertical-align: middle;
 }
 
-#toolbar #removeButton img{
+#toolbar .toolbarButton img{
     height: 80%;
     width: 80%;
     vertical-align: middle;
