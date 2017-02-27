@@ -67,8 +67,7 @@ class Component {
 }
 
 class PhysicsPlant extends Component {
-    
-    
+     
     constructor(paperPath, staticSegments) {
         super(paperPath);
         this.staticSegments = staticSegments;
@@ -80,13 +79,15 @@ class PhysicsPlant extends Component {
         }
     }
     
-    applyForce(dTime, force) {
+    applyForce(dTime, forceGenerator) {
         for(let i=0; i<this.propsSet.length; i++) {
             if (this.staticSegments.includes(i)) {
                 continue;
             }
+            
             let props = this.propsSet[i];
             let seg = this.paperPath.segments[i];
+            let force = forceGenerator.getForce(seg.point);
             
             // Handle Velocity
             let dPosV = props.velocity.multiply(dTime);
@@ -96,11 +97,39 @@ class PhysicsPlant extends Component {
 
             seg.point = seg.point.add(dPosV).add(dPosA);
             
-            if(i==4)
-                console.log(props.acceleration);
-            
             props.velocity = props.velocity.add(props.acceleration.multiply(dTime)).multiply(.97);
             props.acceleration = force.add(props.base.subtract(seg.point).multiply(9));
+        }
+    }
+    
+    applyForces(dTime, forceGenerators) {
+        for(let i=0; i<this.propsSet.length; i++) {
+            
+            if (this.staticSegments.includes(i)) {
+                continue;
+            }
+            
+            
+            let forceTotalAtPoint = new Point(0, 0);
+            
+            let props = this.propsSet[i];
+            let seg = this.paperPath.segments[i];
+            
+            for(let f=0; f<forceGenerators.length; f++) {
+                forceTotalAtPoint = forceTotalAtPoint.add(forceGenerators[f].getForce(seg.point));
+            }
+            
+//            console.log(forceTotalAtPoint);
+            // Handle Velocity
+            let dPosV = props.velocity.multiply(dTime);
+            
+            // Handle Acceleration
+            let dPosA = props.acceleration.multiply(dTime * dTime);
+
+            seg.point = seg.point.add(dPosV).add(dPosA);
+            
+            props.velocity = props.velocity.add(props.acceleration.multiply(dTime)).multiply(.97);
+            props.acceleration = forceTotalAtPoint.add(props.base.subtract(seg.point).multiply(9));
         }
     }
     
@@ -126,5 +155,38 @@ class SegmentProperties {
             this.acceleration = new Point(0, 0);
         }
         
+    }
+}
+
+class ForceGenerator {
+    constructor(forceVector, timeApplyFor) {
+        this.forceVector = forceVector;
+        this.timeApplyFor = timeApplyFor;
+        this.timeElapsed = 0;
+    }
+    
+    getForce(point) {
+        return this.forceVector;
+    }
+    
+    update(dTime) {
+        this.timeElapsed += dTime;
+    }
+    
+    isValid() {
+        return this.timeApplyFor > this.timeElapsed;
+    }
+}
+
+class UniformCircularForce extends ForceGenerator {
+    
+    constructor(forceOrigin, forceMagnitude, timeApplyFor) {
+        super(new Point(0, 0), timeApplyFor);
+        this.forceMagnitude = forceMagnitude;
+        this.forceOrigin = forceOrigin;
+    }
+    
+    getForce(point) {
+        return point.subtract(this.forceOrigin).multiply(this.forceMagnitude);
     }
 }

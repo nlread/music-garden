@@ -1,9 +1,10 @@
 paper.install(window);
 
-let forces = [];
+let forceGenerators = [];
 let movingPlants = [];
 
 function setup() {
+    console.log('setting up');
     paper.setup('paperCanvas');
     
     leafGroup = project.importSVG(document.getElementById('leafModel'), {'insert': false});
@@ -31,27 +32,30 @@ function setup() {
 function onFrame(event) {
     let dTime = event.delta;
     
-    changeForce(dTime)
-    let forceTotal = new Point(0, 0);
-    for(let i=0; i<forces.length; i++) {
-        forceTotal.x += forces[i].x;
-        forceTotal.y += forces[i].y;
+    updateForces(dTime)
+        
+    for(let i=0; i<movingPlants.length; i++) {
+        movingPlants[i].applyForces(dTime, forceGenerators);
     }
     
-    for(let i=0; i<movingPlants.length; i++) {
-        movingPlants[i].applyForce(dTime, forceTotal);
-    }
+    removeInvalidForces();
 }
 
 let timeElapsed = 0;
 let timeApplyFor = .7;
-function changeForce(dTime) {
-    let forEnd = forces.length;
+
+function updateForces(dTime) {
+    for(let i=0; i<forceGenerators.length; i++) {
+        forceGenerators[i].update(dTime);
+    }
+}
+
+function removeInvalidForces() {
+    let forEnd = forceGenerators.length;
     for(let i=0; i<forEnd; i++) {
-        let force = forces[i];
-        force.timeElapsed += dTime;
-        if (force.timeElapsed > force.timeApplyFor) {
-            forces.splice(i, 1);
+        let forceGen = forceGenerators[i];
+        if (!forceGen.isValid()) {
+            forceGenerators.splice(i, 1);
             i--;
             forEnd--;
         }
@@ -67,13 +71,12 @@ function onMouseDown(event) {
 
 function onMouseUp(event) {
     let forceVector = event.point.subtract(downPoint).multiply(10);
-    applyForce(forceVector.x, forceVector.y);
+    applyForce(event.point, 3);
 }
 
 
-function applyForce(xForce, yForce) {
-    let force = new Point(xForce, yForce);
-    force.timeElapsed = 0;
-    force.timeApplyFor = .1;
-    forces.push(force);
+function applyForce(startPoint, magnitude) {
+    let forceGen = new UniformCircularForce(startPoint, magnitude, .7);
+    forceGenerators.push(forceGen);
+    console.log('creating force');
 }
