@@ -17,10 +17,10 @@ var mouseStates = {
 };
 
 var imageSources = {
-        "blue": "mp3/track1Individuals/Op1.mp3",
-        "orange": "mp3/track1Individuals/Op2.mp3",
-        "pink": "mp3/track1Individuals/Au1.mp3",
-        "purple": "mp3/track1Individuals/Op4.mp3",
+        "blue": "mp3/track1Individuals/Op1 louder.mp3",
+        "orange": "mp3/track1Individuals/Op2 louder.mp3",
+        "pink": "mp3/track1Individuals/Au1 louder.mp3",
+        "purple": "mp3/track1Individuals/Op4 louder.mp3",
 };
 
 var colors = {
@@ -28,7 +28,9 @@ var colors = {
     menuSelectColor: "#73efeb",
     toolbarColor: "#07beb8",
     toolbarSelectColor: "#8be0dd"
-}
+};
+
+var canvasFlowers = {};
 
 //this is the flower that will eventually track with the mouse - not currently in use
 //var draggingFlower;
@@ -55,13 +57,11 @@ window.onload = function(){
     $('.menuChoice').on('click', makeMenuChoice);
     
     $('#removeButton').on('click', function(){
-        console.log(event.target)
         highlightToolbarButton(event.target);
         mouseStates.removeFlower = true;
     })
     
     $('#sendToBackButton').on('click', function(){
-        console.log(event.target)
         highlightToolbarButton(event.target);
         mouseStates.sendToBack = true; 
     })
@@ -76,6 +76,7 @@ window.onload = function(){
             pointClicked = event.point;
             mouseStates.currentFlower = new Flower(null,event.item);
             if(mouseStates.removeFlower){
+                canvasFlowers[event.item.data].stopSound();
                 mouseStates.currentFlower.img.remove();
                 mouseStates.removeFlower = false; //you have to click the button every time you want to remove a flower - we could change this
                 unHighlightToolbarButton(document.getElementById('removeButton'));
@@ -192,12 +193,13 @@ unHighlightToolbarButton = function(button){
 dropFlower = function(clickEvent){
     if(project.view.bounds.contains(clickEvent)){
         newFlower =  new Flower(null, new Raster(currentMenuChoice.src).scale(resize.initFlowerSize), new Music(imageSources[currentMenuChoice.name])) //null is for the path since Component is path-based, also omitting sound argument for now
-        //Maybe we should have a way to keep track of the flowers that are in the canvas?
-        newFlower.playSound();
         mouseStates.currentFlower = newFlower
+        newFlower.playSound();
         mouseStates.currentFlower.img.scale(0.3) //Note: all code with ".img." is so that we can work with the rasters, if we move to path or vector-based this will change
         mouseStates.currentFlower.img.position = clickEvent.point
-        mouseStates.droppedFlower = true;      
+        mouseStates.droppedFlower = true;
+        clickEvent.item.data = clickEvent.point;
+        canvasFlowers[clickEvent.item.data] = newFlower;
     } 
 }
 
