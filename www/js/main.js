@@ -75,6 +75,7 @@ window.onload = function(){
             pointClicked = event.point;
             mouseStates.currentFlower = new Flower(null,event.item);
             if(mouseStates.removeFlower){
+
                 canvasFlowers[event.item.data].stopSound();
                 mouseStates.currentFlower.img.remove();
                 mouseStates.removeFlower = false; //you have to click the button every time you want to remove a flower - we could change this
