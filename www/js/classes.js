@@ -71,7 +71,7 @@ class Component {
 }
 
 
-class Plant extends Component{
+class Plant extends Component {
     
     //takes both a path and a raster for now so it can extend component, but should amend that to just one or the other later
     constructor(paperPath, svg, music){
@@ -99,7 +99,7 @@ class Plant extends Component{
     };
 }
 
-class Flower extends Plant{
+class Flower extends Plant {
     //later, this will have more specific animation/sound characteristics, placeholder for now
     
     constructor(paperPath, raster, music){
