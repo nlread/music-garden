@@ -75,7 +75,7 @@ window.onload = function(){
             pointClicked = event.point;
             mouseStates.currentFlower = new Flower(null,event.item);
             if(mouseStates.removeFlower){
-                canvasFlowers[event.item.data].stopSound();
+                canvasFlowers[event.item.id].stopSound();
                 mouseStates.currentFlower.img.remove();
                 mouseStates.removeFlower = false; //you have to click the button every time you want to remove a flower - we could change this
                 unHighlightToolbarButton(document.getElementById('removeButton'));
@@ -207,8 +207,7 @@ dropFlower = function(clickEvent){
             mouseStates.currentFlower.img.scale(0.3)
             mouseStates.currentFlower.img.position = clickEvent.point
             mouseStates.droppedFlower = true;
-            clickEvent.item.data = clickEvent.point;
-            canvasFlowers[clickEvent.item.data] = newFlower;
+            canvasFlowers[clickEvent.item.id] = newFlower;
         });
     } 
 }
@@ -225,14 +224,14 @@ scaleFlower = function(clickEvent){
     if(change > 0){
         if(!(mouseStates.currentFlower.img.bounds.width > (project.view.size.width / 2))){
            mouseStates.currentFlower.img.scale(resize.grow)
-           //mouseStates.currentFlower.img.togleVolume(1.5);
+           //canvasFlowers[clickEvent.item.id].togleVolume(1.05);
         }
     }
     else if(change < 0){
         //current fix for teeny flowers - should be solved if/when we move to distance-based sizing, but fixing for now
         if(!(mouseStates.currentFlower.img.bounds.width < (project.view.size.width / 20))){
             mouseStates.currentFlower.img.scale(resize.shrink)
-            //mouseStates.currentFlower.img.togleVolume(.5);
+            //canvasFlowers[clickEvent.item.id].togleVolume(.95);
         }
     }
 }

@@ -79,12 +79,13 @@ class Plant extends Component{
         this.img = svg;
         //in the future this could be set automatically depending on plant type - can you have default parameters like you can in Python?
         this.music = music;
+        this.volume = 0.5
         
         //plays the music of the plant, setting it to loop and the volume at 0.5
         this.playSound = function(){
             this.music.sound.play();
             this.music.sound.loop(true);
-            this.music.sound.volume(0.5);
+            this.music.sound.volume(this.volume);
         };
         
         this.stopSound = function(){
@@ -92,8 +93,7 @@ class Plant extends Component{
         };
         
         this.togleVolume = function(x){
-            this.volume = this.music.sound.volume()*x;
-            console.log(this.volume);
+            this.volume = this.volume*x;
             this.music.sound.volume(this.volume);
         };
     };
