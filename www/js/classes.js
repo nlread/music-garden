@@ -74,10 +74,9 @@ class Component {
 class Plant extends Component{
     
     //takes both a path and a raster for now so it can extend component, but should amend that to just one or the other later
-    constructor(paperPath, raster, music){
-        super(paperPath);
-        //so it has access to oaper's Raster properties
-        this.img = raster;
+    constructor(paperPath, svg, music){
+        super(paperPath)
+        this.img = svg;
         //in the future this could be set automatically depending on plant type - can you have default parameters like you can in Python?
         this.music = music;
         

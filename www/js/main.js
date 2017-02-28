@@ -16,11 +16,11 @@ var mouseStates = {
     sendToBack: false
 };
 
-var imageSources = {
-        "blue": "mp3/track1Individuals/Op1 louder.mp3",
-        "orange": "mp3/track1Individuals/Op2 louder.mp3",
-        "pink": "mp3/track1Individuals/Au1 louder.mp3",
-        "purple": "mp3/track1Individuals/Op4 louder.mp3",
+var soundSources = {
+    "green": "mp3/track1Individuals/Op1.mp3",
+    "red": "mp3/track1Individuals/Op2.mp3",
+    "jade": "mp3/track1Individuals/Au1.mp3",
+    "succulent": "mp3/track1Individuals/Op4.mp3"
 };
 
 var colors = {
@@ -53,7 +53,6 @@ window.onload = function(){
     
     var myTool = new Tool();
     
-    //NTS: why does animateMenuChoice not need ()?
     $('.menuChoice').on('click', makeMenuChoice);
     
     $('#removeButton').on('click', function(){
@@ -173,33 +172,44 @@ animateMenuChoice = function(){
 }
 
 highlightToolbarButton = function(buttonClicked){
-    $(buttonClicked.parentElement).animate({
+    $(buttonClicked).animate({
         backgroundColor: colors.toolbarSelectColor
         }, 100
     ); 
 }
 
 unHighlightToolbarButton = function(button){
-    //doesn't use the parent element because button unhighlights aren't triggered by actually clicking on the button - so the button gets passed in directly by id
-    console.log(button)
      $(button).animate({
         backgroundColor: colors.toolbarColor
         }, 100
     ); 
     
+    //also change the background of the image
+    $(button.children[1]).animate(
+    {
+        backgroundColor: colors.toolbarColor
+        }, 100
+    );
 }
 
 //drop a clone of a menu flower
 dropFlower = function(clickEvent){
     if(project.view.bounds.contains(clickEvent)){
-        newFlower =  new Flower(null, new Raster(currentMenuChoice.src).scale(resize.initFlowerSize), new Music(imageSources[currentMenuChoice.name])) //null is for the path since Component is path-based, also omitting sound argument for now
-        mouseStates.currentFlower = newFlower
-        newFlower.playSound();
-        mouseStates.currentFlower.img.scale(0.3) //Note: all code with ".img." is so that we can work with the rasters, if we move to path or vector-based this will change
-        mouseStates.currentFlower.img.position = clickEvent.point
-        mouseStates.droppedFlower = true;
-        clickEvent.item.data = clickEvent.point;
-        canvasFlowers[clickEvent.item.data] = newFlower;
+        var newFlower;
+        //all the code that deals with the SVG has to live in the callback function because it's asynchronous (https://groups.google.com/forum/#!searchin/paperjs/svg|sort:relevance/paperjs/ohy3oXUmLPg/G9ehRKhEfVgJ)
+        //for reference, item is the svg that's imported
+        project.importSVG(currentMenuChoice.src, function(item){
+            newFlower = new Flower(null, item.scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name]))//null is for the path since Component is path-based, also omitting sound argument for now
+            
+            //Maybe we should have a way to keep track of the flowers that are in the canvas?
+            newFlower.playSound();
+            mouseStates.currentFlower = newFlower
+            mouseStates.currentFlower.img.scale(0.3)
+            mouseStates.currentFlower.img.position = clickEvent.point
+            mouseStates.droppedFlower = true;
+            clickEvent.item.data = clickEvent.point;
+            canvasFlowers[clickEvent.item.data] = newFlower;
+        });
     } 
 }
 
