@@ -17,10 +17,10 @@ var mouseStates = {
 };
 
 var soundSources = {
-    "green": "mp3/track1Individuals/Op1.mp3",
-    "red": "mp3/track1Individuals/Op2.mp3",
-    "jade": "mp3/track1Individuals/Au1.mp3",
-    "succulent": "mp3/track1Individuals/Op4.mp3"
+    "green": "mp3/track1Individuals/Op4 louder.mp3",
+    "red": "mp3/track1Individuals/Op3 louder.mp3",
+    "jade": "mp3/track1Individuals/Op1 louder.mp3",
+    "succulent": "mp3/track1Individuals/Op2 louder.mp3"
 };
 
 var colors = {
