@@ -157,6 +157,9 @@ class SegmentProperties {
     }
 }
 
+/*
+ * Basically a Uniform Directional Force
+ */
 class ForceGenerator {
     constructor(forceVector, timeApplyFor) {
         this.forceVector = forceVector;
@@ -178,6 +181,18 @@ class ForceGenerator {
     
     isValid() {
         return this.timeApplyFor > this.timeElapsed;
+    }
+}
+
+class MovingDirectionalForce extends ForceGenerator {
+    
+    constructor(forceOrigin, forceVector, timeApplyFor) {
+        super(forceVector, timeApplyFor0)
+        this.forceOrigin = forceOrigin;
+    }
+
+    doesEffect(point) {
+        
     }
 }
 

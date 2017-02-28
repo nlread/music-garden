@@ -3,6 +3,10 @@ var utils {
         return project.importSVG(svgID, {'insert': false});
     }, 
     loadPathsFromCSV: function(svgID) {
-        project.
+        let group = this.importSVG(svgID);
+        let paths = [];
+        for(let i=0; i<group.length; i++) {
+            paths.push
+        }
     }, 
 }

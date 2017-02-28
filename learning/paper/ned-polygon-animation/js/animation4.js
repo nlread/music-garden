@@ -2,7 +2,7 @@ paper.install(window);
 
 let forceGenerators = [];
 let movingPlants = [];
-
+let pathsFromComplexMode;
 function setup() {
     console.log('setting up');
     paper.setup('paperCanvas');
@@ -15,6 +15,15 @@ function setup() {
         oneLeaf.strokeColor = 'green';
         movingPlants.push(new PhysicsPlant(oneLeaf, [0]));
         project.activeLayer.addChild(oneLeaf);
+    }
+    
+    pathsFromComplexMode = Utils.loadPathsFromSVG('model');
+    for(let i=0; i<pathsFromComplexMode.length; i++) {
+        let onePath = pathsFromComplexMode[i];
+        onePath.setPosition(onePath.getPosition().add(new Point(400, 400)));
+        onePath.srokeColor = 'blue';
+        movingPlants.push(new PhysicsPlant(onePath, []));
+        project.activeLayer.addChild(onePath);
     }
     
     polyPath = Path.RegularPolygon(new Point(0, 0), 7, 100);
