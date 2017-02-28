@@ -20,7 +20,7 @@ var soundSources = {
     "green": "mp3/track1Individuals/Op1.mp3",
     "red": "mp3/track1Individuals/Op2.mp3",
     "jade": "mp3/track1Individuals/Au1.mp3",
-    "succulent": "mp3/track1Individuals/Op4.mp3",
+    "succulent": "mp3/track1Individuals/Op4.mp3"
 };
 
 var colors = {
@@ -28,7 +28,9 @@ var colors = {
     menuSelectColor: "#73efeb",
     toolbarColor: "#07beb8",
     toolbarSelectColor: "#8be0dd"
-}
+};
+
+var canvasFlowers = {};
 
 //this is the flower that will eventually track with the mouse - not currently in use
 //var draggingFlower;
@@ -73,6 +75,7 @@ window.onload = function(){
             pointClicked = event.point;
             mouseStates.currentFlower = new Flower(null,event.item);
             if(mouseStates.removeFlower){
+                canvasFlowers[event.item.data].stopSound();
                 mouseStates.currentFlower.img.remove();
                 mouseStates.removeFlower = false; //you have to click the button every time you want to remove a flower - we could change this
                 unHighlightToolbarButton(document.getElementById('removeButton'));
@@ -204,7 +207,9 @@ dropFlower = function(clickEvent){
             mouseStates.currentFlower.img.scale(0.3)
             mouseStates.currentFlower.img.position = clickEvent.point
             mouseStates.droppedFlower = true;
-        });        
+            clickEvent.item.data = clickEvent.point;
+            canvasFlowers[clickEvent.item.data] = newFlower;
+        });
     } 
 }
 
