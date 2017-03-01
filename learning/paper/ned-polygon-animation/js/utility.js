@@ -25,4 +25,8 @@ class Utils {
         
         return paths;
     }
+
+    static dot(a, b) {
+        return a.x * b.x + a.y * b.y;
+    }
 }   

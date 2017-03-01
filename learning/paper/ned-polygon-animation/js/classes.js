@@ -168,7 +168,11 @@ class ForceGenerator {
     }
     
     getForce(point) {
-        return this.forceVector;
+        if(this.doesEffect(point)) {
+            return this.forceVector;
+        } else {
+            return new Point(0, 0);
+        }
     }
 
     doesEffect(point) {
@@ -186,13 +190,55 @@ class ForceGenerator {
 
 class MovingDirectionalForce extends ForceGenerator {
     
-    constructor(forceOrigin, forceVector, timeApplyFor) {
-        super(forceVector, timeApplyFor0)
+    constructor(forceOrigin, forceVector, speed, gap, timeApplyFor) {
+        super(forceVector, timeApplyFor)
+        this.forceDir = forceVector.normalize();
         this.forceOrigin = forceOrigin;
+        this.speed = speed;
+        this.gap = gap;
+        this.leadingDist = 0;
+
+        this.leadingVec = new Point(0, 0);
+        this.trailingVec = new Point(0, 0);
     }
 
     doesEffect(point) {
+        // Vectors from the normal point to the point in evaluating
+        let dirToLeading = point.subtract(this.leadingVec);
+        let dirToTrailing = point.subtract(this.trailingVec);
         
+        // Dot Product > 0 => facing same direction 
+        let beforeLeading = Utils.dot(this.forceDir, dirToLeading) < 0;
+        let afterTrailing = Utils.dot(this.forceDir, dirToTrailing) > 0;
+        
+        return beforeLeading && afterTrailing;
+    }
+
+    update(dTime) {
+        super.update(dTime);
+        this.leadingDist += dTime * this.speed;   
+        this.updateLeadingTrailing();     
+    }
+
+    updateLeadingTrailing() {
+        // Vectors normal to the leading and trailing lines
+        this.leadingVec = this.forceOrigin.add(this.forceDir.multiply(this.leadingDist + this.gap));
+        this.trailingVec = this.forceOrigin.add(this.forceDir.multiply(this.leadingDist));
+    }
+}
+
+class MovingBoxForce extends MovingDirectionalForce {
+    
+    constructor(forceOrigin, forceVector, speed, height, width, timeApplyFor) {
+        super(forceOrigin, forceVector, speed, height, timeApplyFor);
+        this.height = height/2;
+        this.halfWidth = width/2;
+    }
+
+    doesEffect(point) {
+        let dirToTrailing = point.subtract(this.trailingVec);
+        return dirToTrailing.x > -this.halfWidth && dirToTrailing.x < this.halfWidth &&
+               dirToTrailing.y > 0 && dirToTrailing.y < this.height;    
     }
 }
 
