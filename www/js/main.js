@@ -13,7 +13,7 @@ var mouseStates = {
     currentFlower: null,
     resizeOldFlower: false,
     removeFlower: false,
-    sendToBack: false
+    sendToBack: false,
 };
 
 var soundSources = {
@@ -30,7 +30,15 @@ var colors = {
     toolbarSelectColor: "#8be0dd"
 };
 
+//Holds all the flower on the canvas at any time
 var canvasFlowers = {};
+
+//This track will play while any flower is on the canvas.
+var backgroundTrack = new Howl({
+    src: ["mp3/track1Individuals/Au1 louder.mp3"]    
+});
+
+var backgroundSound = false;
 
 //this is the flower that will eventually track with the mouse - not currently in use
 //var draggingFlower;
@@ -75,10 +83,15 @@ window.onload = function(){
             pointClicked = event.point;
             mouseStates.currentFlower = new Flower(null,event.item);
             if(mouseStates.removeFlower){
-                canvasFlowers[event.item.data].stopSound();
+                canvasFlowers[event.item.id].stopSound();
+                delete canvasFlowers[event.item.id];
                 mouseStates.currentFlower.img.remove();
                 mouseStates.removeFlower = false; //you have to click the button every time you want to remove a flower - we could change this
                 unHighlightToolbarButton(document.getElementById('removeButton'));
+                if(Object.keys(canvasFlowers).length == 0){
+                    backgroundTrack.stop();
+                    backgroundSound = false;
+                }
             }
             else if(mouseStates.sendToBack){
                 mouseStates.currentFlower.img.sendToBack();
@@ -86,7 +99,7 @@ window.onload = function(){
                 unHighlightToolbarButton(document.getElementById('sendToBackButton'))
             }
             else{
-                 mouseStates.resizeOldFlower = true;
+                mouseStates.resizeOldFlower = true;
             }
         
             //return so that you don't drop a new flower on top of one to resize
@@ -207,8 +220,12 @@ dropFlower = function(clickEvent){
             mouseStates.currentFlower.img.scale(0.3)
             mouseStates.currentFlower.img.position = clickEvent.point
             mouseStates.droppedFlower = true;
-            clickEvent.item.data = clickEvent.point;
-            canvasFlowers[clickEvent.item.data] = newFlower;
+            canvasFlowers[clickEvent.item.id] = newFlower;
+            if(!backgroundSound){
+                backgroundTrack.play();
+                backgroundTrack.loop(true);
+                backgroundSound = true;
+            }
         });
     } 
 }
@@ -225,14 +242,16 @@ scaleFlower = function(clickEvent){
     if(change > 0){
         if(!(mouseStates.currentFlower.img.bounds.width > (project.view.size.width / 2))){
            mouseStates.currentFlower.img.scale(resize.grow)
-           //mouseStates.currentFlower.img.togleVolume(1.5);
+           //Sound doesn't scale properly, it goes away after resizeing too many times.
+           canvasFlowers[clickEvent.item.id].toggleVolume(resize.grow);
         }
     }
     else if(change < 0){
         //current fix for teeny flowers - should be solved if/when we move to distance-based sizing, but fixing for now
         if(!(mouseStates.currentFlower.img.bounds.width < (project.view.size.width / 20))){
             mouseStates.currentFlower.img.scale(resize.shrink)
-            //mouseStates.currentFlower.img.togleVolume(.5);
+            //Sound doesn't scale properly, it goes away after resizeing too many times.
+            canvasFlowers[clickEvent.item.id].toggleVolume(resize.shrink);
         }
     }
 }
