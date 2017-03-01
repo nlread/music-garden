@@ -50,6 +50,8 @@ function onFrame(event) {
     }
     
     removeInvalidForces();
+
+    makeWind(5);
 }
 
 let timeElapsed = 0;
@@ -81,12 +83,28 @@ function onMouseDown(event) {
 }
 
 function onMouseUp(event) {
-    let forceVector = event.point.subtract(downPoint).multiply(10);
-    applyForce(event.point, 3);
+    let forceVector = event.point.subtract(downPoint).multiply(.5);
+    applyForce(event.point, forceVector);
 }
 
+function makeWind(randFactor) {
+    if (Math.floor(Math.random() * 100) < randFactor) {
+        console.log('adding wind');
+        
+        let forceVector = new Point(30, 0);
+        let startPoint = new Point(0, Math.floor(Math.random() * 800));
+        if (Math.random() > .5) {
+            forceVector.x *= -1;
+            startPoint.x = 1200;
+        }
+        applyForce(startPoint, forceVector);
+    }
+}
 
-function applyForce(startPoint, magnitude) {
-    let forceGen = new MovingCircularForce(startPoint, magnitude, 500, 100, 6);
+function applyForce(startPoint, forceVector) {
+    // let forceGen = new MovingCircularForce(startPoint, magnitude, 500, 100, 6);
+    // let forceGen = new MovingDirectionalForce(startPoint, forceVector, 300, 200, 3);
+     let forceGen = new MovingBoxForce(startPoint, forceVector, 300, 200, 400, 6);
+
     forceGenerators.push(forceGen);
 }
