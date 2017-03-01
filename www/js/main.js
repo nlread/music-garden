@@ -30,8 +30,10 @@ var colors = {
     toolbarSelectColor: "#8be0dd"
 };
 
+//Holds all the flower on the canvas at any time
 var canvasFlowers = {};
 
+//This track will play while any flower is on the canvas.
 var backgroundTrack = new Howl({
     src: ["mp3/track1Individuals/Au1 louder.mp3"]    
 });
@@ -240,14 +242,16 @@ scaleFlower = function(clickEvent){
     if(change > 0){
         if(!(mouseStates.currentFlower.img.bounds.width > (project.view.size.width / 2))){
            mouseStates.currentFlower.img.scale(resize.grow)
-           //canvasFlowers[clickEvent.item.id].toggleVolume(resize.grow);
+           //Sound doesn't scale properly, it goes away after resizeing too many times.
+           canvasFlowers[clickEvent.item.id].toggleVolume(resize.grow);
         }
     }
     else if(change < 0){
         //current fix for teeny flowers - should be solved if/when we move to distance-based sizing, but fixing for now
         if(!(mouseStates.currentFlower.img.bounds.width < (project.view.size.width / 20))){
             mouseStates.currentFlower.img.scale(resize.shrink)
-            //canvasFlowers[clickEvent.item.id].toggleVolume(resize.shrink);
+            //Sound doesn't scale properly, it goes away after resizeing too many times.
+            canvasFlowers[clickEvent.item.id].toggleVolume(resize.shrink);
         }
     }
 }
