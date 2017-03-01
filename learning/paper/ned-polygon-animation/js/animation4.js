@@ -81,12 +81,13 @@ function onMouseDown(event) {
 }
 
 function onMouseUp(event) {
-    let forceVector = event.point.subtract(downPoint).multiply(10);
-    applyForce(event.point, 3);
+    let forceVector = event.point.subtract(downPoint).multiply(.5);
+    applyForce(event.point, forceVector);
 }
 
 
-function applyForce(startPoint, magnitude) {
-    let forceGen = new MovingCircularForce(startPoint, magnitude, 500, 100, 6);
+function applyForce(startPoint, forceVector) {
+    // let forceGen = new MovingCircularForce(startPoint, magnitude, 500, 100, 6);
+    let forceGen = new MovingDirectionalForce(startPoint, forceVector, 300, 200, 3);
     forceGenerators.push(forceGen);
 }
