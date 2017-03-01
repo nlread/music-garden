@@ -92,7 +92,7 @@ class Plant extends Component {
             this.music.sound.stop();
         };
         
-        this.togleVolume = function(x){
+        this.toggleVolume = function(x){
             this.volume = this.volume*x;
             this.music.sound.volume(this.volume);
         };
