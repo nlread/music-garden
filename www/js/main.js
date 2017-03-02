@@ -83,15 +83,7 @@ window.onload = function(){
             pointClicked = event.point;
             mouseStates.currentFlower = new Flower(null,event.item);
             if(mouseStates.removeFlower){
-                canvasFlowers[event.item.id].stopSound();
-                delete canvasFlowers[event.item.id];
-                mouseStates.currentFlower.img.remove();
-                mouseStates.removeFlower = false; //you have to click the button every time you want to remove a flower - we could change this
-                unHighlightToolbarButton(document.getElementById('removeButton'));
-                if(Object.keys(canvasFlowers).length == 0){
-                    backgroundTrack.stop();
-                    backgroundSound = false;
-                }
+                deleteFlower(event);
             }
             else if(mouseStates.sendToBack){
                 mouseStates.currentFlower.img.sendToBack();
@@ -228,6 +220,18 @@ dropFlower = function(clickEvent){
             }
         });
     } 
+}
+
+deleteFlower = function(clickEvent){
+    canvasFlowers[clickEvent.item.id].stopSound();
+    delete canvasFlowers[clickEvent.item.id];
+    mouseStates.currentFlower.img.remove();
+    mouseStates.removeFlower = false; //you have to click the button every time you want to remove a flower - we could change this
+    unHighlightToolbarButton(document.getElementById('removeButton'));
+    if(Object.keys(canvasFlowers).length == 0){
+        backgroundTrack.stop();
+        backgroundSound = false;
+    }
 }
 
 //scale a flower based on whether mouse distance to flower center is increasing or decreasing
