@@ -40,9 +40,6 @@ var backgroundTrack = new Howl({
 
 var backgroundSound = false;
 
-//this is the flower that will eventually track with the mouse - not currently in use
-//var draggingFlower;
-
 //namespace to be filled in onload with menu choice divs
 var menuChoices = {}
 
@@ -133,11 +130,9 @@ stopResize = function(){
 makeMenuChoice = function(){
     animateMenuChoice();
     
-    //reassign state variables
     currentMenuChoice.src = event.target.src;
     //NOTE: the below relies on images being named _____flower, which will probably change later
     currentMenuChoice.name = event.target.src.match(/\/(\w+)flower/)[1]
-    //draggingFlower = new Raster(currentMenuChoice).scale(0.1); - could bring this back later when we want a flower to track with the mouse, but that's going to require more work
     mouseStates.droppedFlower = false;       
     
 }
