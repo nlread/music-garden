@@ -86,9 +86,7 @@ window.onload = function(){
                 deleteFlower(event);
             }
             else if(mouseStates.sendToBack){
-                mouseStates.currentFlower.img.sendToBack();
-                mouseStates.sendToBack = false;
-                unHighlightToolbarButton(document.getElementById('sendToBackButton'))
+               sendFlowerToBack();
             }
             else{
                 mouseStates.resizeOldFlower = true;
@@ -232,6 +230,13 @@ deleteFlower = function(clickEvent){
         backgroundTrack.stop();
         backgroundSound = false;
     }
+}
+
+sendFlowerToBack = function(){
+    mouseStates.currentFlower.img.sendToBack();
+    mouseStates.sendToBack = false;
+    unHighlightToolbarButton(document.getElementById('sendToBackButton'))
+    
 }
 
 //scale a flower based on whether mouse distance to flower center is increasing or decreasing
