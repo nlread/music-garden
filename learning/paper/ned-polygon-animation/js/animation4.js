@@ -3,7 +3,22 @@ paper.install(window);
 let forceGenerators = [];
 let movingPlants = [];
 let pathsFromComplexMode;
+let isActive = true;
 function setup() {
+
+    window.onfocus = function () { 
+        console.log('focuing');
+        
+    isActive = true; 
+    }; 
+
+    window.onblur = function () { 
+        console.log('bluring');
+        
+    isActive = false; 
+    }; 
+
+
     console.log('setting up');
     paper.setup('paperCanvas');
     
@@ -41,6 +56,9 @@ function setup() {
 }
 
 function onFrame(event) {
+    if(!isActive) {
+        return;
+    }
     let dTime = event.delta;
     
     updateForces(dTime)
@@ -51,7 +69,7 @@ function onFrame(event) {
     
     removeInvalidForces();
 
-    makeWind(5);
+    makeWind(4);
 }
 
 let timeElapsed = 0;
@@ -89,7 +107,7 @@ function onMouseUp(event) {
 
 function makeWind(randFactor) {
     if (Math.floor(Math.random() * 100) < randFactor) {
-        console.log('adding wind');
+        console.log('adding wind - ' + forceGenerators.length);
         
         let forceVector = new Point(30, 0);
         let startPoint = new Point(0, Math.floor(Math.random() * 800));
@@ -104,7 +122,7 @@ function makeWind(randFactor) {
 function applyForce(startPoint, forceVector) {
     // let forceGen = new MovingCircularForce(startPoint, magnitude, 500, 100, 6);
     // let forceGen = new MovingDirectionalForce(startPoint, forceVector, 300, 200, 3);
-     let forceGen = new MovingBoxForce(startPoint, forceVector, 300, 200, 400, 6);
+     let forceGen = new MovingBoxForce(startPoint, forceVector, 300, 200, 400, 5);
 
     forceGenerators.push(forceGen);
 }
