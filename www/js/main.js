@@ -24,10 +24,10 @@ var soundSources = {
 };
 
 var colors = {
-    menuColor: "#bdfffd",
-    menuSelectColor: "#73efeb",
-    toolbarColor: "#07beb8",
-    toolbarSelectColor: "#8be0dd"
+    menuColor: "#81E5A9",
+    menuSelectColor: "#90F0B3",
+    toolbarColor: "#aaeec5",
+    toolbarSelectColor: "#90F0B3"
 };
 
 //Holds all the flower on the canvas at any time
