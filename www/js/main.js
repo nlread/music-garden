@@ -27,7 +27,7 @@ var colors = {
     menuColor: "#81E5A9",
     menuSelectColor: "#90F0B3",
     toolbarColor: "#aaeec5",
-    toolbarSelectColor: "#90F0B3"
+    toolbarSelectColor: "#55dd8b"
 };
 
 //Holds all the flower on the canvas at any time
