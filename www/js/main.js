@@ -2,7 +2,7 @@ paper.install(window); //make paper scope global by injecting it into window - f
 
 //DECLARE GLOBAL CONSTANTS AND VARIABLES
 var resize = {
-    initFlowerSize: 0.1,
+    initFlowerSize: 0.2,
     shrink: 0.95,
     grow: 1.05
 }
@@ -24,10 +24,10 @@ var soundSources = {
 };
 
 var colors = {
-    menuColor: "#bdfffd",
-    menuSelectColor: "#73efeb",
-    toolbarColor: "#07beb8",
-    toolbarSelectColor: "#8be0dd"
+    menuColor: "#81E5A9",
+    menuSelectColor: "#90F0B3",
+    toolbarColor: "#aaeec5",
+    toolbarSelectColor: "#55dd8b"
 };
 
 //Holds all the flower on the canvas at any time
@@ -83,15 +83,7 @@ window.onload = function(){
             pointClicked = event.point;
             mouseStates.currentFlower = new Flower(null,event.item);
             if(mouseStates.removeFlower){
-                canvasFlowers[event.item.id].stopSound();
-                delete canvasFlowers[event.item.id];
-                mouseStates.currentFlower.img.remove();
-                mouseStates.removeFlower = false; //you have to click the button every time you want to remove a flower - we could change this
-                unHighlightToolbarButton(document.getElementById('removeButton'));
-                if(Object.keys(canvasFlowers).length == 0){
-                    backgroundTrack.stop();
-                    backgroundSound = false;
-                }
+                deleteFlower(event);
             }
             else if(mouseStates.sendToBack){
                 mouseStates.currentFlower.img.sendToBack();
@@ -228,6 +220,18 @@ dropFlower = function(clickEvent){
             }
         });
     } 
+}
+
+deleteFlower = function(clickEvent){
+    canvasFlowers[clickEvent.item.id].stopSound();
+    delete canvasFlowers[clickEvent.item.id];
+    mouseStates.currentFlower.img.remove();
+    mouseStates.removeFlower = false; //you have to click the button every time you want to remove a flower - we could change this
+    unHighlightToolbarButton(document.getElementById('removeButton'));
+    if(Object.keys(canvasFlowers).length == 0){
+        backgroundTrack.stop();
+        backgroundSound = false;
+    }
 }
 
 //scale a flower based on whether mouse distance to flower center is increasing or decreasing
