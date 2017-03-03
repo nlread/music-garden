@@ -196,7 +196,7 @@ dropFlower = function(clickEvent){
         var newFlower;
         //all the code that deals with the SVG has to live in the callback function because it's asynchronous (https://groups.google.com/forum/#!searchin/paperjs/svg|sort:relevance/paperjs/ohy3oXUmLPg/G9ehRKhEfVgJ)
         //for reference, item is the svg that's imported
-        project.importSVG(currentMenuChoice.src, function(item){
+        project.importSVG(currentMenuChoice.src, {onError: console.log("error"), onLoad: function(item){
             newFlower = new Flower(null, item.scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name]))//null is for the path since Component is path-based, also omitting sound argument for now
             
             //Maybe we should have a way to keep track of the flowers that are in the canvas?
@@ -211,7 +211,7 @@ dropFlower = function(clickEvent){
                 backgroundTrack.loop(true);
                 backgroundSound = true;
             }
-        });
+        }});
     } 
 }
 
@@ -247,7 +247,7 @@ scaleFlower = function(clickEvent){
         if(!(mouseStates.currentFlower.img.bounds.width > (project.view.size.width / 2))){
            mouseStates.currentFlower.img.scale(resize.grow)
            //Sound doesn't scale properly, it goes away after resizeing too many times.
-           canvasFlowers[clickEvent.item.id].toggleVolume(resize.grow);
+           //canvasFlowers[clickEvent.item.id].toggleVolume(resize.grow);
         }
     }
     else if(change < 0){
@@ -255,7 +255,7 @@ scaleFlower = function(clickEvent){
         if(!(mouseStates.currentFlower.img.bounds.width < (project.view.size.width / 20))){
             mouseStates.currentFlower.img.scale(resize.shrink)
             //Sound doesn't scale properly, it goes away after resizeing too many times.
-            canvasFlowers[clickEvent.item.id].toggleVolume(resize.shrink);
+            //canvasFlowers[clickEvent.item.id].toggleVolume(resize.shrink);
         }
     }
 }
