@@ -5,6 +5,8 @@ body {
     margin: 0;
     overflow: hidden;
     height: 100%;
+    /*green color scheme*/
+    background-color: #C9FFDD;
 }
 
 /* Scale canvas with resize attribute to full size */
@@ -18,7 +20,7 @@ canvas[resize] {
     width: 10%;
     height: 100%;
     float: left;
-    background-color: #bdfffd 
+    background-color: #81E5A7; 
 }
 
 /*make menu images centered and the width of their parent div */
@@ -32,13 +34,13 @@ canvas[resize] {
     height: 8%;
     width: 90%;
     float: right; /*i don't really understand css positioning but this seems to work - it's a little weird on resize though (so are the canvas and menu), that's something to work on */
-    background-color: #07beb8;
+    background-color: #aaeec5;
 }
 
 #toolbar #removeButton, #sendToBackButton{
     /*really I want the button to be a square no matter the screen size, but I'm not sure how to do that right now */
     height: 100%;
-    width: 8%;
+    width: 5%;
     text-align: center;
     float: left;
 }
