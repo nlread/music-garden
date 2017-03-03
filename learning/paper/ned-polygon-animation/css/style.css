@@ -1,9 +1,9 @@
 #paperCanvas {
     width: 100%;
     height: 100vh;
-    background-color: plum;
+    background-color: lightgreen;
     position: absolute;
-    border: solid thick black;
+    border: solid thick darkgreen;
 }
 
 #modelCanvas {

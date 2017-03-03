@@ -1,8 +1,8 @@
 paper.install(window);
 
+
 let forces = [];
 let movingPlants = [];
-
 function setup() {
     paper.setup('paperCanvas');
     
@@ -27,7 +27,6 @@ function setup() {
     
     paper.view.onFrame = onFrame;
 }
-
 function onFrame(event) {
     let dTime = event.delta;
     
