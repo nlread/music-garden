@@ -22,31 +22,27 @@ function setup() {
     console.log('setting up');
     paper.setup('paperCanvas');
     
-        leafGroup = project.importSVG(document.getElementById('leafModel'), {'insert': false});
-        leafPath = leafGroup.children[1]; 
-    for(let i=0; i<6; i++) {
-        let oneLeaf = leafPath.clone();
-        oneLeaf.setPosition(100 + 120 * i, 150);
-        oneLeaf.strokeColor = 'green';
-        movingPlants.push(new PhysicsPlant(oneLeaf, [0]));
-        project.activeLayer.addChild(oneLeaf);
-    }
+//        leafGroup = project.importSVG(document.getElementById('leafModel'), {'insert': false});
+//        leafPath = leafGroup.children[1]; 
+//    for(let i=0; i<6; i++) {
+//        let oneLeaf = leafPath.clone();
+//        oneLeaf.setPosition(100 + 120 * i, 150);
+//        oneLeaf.strokeColor = 'green';
+//        movingPlants.push(new PhysicsPlant(oneLeaf, [0]));
+//        project.activeLayer.addChild(oneLeaf);
+//    }
     
-    pathsFromComplexMode = Utils.loadPathsFromSVG('model');
-    for(let i=0; i<pathsFromComplexMode.length; i++) {
-        let onePath = pathsFromComplexMode[i];
-        onePath.setPosition(onePath.getPosition().add(new Point(400, 400)));
-        onePath.srokeColor = 'blue';
-        movingPlants.push(new PhysicsPlant(onePath, []));
-        project.activeLayer.addChild(onePath);
-    }
+    loadComplexSVG('img/greenflower.svg', new Point(300, 500));
+    loadComplexSVG('img/redflower.svg', new Point(800, 300));
+//    loadComplexSVG('img/jadeflower.svg', new Point(700, 800));
+    loadComplexSVG('img/succulentflower.svg', new Point(900, 700));
     
-    polyPath = Path.RegularPolygon(new Point(0, 0), 7, 100);
-    polyPath.strokeColor = 'black';
-    polyPath.fillColor = 'steelblue';
-    polyPath.setPosition(400, 400);
-    movingPlants.push(new PhysicsPlant(polyPath, [2, 3]));
-    project.activeLayer.addChild(polyPath);
+//    polyPath = Path.RegularPolygon(new Point(0, 0), 7, 100);
+//    polyPath.strokeColor = 'black';
+//    polyPath.fillColor = 'steelblue';
+//    polyPath.setPosition(400, 400);
+//    movingPlants.push(new PhysicsPlant(polyPath, [2, 3]));
+//    project.activeLayer.addChild(polyPath);
             
     tool = new Tool();
     tool.onMouseDown = onMouseDown;
@@ -54,6 +50,28 @@ function setup() {
     
     paper.view.onFrame = onFrame;
 }
+
+function loadComplexSVG(path, position) {
+    pathsFromComplexMode = Utils.loadPathsFromSVG2(path, 
+        function(paths) {
+            importPaths(paths, position);   
+        }, 
+        function(err) {
+            console.log(err);
+        });
+}
+
+function importPaths(pathsFromComplexNode, position) {
+  for(let i=0; i<pathsFromComplexNode.length; i++) {
+        let onePath = pathsFromComplexNode[i];
+        onePath.setPosition(position.x, position.y); //onePath.getPosition().add(position)
+        onePath.scale(1.8, 1.8);
+        onePath.srokeColor = 'blue';
+        movingPlants.push(new PhysicsPlant(onePath, []));
+        project.activeLayer.addChild(onePath);
+    }
+}
+
 
 function onFrame(event) {
     if(!isActive) {
@@ -102,7 +120,8 @@ function onMouseDown(event) {
 
 function onMouseUp(event) {
     let forceVector = event.point.subtract(downPoint).multiply(.5);
-    applyForce(event.point, forceVector);
+    applyForce2(event.point, $('#strengthAmount')[0].value);
+    
 }
 
 function makeWind(randFactor) {
@@ -124,5 +143,10 @@ function applyForce(startPoint, forceVector) {
     // let forceGen = new MovingDirectionalForce(startPoint, forceVector, 300, 200, 3);
      let forceGen = new MovingBoxForce(startPoint, forceVector, 300, 200, 400, 5);
 
+    forceGenerators.push(forceGen);
+}
+
+function applyForce2(startPoint, mag) {
+    let forceGen = new MovingCircularForce(startPoint, mag, 250, 100 , 1.8);
     forceGenerators.push(forceGen);
 }
