@@ -196,10 +196,12 @@ dropFlower = function(clickEvent){
         var newFlower;
         //all the code that deals with the SVG has to live in the callback function because it's asynchronous (https://groups.google.com/forum/#!searchin/paperjs/svg|sort:relevance/paperjs/ohy3oXUmLPg/G9ehRKhEfVgJ)
         //for reference, item is the svg that's imported
-        project.importSVG(currentMenuChoice.src, {onError: console.log("error"), onLoad: function(item){
+        project.importSVG(currentMenuChoice.src, 
+            {onError: console.log("error"), 
+            onLoad: function(item){
+            console.log(item)
             newFlower = new Flower(null, item.scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name]))//null is for the path since Component is path-based, also omitting sound argument for now
             
-            //Maybe we should have a way to keep track of the flowers that are in the canvas?
             newFlower.playSound();
             mouseStates.currentFlower = newFlower
             mouseStates.currentFlower.img.scale(0.3)
