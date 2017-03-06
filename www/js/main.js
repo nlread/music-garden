@@ -12,10 +12,13 @@ var mouseStates = {
     droppedFlower: false,
     currentFlower: null,
     resizeOldFlower: false,
-    removeFlower: false,
-    sendToBack: false,
 };
 
+var modes = {
+    plant: true,
+    remove: false,
+    orderLayers: false
+}
 var soundSources = {
     "green": "mp3/track1Individuals/Op4 louder.mp3",
     "red": "mp3/track1Individuals/Op3 louder.mp3",
@@ -62,12 +65,12 @@ window.onload = function(){
     
     $('#removeButton').on('click', function(){
         highlightToolbarButton(event.target);
-        mouseStates.removeFlower = true;
+        modes.remove = true;
     })
     
     $('#sendToBackButton').on('click', function(){
         highlightToolbarButton(event.target);
-        mouseStates.sendToBack = true; 
+        modes.orderLayers = true; 
     })
         
     myTool.onMouseUp = function(event) {
@@ -79,10 +82,10 @@ window.onload = function(){
         if(project.hitTest(event.point)){
             pointClicked = event.point;
             mouseStates.currentFlower = new Flower(null,event.item);
-            if(mouseStates.removeFlower){
+            if(modes.remove){
                 deleteFlower(event);
             }
-            else if(mouseStates.sendToBack){
+            else if(modes.orderLayers){
                sendFlowerToBack();
             }
             else{
@@ -221,7 +224,7 @@ deleteFlower = function(clickEvent){
     canvasFlowers[clickEvent.item.id].stopSound();
     delete canvasFlowers[clickEvent.item.id];
     mouseStates.currentFlower.img.remove();
-    mouseStates.removeFlower = false; //you have to click the button every time you want to remove a flower - we could change this
+    modes.remove = false; //you have to click the button every time you want to remove a flower - TODO: change this (will require changing how other buttons work, so they set the other two to false)
     unHighlightToolbarButton(document.getElementById('removeButton'));
     if(Object.keys(canvasFlowers).length == 0){
         backgroundTrack.stop();
@@ -231,7 +234,7 @@ deleteFlower = function(clickEvent){
 
 sendFlowerToBack = function(){
     mouseStates.currentFlower.img.sendToBack();
-    mouseStates.sendToBack = false;
+    modes.orderLayers = false; //TODO: change this so you don't exit the mode immediately
     unHighlightToolbarButton(document.getElementById('sendToBackButton'))
     
 }

@@ -37,7 +37,7 @@ canvas[resize] {
     background-color: #aaeec5;
 }
 
-#toolbar #removeButton, #sendToBackButton{
+#toolbar .toolbarButton{
     /*really I want the button to be a square no matter the screen size, but I'm not sure how to do that right now */
     height: 100%;
     width: 5%;
