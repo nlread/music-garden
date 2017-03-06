@@ -46,6 +46,8 @@ var backgroundSound = false;
 //namespace to be filled in onload with menu choice divs
 var menuChoices = {}
 
+var buttons = {}
+
 var currentMenuChoice = {
     src: "", //actual image source
     name: "" //flower name - "pink", "blue", etc
@@ -62,32 +64,32 @@ window.onload = function(){
     var myTool = new Tool();
     
     //plant button highlighted by default
-    highlightToolbarButton(document.getElementById("plantButton"))
+    highlightToolbarButton(buttons.plant)
     
     $('.menuChoice').on('click', makeMenuChoice);
     
     $('#removeButton').on('click', function(){
-        highlightToolbarButton(event.target);
-        unHighlightToolbarButton(document.getElementById("sendToBackButton"))
-        unHighlightToolbarButton(document.getElementById("plantButton"))
+        highlightToolbarButton(buttons.remove);
+        unHighlightToolbarButton(buttons.sendToBack);
+        unHighlightToolbarButton(buttons.plant);
         modes.plant = false;
         modes.orderLayers = false;
         modes.remove = true;
     })
     
     $('#sendToBackButton').on('click', function(){
-        highlightToolbarButton(event.target);
-        unHighlightToolbarButton(document.getElementById("removeButton"))
-        unHighlightToolbarButton(document.getElementById("plantButton"))
+        highlightToolbarButton(buttons.sendToBack);
+        unHighlightToolbarButton(buttons.remove);
+        unHighlightToolbarButton(buttons.plant);
         modes.plant = false;
         modes.remove = false;
         modes.orderLayers = true; 
     })
 
       $('#plantButton').on('click', function(){
-        highlightToolbarButton(event.target);
-        unHighlightToolbarButton(document.getElementById("removeButton"))
-        unHighlightToolbarButton(document.getElementById("sendToBackButton"))
+        highlightToolbarButton(buttons.plant);
+        unHighlightToolbarButton(buttons.remove);
+        unHighlightToolbarButton(buttons.sendToBack);
         modes.remove = false;
         modes.orderLayers = false; 
         modes.plant = true;
@@ -142,6 +144,10 @@ initializeGlobals = function(){
     menuChoices.choice3 = document.getElementById("choice3");
     menuChoices.choice4 = document.getElementById("choice4");
     
+    buttons.remove = document.getElementById("removeButton");
+    buttons.plant = document.getElementById("plantButton");
+    buttons.sendToBack = document.getElementById("sendToBackButton");
+    
 }
 
 stopResize = function(){
@@ -191,8 +197,8 @@ animateMenuChoice = function(){
     );  
 }
 
-highlightToolbarButton = function(buttonClicked){
-    $(buttonClicked).animate({
+highlightToolbarButton = function(button){
+    $(button).animate({
         backgroundColor: colors.toolbarSelectColor
         }, 100
     ); 
@@ -203,13 +209,6 @@ unHighlightToolbarButton = function(button){
         backgroundColor: colors.toolbarColor
         }, 100
     ); 
-    
-    //also change the background of the image
-    $(button.children[1]).animate(
-    {
-        backgroundColor: colors.toolbarColor
-        }, 100
-    );
 }
 
 //drop a clone of a menu flower
