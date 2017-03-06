@@ -109,7 +109,6 @@ class PhysicsPlant extends Component {
                 continue;
             }
             
-            
             let forceTotalAtPoint = new Point(0, 0);
             
             let props = this.propsSet[i];
