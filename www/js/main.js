@@ -61,16 +61,36 @@ window.onload = function(){
     
     var myTool = new Tool();
     
+    //plant button highlighted by default
+    highlightToolbarButton(document.getElementById("plantButton"))
+    
     $('.menuChoice').on('click', makeMenuChoice);
     
     $('#removeButton').on('click', function(){
         highlightToolbarButton(event.target);
+        unHighlightToolbarButton(document.getElementById("sendToBackButton"))
+        unHighlightToolbarButton(document.getElementById("plantButton"))
+        modes.plant = false;
+        modes.orderLayers = false;
         modes.remove = true;
     })
     
     $('#sendToBackButton').on('click', function(){
         highlightToolbarButton(event.target);
+        unHighlightToolbarButton(document.getElementById("removeButton"))
+        unHighlightToolbarButton(document.getElementById("plantButton"))
+        modes.plant = false;
+        modes.remove = false;
         modes.orderLayers = true; 
+    })
+
+      $('#plantButton').on('click', function(){
+        highlightToolbarButton(event.target);
+        unHighlightToolbarButton(document.getElementById("removeButton"))
+        unHighlightToolbarButton(document.getElementById("sendToBackButton"))
+        modes.remove = false;
+        modes.orderLayers = false; 
+        modes.plant = true;
     })
         
     myTool.onMouseUp = function(event) {
@@ -97,13 +117,13 @@ window.onload = function(){
             return;
         }
         
-        if(currentMenuChoice){
+        if(currentMenuChoice && modes.plant){
             dropFlower(event);
         }
     }
     
     myTool.onMouseDrag = function(event) {
-        if(mouseStates.droppedFlower || mouseStates.resizeOldFlower){
+        if(modes.plant){
             scaleFlower(event);
         }
     };
@@ -132,7 +152,6 @@ stopResize = function(){
   
 makeMenuChoice = function(){
     animateMenuChoice();
-    
     currentMenuChoice.src = event.target.src;
     //NOTE: the below relies on images being named _____flower, which will probably change later
     currentMenuChoice.name = event.target.src.match(/\/(\w+)flower/)[1]
@@ -224,8 +243,6 @@ deleteFlower = function(clickEvent){
     canvasFlowers[clickEvent.item.id].stopSound();
     delete canvasFlowers[clickEvent.item.id];
     mouseStates.currentFlower.img.remove();
-    modes.remove = false; //you have to click the button every time you want to remove a flower - TODO: change this (will require changing how other buttons work, so they set the other two to false)
-    unHighlightToolbarButton(document.getElementById('removeButton'));
     if(Object.keys(canvasFlowers).length == 0){
         backgroundTrack.stop();
         backgroundSound = false;
@@ -233,10 +250,7 @@ deleteFlower = function(clickEvent){
 }
 
 sendFlowerToBack = function(){
-    mouseStates.currentFlower.img.sendToBack();
-    modes.orderLayers = false; //TODO: change this so you don't exit the mode immediately
-    unHighlightToolbarButton(document.getElementById('sendToBackButton'))
-    
+    mouseStates.currentFlower.img.sendToBack();    
 }
 
 //scale a flower based on whether mouse distance to flower center is increasing or decreasing
