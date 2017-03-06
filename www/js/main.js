@@ -236,6 +236,7 @@ deleteFlower = function(clickEvent){
 
 //scale a flower based on whether mouse distance to flower center is increasing or decreasing
 scaleFlower = function(clickEvent){
+    console.log(clickEvent);
     flowerCenter = mouseStates.currentFlower.img.position;
     mousePos = clickEvent.point;
     prevMousePos = clickEvent.lastPoint;
