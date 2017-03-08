@@ -318,16 +318,18 @@ scaleFlower = function(clickEvent){
     if(change > 0){
         if(!(mouseStates.currentFlower.img.bounds.width > (project.view.size.width / 2))){
            mouseStates.currentFlower.img.scale(resize.grow)
-           //Sound doesn't scale properly, it goes away after resizeing too many times.
-           //canvasFlowers[clickEvent.item.id].toggleVolume(resize.grow);
+           //Sound doesn't scale properly, goes away after resizing too many times
+           canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);
+            console.log(mouseStates.currentFlower.volume)
         }
     }
     else if(change < 0){
         //current fix for teeny flowers - should be solved if/when we move to distance-based sizing, but fixing for now
         if(!(mouseStates.currentFlower.img.bounds.width < (project.view.size.width / 20))){
-            mouseStates.currentFlower.img.scale(resize.shrink)
+            mouseStates.currentFlower.img.scale(resize.shrink);
             //Sound doesn't scale properly, it goes away after resizeing too many times.
-            //canvasFlowers[clickEvent.item.id].toggleVolume(resize.shrink);
+            canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.shrink)
+            console.log(mouseStates.currentFlower.volume)
         }
     }
 }
