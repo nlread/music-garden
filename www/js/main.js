@@ -49,7 +49,8 @@ var buttons = {}
 
 var currentMenuChoice = {
     src: "", //actual image source
-    name: "" //flower name - "pink", "blue", etc
+    name: "", //flower name - "pink", "blue", etc
+    div: "" //div that contains it
 }
 
 /*ONLOAD*/
@@ -66,6 +67,16 @@ window.onload = function(){
     highlightToolbarButton(buttons.plant)
     
     $('.menuChoice').on('click', makeMenuChoice);
+    
+    $('.menuChoice').on('mouseover', function(){
+        choice = this;
+        animateMenuChoice(choice);
+    });
+    
+     $('.menuChoice').on('mouseout', function(){
+        choice = this;
+        unHighlightMenuChoice(choice);
+    });
     
     $('#removeButton').on('click', function(){
        removeButtonClicked();
@@ -141,10 +152,11 @@ stopResize = function(){
  * Switches current flower being dropped and resets state variables
  */
 makeMenuChoice = function(){
-    animateMenuChoice();
+    animateMenuChoice(this);
     currentMenuChoice.src = event.target.src;
     //NOTE: the below relies on images being named _____flower, which will probably change later
     currentMenuChoice.name = event.target.src.match(/\/(\w+)flower/)[1]
+    currentMenuChoice.div = document.getElementById(currentMenuChoice.name).parentElement
     mouseStates.droppedFlower = false;       
     
 }
@@ -153,7 +165,7 @@ makeMenuChoice = function(){
 /*
  * Animates the menu on click - increases image size and highlights it
  */
-animateMenuChoice = function(){
+animateMenuChoice = function(choice){
     if(currentMenuChoice.src){
         //regex relies on current image naming scheme of ___flower.png
         oldMenuChoice = document.getElementById(currentMenuChoice.src.match(/\/(\w+)flower/)[1])
@@ -169,14 +181,27 @@ animateMenuChoice = function(){
     );
     }
 
-    $(event.target).animate({
+    $(choice.firstChild).animate({
         height: "100%",
         width: "100%"
         }, 100
     );
 
-    $(event.target.parentElement).animate({
+    $(choice).animate({
         backgroundColor: colors.menuSelectColor
+        }, 100
+    );  
+}
+
+unHighlightMenuChoice = function(choice){
+    $(choice.firstChild).animate({
+        height: "95%",
+        width: "95%"
+        }, 100
+    );
+
+    $(choice).animate({
+        backgroundColor: colors.menuColor
         }, 100
     );  
 }
