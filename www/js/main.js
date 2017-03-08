@@ -153,10 +153,9 @@ stopResize = function(){
  */
 makeMenuChoice = function(){
     animateMenuChoice(this);
-    currentMenuChoice.src = event.target.src;
-    //NOTE: the below relies on images being named _____flower, which will probably change later
-    currentMenuChoice.name = event.target.src.match(/\/(\w+)flower/)[1]
-    currentMenuChoice.div = document.getElementById(currentMenuChoice.name).parentElement
+    currentMenuChoice.src = this.firstChild.src;
+    currentMenuChoice.name = this.firstChild.id
+    currentMenuChoice.div = this
     mouseStates.droppedFlower = false;       
     
 }
@@ -167,8 +166,8 @@ makeMenuChoice = function(){
  */
 animateMenuChoice = function(choice){
     if(currentMenuChoice.src){
-        //regex relies on current image naming scheme of ___flower.png
-        oldMenuChoice = document.getElementById(currentMenuChoice.src.match(/\/(\w+)flower/)[1])
+        oldMenuChoice =  document.getElementById(currentMenuChoice.name)
+        
         $(oldMenuChoice).animate({
         height: "95%",
         width: "95%" 
