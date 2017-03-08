@@ -69,30 +69,15 @@ window.onload = function(){
     $('.menuChoice').on('click', makeMenuChoice);
     
     $('#removeButton').on('click', function(){
-        highlightToolbarButton(buttons.remove);
-        unHighlightToolbarButton(buttons.sendToBack);
-        unHighlightToolbarButton(buttons.plant);
-        modes.plant = false;
-        modes.orderLayers = false;
-        modes.remove = true;
+       removeButtonClicked();
     })
     
     $('#sendToBackButton').on('click', function(){
-        highlightToolbarButton(buttons.sendToBack);
-        unHighlightToolbarButton(buttons.remove);
-        unHighlightToolbarButton(buttons.plant);
-        modes.plant = false;
-        modes.remove = false;
-        modes.orderLayers = true; 
+        sendToBackButtonClicked();
     })
 
-      $('#plantButton').on('click', function(){
-        highlightToolbarButton(buttons.plant);
-        unHighlightToolbarButton(buttons.remove);
-        unHighlightToolbarButton(buttons.sendToBack);
-        modes.remove = false;
-        modes.orderLayers = false; 
-        modes.plant = true;
+    $('#plantButton').on('click', function(){
+        plantButtonClicked();
     })
         
     myTool.onMouseUp = function(event) {
@@ -115,7 +100,6 @@ window.onload = function(){
             }
         
             //return so that you don't drop a new flower on top of one to resize
-            //NOTE: this does prevent dropping flowers on top of each other, so if that's a feature we want we'll have to work around it somehow
             return;
         }
         
@@ -197,6 +181,34 @@ animateMenuChoice = function(){
     );  
 }
 
+plantButtonClicked = function(){
+    highlightToolbarButton(buttons.plant);
+    unHighlightToolbarButton(buttons.remove);
+    unHighlightToolbarButton(buttons.sendToBack);
+    modes.remove = false;
+    modes.orderLayers = false; 
+    modes.plant = true;
+}
+
+removeButtonClicked = function(){
+    highlightToolbarButton(buttons.remove);
+    unHighlightToolbarButton(buttons.sendToBack);
+    unHighlightToolbarButton(buttons.plant);
+    modes.plant = false;
+    modes.orderLayers = false;
+    modes.remove = true;   
+}
+
+sendToBackButtonClicked = function(){
+    highlightToolbarButton(buttons.sendToBack);
+    unHighlightToolbarButton(buttons.remove);
+    unHighlightToolbarButton(buttons.plant);
+    modes.plant = false;
+    modes.remove = false;
+    modes.orderLayers = true; 
+}
+
+
 highlightToolbarButton = function(button){
     $(button).animate({
         backgroundColor: colors.toolbarSelectColor
@@ -219,8 +231,8 @@ dropFlower = function(clickEvent){
         //for reference, item is the svg that's imported
         project.importSVG(currentMenuChoice.src, {
             onError: function(message){
-                console.log("import error")
-                console.log(message)
+                console.log("import error");
+                console.log(message);
             }, 
             onLoad: function(item){ 
                 newFlower = new Flower(null, item.scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name]))//null is for the path since Component is path-based, also omitting sound argument for now
@@ -257,13 +269,7 @@ sendFlowerToBack = function(){
 
 //scale a flower based on whether mouse distance to flower center is increasing or decreasing
 scaleFlower = function(clickEvent){
-    flowerCenter = mouseStates.currentFlower.img.position;
-    mousePos = clickEvent.point;
-    prevMousePos = clickEvent.lastPoint;
-    prevDist = pointDistance(prevMousePos, flowerCenter);
-    currentDist = pointDistance(mousePos, flowerCenter);
-    change = currentDist - prevDist
-
+    change = calculateMouseDirection(clickEvent);
     if(change > 0){
         if(!(mouseStates.currentFlower.img.bounds.width > (project.view.size.width / 2))){
            mouseStates.currentFlower.img.scale(resize.grow)
@@ -279,6 +285,15 @@ scaleFlower = function(clickEvent){
             //canvasFlowers[clickEvent.item.id].toggleVolume(resize.shrink);
         }
     }
+}
+
+calculateMouseDirection = function(dragEvent){
+    flowerCenter = mouseStates.currentFlower.img.position;
+    mousePos = dragEvent.point;
+    prevMousePos = dragEvent.lastPoint;
+    prevDist = pointDistance(prevMousePos, flowerCenter);
+    currentDist = pointDistance(mousePos, flowerCenter);
+    return(currentDist - prevDist);
 }
 
 //helper function - used to determine whether to increase or decrease flower size
