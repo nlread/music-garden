@@ -125,7 +125,7 @@ window.onload = function(){
     }
     
     myTool.onMouseDrag = function(event) {
-        if(modes.plant){
+        if(modes.plant && mouseStates.droppedFlower){
             scaleFlower(event);
         }
     };
@@ -217,24 +217,27 @@ dropFlower = function(clickEvent){
         var newFlower;
         //all the code that deals with the SVG has to live in the callback function because it's asynchronous (https://groups.google.com/forum/#!searchin/paperjs/svg|sort:relevance/paperjs/ohy3oXUmLPg/G9ehRKhEfVgJ)
         //for reference, item is the svg that's imported
-        project.importSVG(currentMenuChoice.src, 
-            {onError: console.log("error"), 
-            onLoad: function(item){
-            console.log(item)
-            newFlower = new Flower(null, item.scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name]))//null is for the path since Component is path-based, also omitting sound argument for now
-            
-            newFlower.playSound();
-            mouseStates.currentFlower = newFlower
-            mouseStates.currentFlower.img.scale(0.3)
-            mouseStates.currentFlower.img.position = clickEvent.point
-            mouseStates.droppedFlower = true;
-            canvasFlowers[clickEvent.item.id] = newFlower;
-            if(!backgroundSound){
-                backgroundTrack.play();
-                backgroundTrack.loop(true);
-                backgroundSound = true;
+        project.importSVG(currentMenuChoice.src, {
+            onError: function(message){
+                console.log("import error")
+                console.log(message)
+            }, 
+            onLoad: function(item){ 
+                newFlower = new Flower(null, item.scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name]))//null is for the path since Component is path-based, also omitting sound argument for now
+                newFlower.playSound();
+                mouseStates.currentFlower = newFlower;
+                mouseStates.droppedFlower = true;
+                mouseStates.currentFlower.img.position = clickEvent.point;
+                mouseStates.currentFlower.img.scale(0.3);
+                
+                canvasFlowers[clickEvent.item.id] = newFlower;
+                if(!backgroundSound){
+                    backgroundTrack.play();
+                    backgroundTrack.loop(true);
+                    backgroundSound = true;
+                }
             }
-        }});
+        });
     } 
 }
 
