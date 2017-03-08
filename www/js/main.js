@@ -9,6 +9,7 @@ var resize = {
 
 var mouseStates = {
     menuChoice: -1,
+    menuChoiceClicked: false,
     droppedFlower: false,
     currentFlower: null,
     resizeOldFlower: false,
@@ -168,16 +169,12 @@ animateMenuChoice = function(choice){
     if(currentMenuChoice.src){
         oldMenuChoice =  document.getElementById(currentMenuChoice.name)
         
-        $(oldMenuChoice).animate({
-        height: "95%",
-        width: "95%" 
-        }, 100
+        $(oldMenuChoice.firstChild).animate({
+            height: "95%",
+            width: "95%",
+            backgroundColor: colors.menuColor
+            }, 100
         );
-        
-        $(oldMenuChoice.parentElement).animate({
-        backgroundColor: colors.menuColor
-        }, 100
-    );
     }
 
     $(choice.firstChild).animate({
