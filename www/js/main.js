@@ -242,7 +242,7 @@ unHighlightToolbarButton = function(button){
  */
 interactWithPlant = function(clickEvent){
     pointClicked = clickEvent.point;
-    mouseStates.currentFlower = new Flower(null,event.item);
+    mouseStates.currentFlower = new Flower(null,clickEvent.item);
     if(modes.remove){
         deleteFlower(event);
     }
