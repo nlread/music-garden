@@ -220,7 +220,6 @@ dropFlower = function(clickEvent){
         project.importSVG(currentMenuChoice.src, 
             {onError: console.log("error"), 
             onLoad: function(item){
-            console.log(item)
             newFlower = new Flower(null, item.scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name]))//null is for the path since Component is path-based, also omitting sound argument for now
             
             newFlower.playSound();
@@ -254,7 +253,7 @@ sendFlowerToBack = function(){
 
 //scale a flower based on whether mouse distance to flower center is increasing or decreasing
 scaleFlower = function(clickEvent){
-    console.log(clickEvent);
+    console.log(canvasFlowers[clickEvent.item.id].volume);
     flowerCenter = mouseStates.currentFlower.img.position;
     mousePos = clickEvent.point;
     prevMousePos = clickEvent.lastPoint;
