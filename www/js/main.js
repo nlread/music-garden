@@ -1,6 +1,6 @@
 paper.install(window); //make paper scope global by injecting it into window - from here http://blog.lindsayelia.com/post/128346565323/making-paperjs-work-in-an-external-file
 
-//DECLARE GLOBAL CONSTANTS AND VARIABLES
+/*DECLARE GLOBAL CONSTANTS AND VARIABLES*/
 var resize = {
     initFlowerSize: 0.2,
     shrink: 0.95,
@@ -43,7 +43,6 @@ var backgroundTrack = new Howl({
 
 var backgroundSound = false;
 
-//namespace to be filled in onload with menu choice divs
 var menuChoices = {}
 
 var buttons = {}
@@ -53,7 +52,7 @@ var currentMenuChoice = {
     name: "" //flower name - "pink", "blue", etc
 }
 
-//ONLOAD
+/*ONLOAD*/
 window.onload = function(){
     //sanity check
     console.log("window loaded");
@@ -69,30 +68,15 @@ window.onload = function(){
     $('.menuChoice').on('click', makeMenuChoice);
     
     $('#removeButton').on('click', function(){
-        highlightToolbarButton(buttons.remove);
-        unHighlightToolbarButton(buttons.sendToBack);
-        unHighlightToolbarButton(buttons.plant);
-        modes.plant = false;
-        modes.orderLayers = false;
-        modes.remove = true;
+       removeButtonClicked();
     })
     
     $('#sendToBackButton').on('click', function(){
-        highlightToolbarButton(buttons.sendToBack);
-        unHighlightToolbarButton(buttons.remove);
-        unHighlightToolbarButton(buttons.plant);
-        modes.plant = false;
-        modes.remove = false;
-        modes.orderLayers = true; 
+        sendToBackButtonClicked();
     })
 
-      $('#plantButton').on('click', function(){
-        highlightToolbarButton(buttons.plant);
-        unHighlightToolbarButton(buttons.remove);
-        unHighlightToolbarButton(buttons.sendToBack);
-        modes.remove = false;
-        modes.orderLayers = false; 
-        modes.plant = true;
+    $('#plantButton').on('click', function(){
+        plantButtonClicked();
     })
         
     myTool.onMouseUp = function(event) {
@@ -100,44 +84,38 @@ window.onload = function(){
     };
 
     myTool.onMouseDown = function(event){
-        
         if(project.hitTest(event.point)){
-            pointClicked = event.point;
-            mouseStates.currentFlower = new Flower(null,event.item);
-            if(modes.remove){
-                deleteFlower(event);
-            }
-            else if(modes.orderLayers){
-               sendFlowerToBack();
-            }
-            else{
-                mouseStates.resizeOldFlower = true;
-            }
-        
+            interactWithPlant(event);
             //return so that you don't drop a new flower on top of one to resize
-            //NOTE: this does prevent dropping flowers on top of each other, so if that's a feature we want we'll have to work around it somehow
             return;
-        }
-        
+        } 
         if(currentMenuChoice && modes.plant){
             dropFlower(event);
         }
     }
     
     myTool.onMouseDrag = function(event) {
-        if(modes.plant){
+        if(modes.plant && mouseStates.droppedFlower){
             scaleFlower(event);
         }
     };
 }
 
 //HELPER FUNCTIONS
+
+/*
+ * Sets up Paper.js screen
+ */
 setUpScreen = function(){
     paper.setup('canvas')
-    view.draw(); 
-    
+    view.draw();   
 }
 
+
+/*
+ * Initializes global namespaces that we don't have access to until onload() but need 
+ * globally
+ */
 initializeGlobals = function(){
     menuChoices.choice1 = document.getElementById("choice1");
     menuChoices.choice2 = document.getElementById("choice2");
@@ -150,12 +128,18 @@ initializeGlobals = function(){
     
 }
 
+/*
+ * Stops resizing plant
+ */
 stopResize = function(){
     if(mouseStates.resizeOldFlower){
         mouseStates.resizeOldFlower = false;
     }
 }
-  
+
+/*
+ * Switches current flower being dropped and resets state variables
+ */
 makeMenuChoice = function(){
     animateMenuChoice();
     currentMenuChoice.src = event.target.src;
@@ -165,8 +149,11 @@ makeMenuChoice = function(){
     
 }
 
+
+/*
+ * Animates the menu on click - increases image size and highlights it
+ */
 animateMenuChoice = function(){
-    //shrink old menu choice but first make sure it's not null
     if(currentMenuChoice.src){
         //regex relies on current image naming scheme of ___flower.png
         oldMenuChoice = document.getElementById(currentMenuChoice.src.match(/\/(\w+)flower/)[1])
@@ -175,28 +162,64 @@ animateMenuChoice = function(){
         width: "95%" 
         }, 100
         );
-
-        //unhighlight color
+        
         $(oldMenuChoice.parentElement).animate({
         backgroundColor: colors.menuColor
         }, 100
     );
     }
 
-    //increase size of new menu choice
     $(event.target).animate({
         height: "100%",
         width: "100%"
         }, 100
     );
 
-    //highlight color
     $(event.target.parentElement).animate({
         backgroundColor: colors.menuSelectColor
         }, 100
     );  
 }
 
+/*
+ * Resets states after plant button clicked
+ */
+plantButtonClicked = function(){
+    highlightToolbarButton(buttons.plant);
+    unHighlightToolbarButton(buttons.remove);
+    unHighlightToolbarButton(buttons.sendToBack);
+    modes.remove = false;
+    modes.orderLayers = false; 
+    modes.plant = true;
+}
+
+/*
+ * Resets states after remove button clicked
+ */
+removeButtonClicked = function(){
+    highlightToolbarButton(buttons.remove);
+    unHighlightToolbarButton(buttons.sendToBack);
+    unHighlightToolbarButton(buttons.plant);
+    modes.plant = false;
+    modes.orderLayers = false;
+    modes.remove = true;   
+}
+
+/*
+ * Resets states after send to back button clicked
+ */
+sendToBackButtonClicked = function(){
+    highlightToolbarButton(buttons.sendToBack);
+    unHighlightToolbarButton(buttons.remove);
+    unHighlightToolbarButton(buttons.plant);
+    modes.plant = false;
+    modes.remove = false;
+    modes.orderLayers = true; 
+}
+
+/*
+ * Helper function to highlight a given toolbar button
+ */
 highlightToolbarButton = function(button){
     $(button).animate({
         backgroundColor: colors.toolbarSelectColor
@@ -204,6 +227,9 @@ highlightToolbarButton = function(button){
     ); 
 }
 
+/*
+ * Helper function to unhighlight a given toolbar button
+ */
 unHighlightToolbarButton = function(button){
      $(button).animate({
         backgroundColor: colors.toolbarColor
@@ -211,32 +237,61 @@ unHighlightToolbarButton = function(button){
     ); 
 }
 
-//drop a clone of a menu flower
+/*
+ * Determine whether to delete, send to back, or resize a plant that's been clicked on  * based on current mode
+ */
+interactWithPlant = function(clickEvent){
+    pointClicked = clickEvent.point;
+    mouseStates.currentFlower = new Flower(null,clickEvent.item);
+    if(modes.remove){
+        deleteFlower(event);
+    }
+    else if(modes.orderLayers){
+       sendFlowerToBack();
+    }
+    else{
+        mouseStates.resizeOldFlower = true;
+    } 
+}
+
+
+/*
+ * Drop a plant on the screen
+ */
+
 dropFlower = function(clickEvent){
     if(project.view.bounds.contains(clickEvent)){
         var newFlower;
         //all the code that deals with the SVG has to live in the callback function because it's asynchronous (https://groups.google.com/forum/#!searchin/paperjs/svg|sort:relevance/paperjs/ohy3oXUmLPg/G9ehRKhEfVgJ)
         //for reference, item is the svg that's imported
-        project.importSVG(currentMenuChoice.src, 
-            {onError: console.log("error"), 
-            onLoad: function(item){
-            newFlower = new Flower(null, item.scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name]))//null is for the path since Component is path-based, also omitting sound argument for now
-            
-            newFlower.playSound();
-            mouseStates.currentFlower = newFlower
-            mouseStates.currentFlower.img.scale(0.3)
-            mouseStates.currentFlower.img.position = clickEvent.point
-            mouseStates.droppedFlower = true;
-            canvasFlowers[clickEvent.item.id] = newFlower;
-            if(!backgroundSound){
-                backgroundTrack.play();
-                backgroundTrack.loop(true);
-                backgroundSound = true;
+        project.importSVG(currentMenuChoice.src, {
+            onError: function(message){
+                console.log("import error");
+                console.log(message);
+            }, 
+            onLoad: function(item){ 
+                newFlower = new Flower(null, item.scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name]))//null is for the path since Component is path-based, also omitting sound argument for now
+                newFlower.playSound();
+                mouseStates.currentFlower = newFlower;
+                mouseStates.droppedFlower = true;
+                mouseStates.currentFlower.img.position = clickEvent.point;
+                mouseStates.currentFlower.img.scale(0.3);
+                
+                canvasFlowers[clickEvent.item.id] = newFlower;
+                if(!backgroundSound){
+                    backgroundTrack.play();
+                    backgroundTrack.loop(true);
+                    backgroundSound = true;
+                }
             }
-        }});
+        });
     } 
 }
 
+
+/*
+ * Delete a plant from screen and stop its associated sound
+ */
 deleteFlower = function(clickEvent){
     canvasFlowers[clickEvent.item.id].stopSound();
     delete canvasFlowers[clickEvent.item.id];
@@ -247,25 +302,25 @@ deleteFlower = function(clickEvent){
     }
 }
 
+/*
+ * Send to back
+ */
 sendFlowerToBack = function(){
     mouseStates.currentFlower.img.sendToBack();    
 }
 
-//scale a flower based on whether mouse distance to flower center is increasing or decreasing
+/*
+ * Scale a flower based on whether mouse distance to flower center is increasing or 
+ * decreasing
+ */
 scaleFlower = function(clickEvent){
+    change = calculateMouseDirection(clickEvent);
     console.log(canvasFlowers[clickEvent.item.id].volume);
-    flowerCenter = mouseStates.currentFlower.img.position;
-    mousePos = clickEvent.point;
-    prevMousePos = clickEvent.lastPoint;
-    prevDist = pointDistance(prevMousePos, flowerCenter);
-    currentDist = pointDistance(mousePos, flowerCenter);
-    change = currentDist - prevDist
-
     if(change > 0){
         if(!(mouseStates.currentFlower.img.bounds.width > (project.view.size.width / 2))){
-           mouseStates.currentFlower.img.scale(resize.grow)
-           //Sound doesn't scale properly, it goes away after resizeing too many times.
-           //canvasFlowers[clickEvent.item.id].toggleVolume(resize.grow);
+            mouseStates.currentFlower.img.scale(resize.grow)
+            //Sound doesn't scale properly, it goes away after resizeing too many times.
+            canvasFlowers[clickEvent.item.id].toggleVolume(resize.grow);
         }
     }
     else if(change < 0){
@@ -273,12 +328,29 @@ scaleFlower = function(clickEvent){
         if(!(mouseStates.currentFlower.img.bounds.width < (project.view.size.width / 20))){
             mouseStates.currentFlower.img.scale(resize.shrink)
             //Sound doesn't scale properly, it goes away after resizeing too many times.
-            //canvasFlowers[clickEvent.item.id].toggleVolume(resize.shrink);
+            canvasFlowers[clickEvent.item.id].toggleVolume(resize.shrink);
         }
     }
 }
 
-//helper function - used to determine whether to increase or decrease flower size
+
+/*
+ * Helper function to calculate direction mouse is moving in relation to plant on drag
+ */
+calculateMouseDirection = function(dragEvent){
+    flowerCenter = mouseStates.currentFlower.img.position;
+    mousePos = dragEvent.point;
+    prevMousePos = dragEvent.lastPoint;
+    prevDist = pointDistance(prevMousePos, flowerCenter);
+    currentDist = pointDistance(mousePos, flowerCenter);
+    return(currentDist - prevDist);
+}
+
+/*
+ * Euclidean distance (helper function for calculateMouseDirection)
+ */
+
+
 pointDistance = function(point1, point2){
     distance = Math.sqrt(Math.pow((point2.x - point1.x), 2) + Math.pow((point2.y - point2.x), 2));
     return(distance);
