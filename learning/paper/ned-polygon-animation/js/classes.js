@@ -73,13 +73,16 @@ class PhysicsPlant extends Component {
         this.staticSegments = staticSegments;
         
         this.propsSet = [];
-        for(let pathIndex=0; pathIndex<movingPaths; pathIndex++) {
-            for(let segIndex=0; i < movingPaths[pathIndex].segments.length; segIndex++) {
+        console.log('moving: ' + movingPaths.length);
+        for(let pathIndex=0; pathIndex<movingPaths.length; pathIndex++) {
+            console.log('segs: ' + movingPaths[pathIndex].segments.length);
+            for(let segIndex=0; segIndex<movingPaths[pathIndex].segments.length; segIndex++) {
                 let seg = movingPaths[pathIndex].segments[segIndex];
-                let props = new SegmentProperties(seg.point)
+                let props = new SegmentProperties(seg, seg.point)
                 this.propsSet.push(props);
             }
         }
+        console.log(this.propsSet);
     }
     
     applyForce(dTime, forceGenerator) {
@@ -111,7 +114,6 @@ class PhysicsPlant extends Component {
     
     applyForces(dTime, forceGenerators) {
         for(let i=0; i<this.propsSet.length; i++) {
-            
             if (this.staticSegments.includes(i)) {
                 continue;
             }
@@ -119,7 +121,7 @@ class PhysicsPlant extends Component {
             let forceTotalAtPoint = new Point(0, 0);
             
             let props = this.propsSet[i];
-            let seg = propsSet.segment;
+            let seg = props.segment;
             
             for(let f=0; f<forceGenerators.length; f++) {
                 forceTotalAtPoint = forceTotalAtPoint.add(forceGenerators[f].getForce(seg.point));
@@ -149,13 +151,13 @@ class SegmentProperties {
             throw 'no segment or base point provided';
         }
                 
-        if(arguments.length >= 2) {
+        if(arguments.length >= 3) {
             this.velocity = velocity.clone();
         } else {
             this.velocity = new Point(0, 0);
         }
         
-        if(arguments.length >= 3) {
+        if(arguments.length >= 4) {
             this.acceleration = acceleration.clone();
         } else {
             this.acceleration = new Point(0, 0);

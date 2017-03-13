@@ -32,11 +32,7 @@ function setup() {
 //        project.activeLayer.addChild(oneLeaf);
 //    }
     
-    loadComplexSVG('img/greenflower.svg', new Point(300, 500));
-    loadComplexSVG('img/redflower.svg', new Point(800, 300));
-//    loadComplexSVG('img/jadeflower.svg', new Point(700, 800));
-    loadComplexSVG('img/succulentflower.svg', new Point(900, 700));
-    
+    loadPlant('img/jadeflower.svg', new Point(300, 500));
 //    polyPath = Path.RegularPolygon(new Point(0, 0), 7, 100);
 //    polyPath.strokeColor = 'black';
 //    polyPath.fillColor = 'steelblue';
@@ -59,6 +55,18 @@ function loadComplexSVG(path, position) {
         function(err) {
             console.log(err);
         });
+}
+
+function loadPlant(path, position) {
+    Utils.importSVGToPhysicsPlant(
+        path, 
+        function(physicsPlant) {
+            movingPlants.push(physicsPlant);
+            project.activeLayer.addChild(physicsPlant.paperGroup);
+        }, 
+        function(err) {
+            console.log(err);
+    });
 }
 
 function importPaths(pathsFromComplexNode, position) {

@@ -17,6 +17,7 @@ class Utils {
             path, 
             function(importedData) {
                 let paths = Utils.getPathsFromImportedData(importedData);
+                console.log(paths);
                 let physicsPlant = new PhysicsPlant(importedData, paths, []);
                 success(physicsPlant);
             }, 
@@ -34,7 +35,6 @@ class Utils {
             let group = groups.pop();
             for(let i=0; i<group.children.length; i++) {
                 let obj = group.children[i]; 
-                console.log(typeof(obj));
                 if (obj instanceof Path) {
                     paths.push(obj);
                 } else if(obj instanceof Group || obj instanceof Group) {
