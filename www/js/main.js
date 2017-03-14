@@ -285,6 +285,7 @@ dropFlower = function(clickEvent){
         var newFlower;
         //all the code that deals with the SVG has to live in the callback function because it's asynchronous (https://groups.google.com/forum/#!searchin/paperjs/svg|sort:relevance/paperjs/ohy3oXUmLPg/G9ehRKhEfVgJ)
         //for reference, item is the svg that's imported
+        console.log(currentMenuChoice.src)
         project.importSVG(currentMenuChoice.src, {
             onError: function(message){
                 console.log("import error");
