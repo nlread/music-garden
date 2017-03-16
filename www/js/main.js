@@ -13,6 +13,7 @@ var mouseStates = {
     droppedFlower: false,
     currentFlower: null,
     resizeOldFlower: false,
+    cursorFlower: false,
 };
 
 var modes = {
@@ -51,8 +52,10 @@ var buttons = {}
 var currentMenuChoice = {
     src: "", //actual image source
     name: "", //flower name - "pink", "blue", etc
-    div: "" //div that contains it
+    div: "", //div that contains it
 }
+
+var cursorFlower = null;
 
 /*ONLOAD*/
 window.onload = function(){
@@ -65,7 +68,7 @@ window.onload = function(){
     var myTool = new Tool();
     
     //plant button highlighted by default
-    highlightToolbarButton(buttons.plant)
+    highlightToolbarButton(buttons.plant);
     
     $('.menuChoice').on('click', makeMenuChoice);
     
@@ -96,6 +99,7 @@ window.onload = function(){
     };
 
     myTool.onMouseDown = function(event){
+        console.log(currentMenuChoice)
         if(project.hitTest(event.point)){
             interactWithPlant(event);
             //return so that you don't drop a new flower on top of one to resize
@@ -106,11 +110,18 @@ window.onload = function(){
         }
     }
     
-    myTool.onMouseDrag = function(event) {
+    myTool.onMouseDrag = function(event) { 
         if(modes.plant && mouseStates.droppedFlower){
             scaleFlower(event);
         }
     };
+    
+    myTool.onMouseMove = function(event){
+        if(modes.plant && mouseStates.cursorFlower){
+            cursorFlower.position.x = event.point.x+20;
+            cursorFlower.position.y = event.point.y+20;
+        }
+    }
 }
 
 //HELPER FUNCTIONS
@@ -157,8 +168,10 @@ makeMenuChoice = function(){
     currentMenuChoice.src = this.firstChild.src;
     currentMenuChoice.name = this.firstChild.id
     currentMenuChoice.div = this
-    mouseStates.droppedFlower = false;       
-    
+    mouseStates.droppedFlower = false;
+    mouseStates.cursorFlower = true;
+    cursorFlower = new Raster(currentMenuChoice.src).scale(0.07)
+    cursorFlower.opacity = 0.4 
 }
 
 
@@ -223,7 +236,8 @@ removeButtonClicked = function(){
     unHighlightToolbarButton(buttons.plant);
     modes.plant = false;
     modes.orderLayers = false;
-    modes.remove = true;   
+    modes.remove = true;  
+    mouseStates.cursorFlower = false;
 }
 
 /*
@@ -236,6 +250,7 @@ sendToBackButtonClicked = function(){
     modes.plant = false;
     modes.remove = false;
     modes.orderLayers = true; 
+    mouseStates.cursorFlower = false;
 }
 
 /*
@@ -285,11 +300,9 @@ dropFlower = function(clickEvent){
         var newFlower;
         //all the code that deals with the SVG has to live in the callback function because it's asynchronous (https://groups.google.com/forum/#!searchin/paperjs/svg|sort:relevance/paperjs/ohy3oXUmLPg/G9ehRKhEfVgJ)
         //for reference, item is the svg that's imported
-        console.log(currentMenuChoice.src)
         project.importSVG(currentMenuChoice.src, {
             onError: function(message){
                 console.log("import error");
-                console.log(message);
             }, 
             onLoad: function(item){ 
                 newFlower = new Flower(null, item.scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name]))//null is for the path since Component is path-based, also omitting sound argument for now
@@ -342,7 +355,6 @@ scaleFlower = function(clickEvent){
            mouseStates.currentFlower.img.scale(resize.grow)
            //Sound doesn't scale properly, goes away after resizing too many times
            canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);
-            console.log(mouseStates.currentFlower.volume)
         }
     }
     else if(change < 0){
@@ -351,7 +363,6 @@ scaleFlower = function(clickEvent){
             mouseStates.currentFlower.img.scale(resize.shrink);
             //Sound doesn't scale properly, it goes away after resizeing too many times.
             canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.shrink)
-            console.log(mouseStates.currentFlower.volume)
         }
     }
 }
