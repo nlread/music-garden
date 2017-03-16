@@ -118,8 +118,11 @@ window.onload = function(){
     
     myTool.onMouseMove = function(event){
         if(modes.plant && mouseStates.cursorFlower){
-            cursorFlower.position.x = event.point.x+20;
-            cursorFlower.position.y = event.point.y+20;
+            //make it lag less on initial click - kind of a hacky fix for now
+            if(event.point.x != 0  && event.point.y != 0){
+                cursorFlower.position.x = event.point.x+20;
+                cursorFlower.position.y = event.point.y+20;
+            }
         }
     }
 }
@@ -170,6 +173,10 @@ makeMenuChoice = function(){
     currentMenuChoice.div = this
     mouseStates.droppedFlower = false;
     mouseStates.cursorFlower = true;
+    //delete old cursor flower
+    if(cursorFlower){
+        cursorFlower.remove()
+    }
     cursorFlower = new Raster(currentMenuChoice.src).scale(0.07)
     cursorFlower.opacity = 0.4 
 }
