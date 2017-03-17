@@ -78,17 +78,11 @@ window.onload = function(){
         unHighlightMenuChoice(choice);
     });
     
-    $('#removeButton').on('click', function(){
-       removeButtonClicked();
-    })
+    $('#removeButton').on('click', removeButtonClicked);
     
-    $('#sendToBackButton').on('click', function(){
-        sendToBackButtonClicked();
-    })
+    $('#sendToBackButton').on('click', sendToBackButtonClicked);
 
-    $('#plantButton').on('click', function(){
-        plantButtonClicked();
-    })
+    $('#plantButton').on('click', plantButtonClicked);
         
     myTool.onMouseUp = function(event) {
         stopResize();
@@ -113,11 +107,7 @@ window.onload = function(){
     
     myTool.onMouseMove = function(event){
         if(modes.plant && mouseStates.cursorFlower){
-            //make it lag less on initial click - kind of a hacky fix for now
-            if(event.point.x != 0  && event.point.y != 0){
-                cursorFlower.position.x = event.point.x+20;
-                cursorFlower.position.y = event.point.y+20;
-            }
+            moveCursorFlower(event);
         }
     }
 }
@@ -301,7 +291,6 @@ dropFlower = function(clickEvent){
     if(project.view.bounds.contains(clickEvent)){
         var newFlower;
         //all the code that deals with the SVG has to live in the callback function because it's asynchronous (https://groups.google.com/forum/#!searchin/paperjs/svg|sort:relevance/paperjs/ohy3oXUmLPg/G9ehRKhEfVgJ)
-        //for reference, item is the svg that's imported
         project.importSVG(currentMenuChoice.src, {
             onError: function(message){
                 console.log("import error");
@@ -315,11 +304,7 @@ dropFlower = function(clickEvent){
                 mouseStates.currentFlower.img.scale(0.3);
                 
                 canvasFlowers[clickEvent.item.id] = newFlower;
-                if(!backgroundSound){
-                    backgroundTrack.play();
-                    backgroundTrack.loop(true);
-                    backgroundSound = true;
-                }
+                startBackgroundSound();
             }
         });
     } 
@@ -354,17 +339,13 @@ scaleFlower = function(clickEvent){
     change = calculateMouseDirection(clickEvent);
     if(change > 0){
         if(!(mouseStates.currentFlower.img.bounds.width > (project.view.size.width / 2))){
-           mouseStates.currentFlower.img.scale(resize.grow)
-           //Sound doesn't scale properly, goes away after resizing too many times
-           canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);
+           mouseStates.currentFlower.img.scale(resize.grow); canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);
         }
     }
     else if(change < 0){
         //current fix for teeny flowers - should be solved if/when we move to distance-based sizing, but fixing for now
         if(!(mouseStates.currentFlower.img.bounds.width < (project.view.size.width / 20))){
-            mouseStates.currentFlower.img.scale(resize.shrink);
-            //Sound doesn't scale properly, it goes away after resizeing too many times.
-            canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.shrink)
+            mouseStates.currentFlower.img.scale(resize.shrink); canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.shrink)
         }
     }
 }
@@ -383,10 +364,31 @@ calculateMouseDirection = function(dragEvent){
 }
 
 /*
+ * Starts background sound if it's not already started
+ */
+startBackgroundSound = function(){
+    if(!backgroundSound){
+        backgroundTrack.play();
+        backgroundTrack.loop(true);
+        backgroundSound = true;
+    }
+}
+
+/*
+ * Moves the "ghost" flower that tracks with the cursor
+ */ 
+
+moveCursorFlower = function(event){
+//make it lag less on initial click - kind of a hacky fix for now
+    if(event.point.x != 0  && event.point.y != 0){
+        cursorFlower.position.x = event.point.x+20;
+        cursorFlower.position.y = event.point.y+20;
+    }
+}
+
+/*
  * Euclidean distance (helper function for calculateMouseDirection)
  */
-
-
 pointDistance = function(point1, point2){
     distance = Math.sqrt(Math.pow((point2.x - point1.x), 2) + Math.pow((point2.y - point2.x), 2));
     return(distance);
