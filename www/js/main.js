@@ -8,8 +8,6 @@ var resize = {
 }
 
 var mouseStates = {
-    menuChoice: -1,
-    menuChoiceClicked: false,
     droppedFlower: false,
     currentFlower: null,
     resizeOldFlower: false,
@@ -38,7 +36,6 @@ var colors = {
 //Holds all the flower on the canvas at any time
 var canvasFlowers = {};
 
-//This track will play while any flower is on the canvas.
 var backgroundTrack = new Howl({
     src: ["mp3/track1Individuals/Au1 louder.mp3"]    
 });
@@ -59,7 +56,6 @@ var cursorFlower = null;
 
 /*ONLOAD*/
 window.onload = function(){
-    //sanity check
     console.log("window loaded");
     
     setUpScreen(); 
@@ -99,7 +95,6 @@ window.onload = function(){
     };
 
     myTool.onMouseDown = function(event){
-        console.log(currentMenuChoice)
         if(project.hitTest(event.point)){
             interactWithPlant(event);
             //return so that you don't drop a new flower on top of one to resize
@@ -335,8 +330,8 @@ dropFlower = function(clickEvent){
  * Delete a plant from screen and stop its associated sound
  */
 deleteFlower = function(clickEvent){
-    canvasFlowers[clickEvent.item.id].stopSound();
-    delete canvasFlowers[clickEvent.item.id];
+    canvasFlowers[mouseStates.currentFlower.img.id].stopSound();
+    delete canvasFlowers[mouseStates.currentFlower.img.id];
     mouseStates.currentFlower.img.remove();
     if(Object.keys(canvasFlowers).length == 0){
         backgroundTrack.stop();
