@@ -83,6 +83,21 @@ window.onload = function(){
     $('#sendToBackButton').on('click', sendToBackButtonClicked);
 
     $('#plantButton').on('click', plantButtonClicked);
+    
+    $('.toolbarButton').on('mouseover', function(){
+        $(this.children[1]).animate({
+            height: '100%',
+            width: '100%'
+        })
+    })
+    
+    $('.toolbarButton').on('mouseout', function(){
+        console.log("mouseout")
+        $(this.children[1]).animate({
+            height: '95%',
+            width: '95%'
+        })
+    })
         
     myTool.onMouseUp = function(event) {
         stopResize();
