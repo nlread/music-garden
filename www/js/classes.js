@@ -111,10 +111,11 @@ class Flower extends Plant {
 
 class Music {
 
-    constructor(source){
+    constructor(source, section){
         this.source = source;
+        this.section = section;
         this.sound = new Howl({
-            src: [source]
+            src: [source[section]]
         });
     };
     

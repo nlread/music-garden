@@ -19,11 +19,13 @@ var modes = {
     remove: false,
     orderLayers: false
 }
+
+//For each flower there is a dictionary for its different pitches
 var soundSources = {
-    "green": "mp3/track1Individuals/Op4 louder.mp3",
-    "red": "mp3/track1Individuals/Op3 louder.mp3",
-    "jade": "mp3/track1Individuals/Op1 louder.mp3",
-    "succulent": "mp3/track1Individuals/Op2 louder.mp3"
+    "green": {1:"mp3/track1Individuals/Op4 louder.mp3"},
+    "red": {1:"mp3/track1Individuals/Op3 louder.mp3"},
+    "jade": {1:"mp3/track1Individuals/Op1 louder.mp3"},
+    "succulent": {1:"mp3/track1Individuals/Op2 louder.mp3"}
 };
 
 var colors = {
@@ -270,7 +272,7 @@ dropFlower = function(clickEvent){
                 console.log(message);
             }, 
             onLoad: function(item){ 
-                newFlower = new Flower(null, item.scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name]))//null is for the path since Component is path-based, also omitting sound argument for now
+                newFlower = new Flower(null, item.scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name],1))//null is for the path since Component is path-based, also omitting sound argument for now
                 newFlower.playSound();
                 mouseStates.currentFlower = newFlower;
                 mouseStates.droppedFlower = true;
