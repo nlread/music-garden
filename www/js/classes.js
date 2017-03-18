@@ -135,11 +135,22 @@ class Music {
 }
 
 class Animation {
+    /**
+     * Parent class of any tweens to apply to on screen components. 
+     * @constructor
+     * @param {Number} duration 
+     */
     constructor(duration) {
         this.duration = duration;
         this.elapsed = 0;
     }
 
+    /**
+     * Have the animation apply nessessary changes to the provided component. 
+     * Handles timing, then calss applyChange implemented in child. 
+     * @param {Number} dTime 
+     * @param {Component} component 
+     */
     update(dTime, component) {
         if (this.elapsed + dTime > this.duration) {
             this.dTime = this.duration - this.elapsed;
@@ -165,6 +176,12 @@ class ScalingAnimation extends Animation {
         this.changedBy = new Point(0, 0);
     }
 
+    /**
+     * Scales the provided component by the amount required given the amount of time passed
+     * and this animations target scaling. 
+     * @param {Number} dTime 
+     * @param {Component} component 
+     */
     applyChange(dTime, component) {
         let toChangeBy = this.scaleRadio.multiply(dTime / this.duration);
         
@@ -176,7 +193,7 @@ class ScalingAnimation extends Animation {
             toChangeBy.y = this.scaleRadio.y - this.changedBy.y;
         }
 
-        //component.scale(toChangeBy.x, toChangeBy.y);
+        component.scale(toChangeBy.x, toChangeBy.y);
         
         this.changedBy = this.changedBy.add(toChangeBy);
     }
