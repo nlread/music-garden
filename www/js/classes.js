@@ -1,5 +1,11 @@
 class Component {
     
+    /**
+     * Class which wraps a paper.js Group or Path and gives it the ability
+     * to set the rotation and scaling, instead of only changing the rotation
+     * and scaling. 
+     * @param {Group} paperGroup 
+     */
     constructor(paperGroup) {
         //null check enables having components with only Rasters and not Paths
         if(paperGroup != null){
@@ -12,8 +18,11 @@ class Component {
         
     }
     
-    // Not needed as paperGroup keeps track of its position? 
-    // Need way to account for position moving on rotation. 
+    /**
+     * Sets the position of the group relative to its starting position. 
+     * @param {Number} x
+     * @param {Number} y 
+     */
     setPosition(x, y) {
         this._position.x = x;
         this._position.y = y;
@@ -22,15 +31,21 @@ class Component {
         this.paperGroup.translate(deltaPos.x, deltaPos.y);
     }
     
+    /**
+     * Changes the position of the group by the provided values. 
+     * @param {Number} x 
+     * @param {Number} y 
+     */
     translate(x, y) {   
         this._position.x = x;
         this._position.y = y;
         this.paperGroup.translate(new Point(x, y));
     }
     
-    /*
+    /**
      * Sets the rotation of the path relative to its starting 
-     * rotation when it was created.
+     * rotation when it was created. 
+     * @param {Number} angle 
      */
     setRotation(angle) {        
         let deltaAngle = angle - this._orientation
@@ -38,14 +53,20 @@ class Component {
         this._orientation = angle;
     }
     
+    /**
+     * Changes the rotation of the group by the provided amount. 
+     * @param {Number} deltaAngle 
+     */
     rotate(deltaAngle) {
         this.paperGroup.rotate(deltaAngle);
         this._orientation += deltaAngle;
     }
     
-    /* 
+    /**
      * Scales the path to match the provided values relative to it's
-     * starting size when it was created. 
+     * starting size when it was created.  
+     * @param {Number} factorX 
+     * @param {Number} factorY 
      */
     setScaleFactor(factorX, factorY) {
         let deltaScale = new Point()
@@ -62,6 +83,12 @@ class Component {
         this._scaleFactor.y = factorY;
     }
     
+    /**
+     * Scales the group by the provided amounts. 
+     * 1 does not change the size in the given direction. 
+     * @param {Number} factorX 
+     * @param {Number} factorY 
+     */
     scale(factorX, factorY) {
         this.paperGroup.scale(factorX, factorY);
         
