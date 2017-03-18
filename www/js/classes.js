@@ -141,13 +141,43 @@ class Animation {
     }
 
     update(dTime, component) {
-        if (this.elapsed + dTime > duration) {
+        if (this.elapsed + dTime > this.duration) {
             this.dTime = this.duration - this.elapsed;
         }
         this.elapsed += dTime;
         
-        applyChange(dTime, component);
+        this.applyChange(dTime, component);
     }
 
 }
 
+class ScalingAnimation extends Animation {
+    
+    /**
+     * Animation which tweens the size of a component. 
+     * @constructor
+     * @param {Number} duration 
+     * @param {Point} scaleRadio 
+     */
+    constructor(duration, scaleRadio) {
+        super(duration);
+        this.scaleRadio = scaleRadio;
+        this.changedBy = new Point(0, 0);
+    }
+
+    applyChange(dTime, component) {
+        let toChangeBy = this.scaleRadio.multiply(dTime / this.duration);
+        
+        if(toChangeBy.x + this.changedBy.x >= this.scaleRadio.x) {
+            toChangeBy.x = this.scaleRadio.x - this.changedBy.x;
+        }
+
+        if(toChangeBy.y + this.changedBy.y >= this.scaleRadio.y) {
+            toChangeBy.y = this.scaleRadio.y - this.changedBy.y;
+        }
+
+        //component.scale(toChangeBy.x, toChangeBy.y);
+        
+        this.changedBy = this.changedBy.add(toChangeBy);
+    }
+}
