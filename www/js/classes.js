@@ -43,7 +43,7 @@ class Component {
         this._orientation += deltaAngle;
     }
     
-    /*
+    /* 
      * Scales the path to match the provided values relative to it's
      * starting size when it was created. 
      */
@@ -70,6 +70,18 @@ class Component {
     }
 }
 
+class AnimatedComponent extends Component {
+    constructor(paperGroup) {
+        super(paperGroup);
+        this.animations = [];
+    }
+
+    update(dTime) {
+        for(let i=0; i<this.animations.length; i++) {
+            
+        }
+    }
+}
 
 class Plant extends Component {
     
@@ -99,6 +111,8 @@ class Plant extends Component {
     };
 }
 
+
+
 class Flower extends Plant {
     //later, this will have more specific animation/sound characteristics, placeholder for now
     
@@ -119,3 +133,21 @@ class Music {
     };
     
 }
+
+class Animation {
+    constructor(duration) {
+        this.duration = duration;
+        this.elapsed = 0;
+    }
+
+    update(dTime, component) {
+        if (this.elapsed + dTime > duration) {
+            this.dTime = this.duration - this.elapsed;
+        }
+        this.elapsed += dTime;
+        
+        applyChange(dTime, component);
+    }
+
+}
+
