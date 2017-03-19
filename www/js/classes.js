@@ -98,14 +98,24 @@ class Component {
 }
 
 class AnimatedComponent extends Component {
+
     constructor(paperGroup) {
         super(paperGroup);
         this.animations = [];
     }
 
+    animate(anim) {
+        this.animations.push(anim);
+    }
+
     update(dTime) {
-        for(let i=0; i<this.animations.length; i++) {
+        for(let i=0; i < this.animations.length; i++) {
+            let anim = this.animations[i];
+            anim.update(dTime, this);
             
+            if(!anim.isValid()) {
+                this.animations.splice(i, 1);
+            }
         }
     }
 }
@@ -138,8 +148,6 @@ class Plant extends Component {
     };
 }
 
-
-
 class Flower extends Plant {
     //later, this will have more specific animation/sound characteristics, placeholder for now
     
@@ -162,6 +170,7 @@ class Music {
 }
 
 class Animation {
+
     /**
      * Parent class of any tweens to apply to on screen components. 
      * @constructor
@@ -179,12 +188,21 @@ class Animation {
      * @param {Component} component 
      */
     update(dTime, component) {
-        if (this.elapsed + dTime > this.duration) {
+        if (this.elapsed + dTime >= this.duration) {
             this.dTime = this.duration - this.elapsed;
         }
         this.elapsed += dTime;
         
         this.applyChange(dTime, component);
+    }
+
+    /**
+     * Returns if the animation is still valid or not.
+     * Eg has performed its tween or not. 
+     * @returns {Boolean}
+     */
+    isValid() {
+        return this.elapsed <= this.duration;
     }
 
 }
@@ -195,12 +213,12 @@ class ScalingAnimation extends Animation {
      * Animation which tweens the size of a component. 
      * @constructor
      * @param {Number} duration 
-     * @param {Point} scaleRadio 
+     * @param {Point} scaleRatio 
      */
-    constructor(duration, scaleRadio) {
+    constructor(duration, scaleRatio) {
         super(duration);
-        this.scaleRadio = scaleRadio;
-        this.changedBy = new Point(0, 0);
+        this.scaleRatio = scaleRatio;
+        this.scaledBy = new Point(1, 1);
     }
 
     /**
@@ -210,18 +228,33 @@ class ScalingAnimation extends Animation {
      * @param {Component} component 
      */
     applyChange(dTime, component) {
-        let toChangeBy = this.scaleRadio.multiply(dTime / this.duration);
+        let onePoint = new Point(1, 1);
+        let deltaScale = this.scaleRatio.multiply(dTime / this.duration);
         
-        if(toChangeBy.x + this.changedBy.x >= this.scaleRadio.x) {
-            toChangeBy.x = this.scaleRadio.x - this.changedBy.x;
+        if(deltaScale.x + this.scaledBy.x >= this.scaleRatio.x) {
+            deltaScale.x = this.scaleRatio.x - this.scaledBy.x;
         }
 
-        if(toChangeBy.y + this.changedBy.y >= this.scaleRadio.y) {
-            toChangeBy.y = this.scaleRadio.y - this.changedBy.y;
+        if(deltaScale.y + this.scaledBy.y >= this.scaleRatio.y) {
+            deltaScale.y = this.scaleRatio.y - this.scaledBy.y;
         }
 
-        component.scale(toChangeBy.x, toChangeBy.y);
-        
-        this.changedBy = this.changedBy.add(toChangeBy);
+
+        // Need to account for fact that component.scale() uses values relative to its size
+        // Must basically scale down then up to new value. 
+        let actualScaleFactor;
+        if(this.scaledBy.x === 0) {
+            actualScaleFactor = deltaScale.add(this.scaledBy);
+        } else {
+            actualScaleFactor = deltaScale.add(this.scaledBy).add(onePoint).divide(this.scaledBy.add(onePoint));
+        }
+
+        console.log(actualScaleFactor.x);
+
+        if(actualScaleFactor.x > 1) {
+            component.scale(actualScaleFactor.x, actualScaleFactor.y);
+        }
+   
+        this.changedBy = this.scaledBy.add(deltaScale);
     }
 }
