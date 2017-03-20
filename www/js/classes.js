@@ -18,6 +18,13 @@ class Component {
     }
     
     /**
+     * Sets the position of the group relative to its starting position
+     * @param {Point} newPos 
+     */
+    setPosition(newPos) {
+        this.setPosition(newPos.x, newPos.y);
+    }
+    /**
      * Sets the position of the group relative to its starting position. 
      * @param {Number} x
      * @param {Number} y 
@@ -30,6 +37,14 @@ class Component {
         this.paperGroup.translate(deltaPos.x, deltaPos.y);
     }
     
+    /**
+     * Changes the position of the group by the provided point
+     * @param {Point} deltaPoint 
+     */
+    translate(deltaPoint) {
+        this.translate(deltaPoint.x, deltaPoint.y);
+    }
+
     /**
      * Changes the position of the group by the provided values. 
      * @param {Number} x 
@@ -63,13 +78,10 @@ class Component {
     
     /**
      * Scales the path to match the provided values relative to it's
-     * starting size when it was created.  
-     * @param {Number} factorX 
-     * @param {Number} factorY 
+     * starting size when it was created. 
+     * @param {Point} deltaScale 
      */
-    setScaleFactor(factorX, factorY) {
-        let deltaScale = new Point(factorX, factorY);
-        
+    setScaleFactor(deltaScale) {
         if (this._scaleFactor.x == 0 || this._scaleFactor.y == 0) {
             // Can't scale out if factor set to 0.
             deltaScale = new Point(1, 1);
@@ -82,7 +94,27 @@ class Component {
         this._scaleFactor.x = factorX;
         this._scaleFactor.y = factorY;
     }
+
+    /**
+     * Scales the path to match the provided values relative to it's
+     * starting size when it was created.  
+     * @param {Number} factorX 
+     * @param {Number} factorY 
+     */
+    setScaleFactor(factorX, factorY) {
+        let deltaScale = new Point(factorX, factorY);
+        this.setScaleFactor(deltaScale);
+    }
     
+    /**
+     * Scales the group by the provided amounts. 
+     * 1 does not change the size in the given direction. 
+     * @param {Point} scalingFactor 
+     */
+    scale(scalingFactor) {
+        this.scale(scalingFactor.x, scalingFactor.y);
+    }
+
     /**
      * Scales the group by the provided amounts. 
      * 1 does not change the size in the given direction. 
@@ -189,7 +221,7 @@ class Animation {
      */
     update(dTime, component) {
         if (this.elapsed + dTime >= this.duration) {
-            this.dTime = this.duration - this.elapsed;
+            dTime = this.duration - this.elapsed;
         }
         this.elapsed += dTime;
         
@@ -204,7 +236,6 @@ class Animation {
     isValid() {
         return this.elapsed <= this.duration;
     }
-
 }
 
 class ScalingAnimation extends Animation {
@@ -258,6 +289,12 @@ class ScalingAnimation extends Animation {
 
 class RotatingAnimation extends Animation {
 
+    /**
+     * Animation which tweens rotating a Component the provided degrees over the 
+     * provided amount of time.
+     * @param {Number} duration 
+     * @param {Number} degreeChange 
+     */
     constructor(duration, degreeChange) {
         super(duration);
         this.degreeChange = degreeChange;
@@ -265,7 +302,7 @@ class RotatingAnimation extends Animation {
     }
 
     /**
-     * Applies the appriate amount of rotation to the providec component based on the
+     * Applies the appriate amount of rotation to the provided component based on the
      * time that has passed and overall change.
      * @param {Number} dTime 
      * @param {Component} component 
@@ -281,4 +318,37 @@ class RotatingAnimation extends Animation {
 
         this.rotatedBy += deltaRotation;
     }
+}
+
+class TranslationAnimation extends Animation {
+
+    /**
+     * Animation which tweens moving a Component over 
+     * @param {Number} duration 
+     * @param {Point} distChange 
+     */
+    constructor(duration, distChange) {
+        super(duration);
+        this.distChange = distChange;
+        this.translatedBy = new Point(0, 0);
+        
+    }
+
+    applyChange(dTime, component) {
+        let deltaPos = this.translatedBy.multiply(dTime / this.duration);
+
+        if(this.translatedBy.x + deltaPos.x  > this.distChange.y) {
+            deltaPos.x = this.distChange.x - this.translatedBy.x;
+        }
+
+        if (this.translatedBy.y + deltaPos.y > this.distChange.y) {
+            deltaPos.y = this.distChange.y - this.translatedBy.y;
+        }
+
+        component.translate(deltaPos);
+
+        this.translatedBy = this.translatedBy.add(deltaPos);
+    }
+
+    
 }
