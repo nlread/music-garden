@@ -16,20 +16,31 @@ class Component {
             this._scaleFactor = paperGroup.getScaling().clone();
         }
     }
-    
+
     /**
-     * Sets the position of the group relative to its starting position
-     * @param {Point} newPos 
+     * Sets the position of the group. 
+     * @param {(Point|Number)} args - Point or Coords to move group to
      */
-    setPosition(newPos) {
+    setPosition(...args) {
+        if (args.length === 1) {
+            this._setPositionPoint(args[0]);
+        } else if (args.length === 2) {
+            this._setPositionCoords(args[0], args[1]);
+        }
+    }
+    /**
+     * Sets the position of the group.
+     * @param {Point} newPos - Point to move group to
+     */
+    _setPositionPoint(newPos) {
         this.setPosition(newPos.x, newPos.y);
     }
     /**
-     * Sets the position of the group relative to its starting position. 
-     * @param {Number} x
-     * @param {Number} y 
+     * Sets the position of the group.
+     * @param {Number} x - x coord to move group to
+     * @param {Number} y - y coord to move group to
      */
-    setPosition(x, y) {
+    _setPositionCoords(x, y) {
         this._position.x = x;
         this._position.y = y;
         
@@ -49,6 +60,7 @@ class Component {
             _translateCoords(args[0], args[1]);
         }
     }
+    
     /**
      * Changes the position of the group by the provided point
      * @param {Point} deltaPoint - Amount to move group by
@@ -89,11 +101,24 @@ class Component {
     }
     
     /**
-     * Scales the path to match the provided values relative to it's
-     * starting size when it was created. 
+     * Scales the group to match the provided values, relative to its
+     * starting size.
+     * @param {(Point|Number)} args 
+     */
+    setScaleFactor(...args) {
+        if (args.length === 1) {
+            _setScaleFactorPoint(args[0]);
+        } else if(args.length === 2) {
+            _setScaleFactorXY(args[0], args[1]);
+        }
+    }
+
+    /**
+     * Scales the group to match the provided values relative to it's
+     * starting size. 
      * @param {Point} deltaScale 
      */
-    setScaleFactor(deltaScale) {
+    _setScaleFactorPoint(deltaScale) {
         if (this._scaleFactor.x == 0 || this._scaleFactor.y == 0) {
             // Can't scale out if factor set to 0.
             deltaScale = new Point(1, 1);
@@ -103,19 +128,31 @@ class Component {
 
         this.paperGroup.scale(deltaScale);
         
-        this._scaleFactor.x = factorX;
-        this._scaleFactor.y = factorY;
+        this._scaleFactor.x = deltaScale.x;
+        this._scaleFactor.y = deltaScale.y;
     }
 
     /**
-     * Scales the path to match the provided values relative to it's
-     * starting size when it was created.  
-     * @param {Number} factorX 
-     * @param {Number} factorY 
+     * Scales the group to match the provided values relative to it's
+     * starting size.
+     * @param {Number} widthFactor - Amount to scale width by
+     * @param {Number} heightFactor - Amount to scale height by
      */
-    setScaleFactor(factorX, factorY) {
-        let deltaScale = new Point(factorX, factorY);
+    _setScaleFactorXY(widthFactor, heightFactor) {
+        let deltaScale = new Point(widthFactor, heightFactor);
         this.setScaleFactor(deltaScale);
+    }
+
+    /**
+     * Scales the group by the provided values.
+     * @param {(Point|Number)} args - Values to scale object by
+     */
+    scale(...args) {
+        if (args.length === 1) {
+            _scalePoint(args[0]);
+        } else if(args.length === 2) {
+            _scaleXY(args[0], args[1]);
+        }
     }
     
     /**
@@ -123,21 +160,21 @@ class Component {
      * 1 does not change the size in the given direction. 
      * @param {Point} scalingFactor 
      */
-    scale(scalingFactor) {
+    _scalePoint(scalingFactor) {
         this.scale(scalingFactor.x, scalingFactor.y);
     }
 
     /**
      * Scales the group by the provided amounts. 
      * 1 does not change the size in the given direction. 
-     * @param {Number} factorX 
-     * @param {Number} factorY 
+     * @param {Number} widthFactor - Amount to scale width by
+     * @param {Number} heightFactor - Amount to scale height by 
      */
-    scale(factorX, factorY) {
-        this.paperGroup.scale(factorX, factorY);
+    _scaleXY(widthFactor, heightFactor) {
+        this.paperGroup.scale(widthFactor, heightFactor);
         
-        this._scaleFactor.x *= factorX;
-        this._scaleFactor.y *= factorY;
+        this._scaleFactor.x *= widthFactor;
+        this._scaleFactor.y *= heightFactor;
     }
 }
 
@@ -171,7 +208,7 @@ class Plant extends Component {
     constructor(paperGroup, svg, music){
         super(paperGroup)
         this.img = svg;
-        
+
         //in the future this could be set automatically depending on plant type
         //can you have default parameters like you can in Python?
         this.music = music;
