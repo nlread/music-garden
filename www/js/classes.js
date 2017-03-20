@@ -246,15 +246,12 @@ class ScalingAnimation extends Animation {
         if(this.scaledBy.x === 0) {
             actualScaleFactor = deltaScale.add(this.scaledBy);
         } else {
-            actualScaleFactor = deltaScale.add(this.scaledBy).add(onePoint).divide(this.scaledBy.add(onePoint));
+            actualScaleFactor = deltaScale.add(this.scaledBy);
+            actualScaleFactor = actualScaleFactor.divide(this.scaledBy);
         }
 
-        console.log(actualScaleFactor.x);
+        component.scale(actualScaleFactor.x, actualScaleFactor.y);
 
-        if(actualScaleFactor.x > 1) {
-            component.scale(actualScaleFactor.x, actualScaleFactor.y);
-        }
-   
-        this.changedBy = this.scaledBy.add(deltaScale);
+        this.scaledBy = this.scaledBy.add(deltaScale);
     }
 }
