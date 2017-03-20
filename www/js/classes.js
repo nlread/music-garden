@@ -255,3 +255,30 @@ class ScalingAnimation extends Animation {
         this.scaledBy = this.scaledBy.add(deltaScale);
     }
 }
+
+class RotatingAnimation extends Animation {
+
+    constructor(duration, degreeChange) {
+        super(duration);
+        this.degreeChange = degreeChange;
+        this.rotatedBy = 0;
+    }
+
+    /**
+     * Applies the appriate amount of rotation to the providec component based on the
+     * time that has passed and overall change.
+     * @param {Number} dTime 
+     * @param {Component} component 
+     */
+    applyChange(dTime, component) {
+        let deltaRotation = this.degreeChange * dTime / this.duration;
+        
+        if (Math.abs(deltaRotation + this.rotatedBy) >= Math.abs(this.degreeChange)) {
+            deltaRotation = this.degreeChange - this.rotatedBy;
+        }
+
+        component.rotate(deltaRotation);
+
+        this.rotatedBy += deltaRotation;
+    }
+}
