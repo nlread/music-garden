@@ -55,9 +55,9 @@ class Component {
      */
     translate(...args) {
         if (args.length === 1) {
-            _translatePoint(args[0]);
+            this._translatePoint(args[0]);
         } else if (args.length === 2) {
-            _translateCoords(args[0], args[1]);
+            this._translateCoords(args[0], args[1]);
         }
     }
     
@@ -107,9 +107,9 @@ class Component {
      */
     setScaleFactor(...args) {
         if (args.length === 1) {
-            _setScaleFactorPoint(args[0]);
+            this._setScaleFactorPoint(args[0]);
         } else if(args.length === 2) {
-            _setScaleFactorXY(args[0], args[1]);
+            this._setScaleFactorXY(args[0], args[1]);
         }
     }
 
@@ -140,7 +140,7 @@ class Component {
      */
     _setScaleFactorXY(widthFactor, heightFactor) {
         let deltaScale = new Point(widthFactor, heightFactor);
-        this.setScaleFactor(deltaScale);
+        this._setScaleFactorPoint(deltaScale);
     }
 
     /**
@@ -149,9 +149,9 @@ class Component {
      */
     scale(...args) {
         if (args.length === 1) {
-            _scalePoint(args[0]);
+            this._scalePoint(args[0]);
         } else if(args.length === 2) {
-            _scaleXY(args[0], args[1]);
+            this._scaleXY(args[0], args[1]);
         }
     }
     
@@ -161,7 +161,7 @@ class Component {
      * @param {Point} scalingFactor 
      */
     _scalePoint(scalingFactor) {
-        this.scale(scalingFactor.x, scalingFactor.y);
+        this._scaleXY(scalingFactor.x, scalingFactor.y);
     }
 
     /**
