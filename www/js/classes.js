@@ -37,23 +37,35 @@ class Component {
         this.paperGroup.translate(deltaPos.x, deltaPos.y);
     }
     
+
+    /**
+     * Changes the position of the group by the provided values
+     * @param {(Point|Number)} args - Amount to move group by
+     */
+    translate(...args) {
+        if (args.length === 1) {
+            _translatePoint(args[0]);
+        } else if (args.length === 2) {
+            _translateCoords(args[0], args[1]);
+        }
+    }
     /**
      * Changes the position of the group by the provided point
-     * @param {Point} deltaPoint 
+     * @param {Point} deltaPoint - Amount to move group by
      */
-    translate(deltaPoint) {
-        this.translate(deltaPoint.x, deltaPoint.y);
+    _translatePoint(deltaPoint) {
+        this._position.x += deltaPoint.x;
+        this._position.y += deltaPoint.y;
+        this.paperGroup.translate(deltaPoint);
     }
 
     /**
      * Changes the position of the group by the provided values. 
-     * @param {Number} x 
-     * @param {Number} y 
+     * @param {Number} x - Amount to move group in x coord
+     * @param {Number} y - Amount to move group in y coord
      */
-    translate(x, y) {   
-        this._position.x = x;
-        this._position.y = y;
-        this.paperGroup.translate(new Point(x, y));
+    _translateCoords(x, y) {   
+        this._translatePoint(new Point(x, y));
     }
     
     /**
@@ -154,11 +166,14 @@ class AnimatedComponent extends Component {
 
 class Plant extends Component {
     
-    //takes both a path and a raster for now so it can extend component, but should amend that to just one or the other later
+    //takes both a path and a raster for now so it can extend component, 
+    //but should amend that to just one or the other later
     constructor(paperGroup, svg, music){
         super(paperGroup)
         this.img = svg;
-        //in the future this could be set automatically depending on plant type - can you have default parameters like you can in Python?
+        
+        //in the future this could be set automatically depending on plant type
+        //can you have default parameters like you can in Python?
         this.music = music;
         this.volume = 0.5
         
