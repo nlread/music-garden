@@ -363,7 +363,6 @@ class ScalingAnimation extends Animation {
      * @param {Component} component - Component to apply to
      */
     applyChange(dTime, component) {
-        let onePoint = new Point(1, 1);
         let deltaScale = this.scaleRatio.multiply(dTime / this.duration);
         
         if(deltaScale.x + this.scaledBy.x >= this.scaleRatio.x) {
