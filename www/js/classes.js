@@ -320,3 +320,33 @@ class RotatingAnimation extends Animation {
     }
 }
 
+class TranslationAnimation extends Animation {
+
+    /**
+     * Animation which tweens moving a Component over 
+     * @param {Number} duration 
+     * @param {Point} distChange 
+     */
+    constructor(duration, distChange) {
+        super(duration);
+        this.distChange = distChange;
+        this.translatedBy = new Point(0, 0);
+        
+    }
+
+    applyChange(dTime, component) {
+        let deltaPos = this.distChange.multiply(dTime / this.duration);
+
+        if(this.translatedBy.x + deltaPos.x  > this.distChange.y) {
+            deltaPos.x = this.distChange.x - this.translatedBy.x;
+        }
+
+        if (this.translatedBy.y + deltaPos.y > this.distChange.y) {
+            deltaPos.y = this.distChange.y - this.translatedBy.y;
+        }
+
+        component.translate(deltaPos);
+        
+        this.translatedBy = this.translatedBy.add(deltaPos);
+    }
+}
