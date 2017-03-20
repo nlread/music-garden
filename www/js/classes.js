@@ -185,10 +185,19 @@ class AnimatedComponent extends Component {
         this.animations = [];
     }
 
+    /**
+     * Adds animation to list to apply to this Component
+     * @param {Animation} anim - Animation to apply
+     */
     animate(anim) {
         this.animations.push(anim);
     }
 
+    /**
+     * Performs tasks that should be done pre-draw:
+     *     - Apply animations
+     * @param {Number} dTime - Amount of time passed since last update
+     */
     update(dTime) {
         for(let i=0; i < this.animations.length; i++) {
             let anim = this.animations[i];
@@ -258,9 +267,18 @@ class Animation {
     /**
      * Parent class of any tweens to apply to on screen components. 
      * @constructor
-     * @param {Number} duration 
+     * @param {Number} duration - Amount of time to apply for
+     * @param {Number} delay - Amount of time before begining to apply animation
      */
-    constructor(duration) {
+    constructor(duration, delay) {
+        if (!delay || delay === 0) {
+            this.delayRemaining = 0;
+            this.active = true;
+        } else {
+            this.delayRemaining = delay;
+            this.active = false;
+        }
+
         this.duration = duration;
         this.elapsed = 0;
     }
@@ -272,6 +290,18 @@ class Animation {
      * @param {Component} component 
      */
     update(dTime, component) {
+        if (!this.active) { // Change to delayRemaining <= 0 ?
+            if (this.delayRemaining - dTime <= 0) {
+                // Apply changes for correct amount of time
+                dTime = dTime - this.delayRemaining; 
+                this.active = true;
+                this.delayRemaining = 0;
+            } else {
+                this.delayRemaining -= dTime;
+                return; // Still more delay, do not apply changes
+            }
+        }
+
         if (this.elapsed + dTime >= this.duration) {
             dTime = this.duration - this.elapsed;
         }
@@ -295,11 +325,12 @@ class ScalingAnimation extends Animation {
     /**
      * Animation which tweens the size of a component. 
      * @constructor
-     * @param {Number} duration 
-     * @param {Point} scaleRatio 
+     * @param {Point} scaleRatio - Amount to scale by
+     * @param {Number} duration - Time to scale over
+     * @param {Number} delay - Time to delay for
      */
-    constructor(duration, scaleRatio) {
-        super(duration);
+    constructor(scaleRatio, duration, delay) {
+        super(duration, delay);
         this.scaleRatio = scaleRatio;
         this.scaledBy = new Point(1, 1);
     }
@@ -307,8 +338,8 @@ class ScalingAnimation extends Animation {
     /**
      * Scales the provided component by the amount required given the amount of time passed
      * and this animations target scaling. 
-     * @param {Number} dTime 
-     * @param {Component} component 
+     * @param {Number} dTime - Amount of time since last application
+     * @param {Component} component - Component to apply to
      */
     applyChange(dTime, component) {
         let onePoint = new Point(1, 1);
@@ -344,11 +375,12 @@ class RotatingAnimation extends Animation {
     /**
      * Animation which tweens rotating a Component the provided degrees over the 
      * provided amount of time.
-     * @param {Number} duration 
-     * @param {Number} degreeChange 
+     * @param {Number} degreeChange - Amount to rotate by
+     * @param {Number} duration - Time to apply rotation over
+     * @param {Number} delay - Time to delay for 
      */
-    constructor(duration, degreeChange) {
-        super(duration);
+    constructor(degreeChange, duration, delay) {
+        super(duration, delay);
         this.degreeChange = degreeChange;
         this.rotatedBy = 0;
     }
@@ -356,8 +388,8 @@ class RotatingAnimation extends Animation {
     /**
      * Applies the appriate amount of rotation to the provided component based on the
      * time that has passed and overall change.
-     * @param {Number} dTime 
-     * @param {Component} component 
+     * @param {Number} dTime - Time since last application
+     * @param {Component} component - Component to apply to
      */
     applyChange(dTime, component) {
         let deltaRotation = this.degreeChange * dTime / this.duration;
@@ -376,16 +408,23 @@ class TranslationAnimation extends Animation {
 
     /**
      * Animation which tweens moving a Component over 
-     * @param {Number} duration 
-     * @param {Point} distChange 
+     * @param {Point} distChange - Amount to translate by
+     * @param {Number} duration - Time to apply translation over
+     * @param {Number} delay - Time to delay for
      */
-    constructor(duration, distChange) {
+    constructor(distChange, duration, delay) {
         super(duration);
         this.distChange = distChange;
         this.translatedBy = new Point(0, 0);
         
     }
 
+    /**
+     * Applies amount of translation given the amount of time since the
+     * last application.
+     * @param {Number} dTime - Time since last application
+     * @param {Component} component - Component to apply to 
+     */
     applyChange(dTime, component) {
         let deltaPos = this.distChange.multiply(dTime / this.duration);
 
