@@ -15,7 +15,6 @@ class Component {
             this._orientation = paperGroup.getRotation();
             this._scaleFactor = paperGroup.getScaling().clone();
         }
-        
     }
     
     /**
@@ -69,14 +68,15 @@ class Component {
      * @param {Number} factorY 
      */
     setScaleFactor(factorX, factorY) {
-        let deltaScale = new Point()
-        deltaScale.x = factorX;
-        deltaScale.y = factorY;
+        let deltaScale = new Point(factorX, factorY);
         
-        if(this._scaleFactor.x == 0 || this._scaleFactor.y == 0)
+        if (this._scaleFactor.x == 0 || this._scaleFactor.y == 0) {
+            // Can't scale out if factor set to 0.
             deltaScale = new Point(1, 1);
-        else
-            deltaScale = this._deltaScale.multiply(this._scaleFactor);
+        } else {
+            deltaScale = deltaScale.divide(this._scaleFactor);
+        }
+
         this.paperGroup.scale(deltaScale);
         
         this._scaleFactor.x = factorX;
