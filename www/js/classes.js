@@ -187,7 +187,14 @@ class Component {
      * @param {Number} heightFactor - Amount to scale height by 
      */
     _scaleXY(widthFactor, heightFactor) {
-        this.paperGroup.scale(widthFactor, heightFactor);
+        let rads = this._orientation * (Math.PI / 180);
+        let total = Math.sqrt(Math.pow((widthFactor - 1), 2) + Math.pow((heightFactor - 1), 2));
+        let actualWidthScale = total * Math.cos(rads) + 1
+        let actualHeightScale = total * Math.sin(rads) + 1;
+
+        console.log('w: ' + actualWidthScale + ' h: ' + actualHeightScale);
+        
+        this.paperGroup.scale(actualWidthScale, actualHeightScale);
         
         this._scaleFactor.x *= widthFactor;
         this._scaleFactor.y *= heightFactor;
