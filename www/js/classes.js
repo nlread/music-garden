@@ -18,6 +18,7 @@ class Component {
     }
 
     /**
+     * @public
      * Sets the position of the group. 
      * @param {(Point|Number)} args - Point or Coords to move group to
      */
@@ -28,14 +29,18 @@ class Component {
             this._setPositionCoords(args[0], args[1]);
         }
     }
+
     /**
+     * @private
      * Sets the position of the group.
      * @param {Point} newPos - Point to move group to
      */
     _setPositionPoint(newPos) {
         this.setPosition(newPos.x, newPos.y);
     }
+
     /**
+     * @private
      * Sets the position of the group.
      * @param {Number} x - x coord to move group to
      * @param {Number} y - y coord to move group to
@@ -50,6 +55,7 @@ class Component {
     
 
     /**
+     * @public
      * Changes the position of the group by the provided values
      * @param {(Point|Number)} args - Amount to move group by
      */
@@ -62,6 +68,7 @@ class Component {
     }
     
     /**
+     * @private
      * Changes the position of the group by the provided point
      * @param {Point} deltaPoint - Amount to move group by
      */
@@ -72,6 +79,7 @@ class Component {
     }
 
     /**
+     * @private
      * Changes the position of the group by the provided values. 
      * @param {Number} x - Amount to move group in x coord
      * @param {Number} y - Amount to move group in y coord
@@ -81,6 +89,7 @@ class Component {
     }
     
     /**
+     * @public
      * Sets the rotation of the path relative to its starting 
      * rotation when it was created. 
      * @param {Number} angle 
@@ -92,6 +101,7 @@ class Component {
     }
     
     /**
+     * @public
      * Changes the rotation of the group by the provided amount. 
      * @param {Number} deltaAngle 
      */
@@ -101,6 +111,7 @@ class Component {
     }
     
     /**
+     * @public
      * Scales the group to match the provided values, relative to its
      * starting size.
      * @param {(Point|Number)} args 
@@ -114,6 +125,7 @@ class Component {
     }
 
     /**
+     * @private
      * Scales the group to match the provided values relative to it's
      * starting size. 
      * @param {Point} deltaScale 
@@ -133,6 +145,7 @@ class Component {
     }
 
     /**
+     * @private
      * Scales the group to match the provided values relative to it's
      * starting size.
      * @param {Number} widthFactor - Amount to scale width by
@@ -144,6 +157,7 @@ class Component {
     }
 
     /**
+     * @public
      * Scales the group by the provided values.
      * @param {(Point|Number)} args - Values to scale object by
      */
@@ -156,6 +170,7 @@ class Component {
     }
     
     /**
+     * @private
      * Scales the group by the provided amounts. 
      * 1 does not change the size in the given direction. 
      * @param {Point} scalingFactor 
@@ -165,6 +180,7 @@ class Component {
     }
 
     /**
+     * @private
      * Scales the group by the provided amounts. 
      * 1 does not change the size in the given direction. 
      * @param {Number} widthFactor - Amount to scale width by
@@ -186,6 +202,7 @@ class AnimatedComponent extends Component {
     }
 
     /**
+     * @public
      * Adds animation to list to apply to this Component
      * @param {Animation} anim - Animation to apply
      */
@@ -194,6 +211,7 @@ class AnimatedComponent extends Component {
     }
 
     /**
+     * @public
      * Performs tasks that should be done pre-draw:
      *     - Apply animations
      * @param {Number} dTime - Amount of time passed since last update
@@ -284,10 +302,12 @@ class Animation {
     }
 
     /**
+     * @public
      * Have the animation apply nessessary changes to the provided component. 
      * Handles timing, then calss applyChange implemented in child. 
      * @param {Number} dTime 
      * @param {Component} component 
+     * @public
      */
     update(dTime, component) {
         if (!this.active) { // Change to delayRemaining <= 0 ?
@@ -311,6 +331,7 @@ class Animation {
     }
 
     /**
+     * @public
      * Returns if the animation is still valid or not.
      * Eg has performed its tween or not. 
      * @returns {Boolean}
