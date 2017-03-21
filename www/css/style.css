@@ -27,8 +27,9 @@ canvas[resize] {
 #menu div img{
     height: 95%;
     width: 95%;
-    margin: auto;
+    margin: auto;  
 }
+
 
 #toolbar{
     height: 8%;
