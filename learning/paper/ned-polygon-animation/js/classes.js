@@ -1,27 +1,27 @@
 class Component {
     
-    constructor(paperPath) {
-        this.paperPath = paperPath;
+    constructor(paperGroup) {
+        this.paperGroup = paperGroup;
         
-        this._position = paperPath.getPosition().clone();
-        this._orientation = paperPath.getRotation();
-        this._scaleFactor = paperPath.getScaling().clone();
+        this._position = paperGroup.getPosition().clone();
+        this._orientation = paperGroup.getRotation();
+        this._scaleFactor = paperGroup.getScaling().clone();
     }
     
-    // Not needed as paperPath keeps track of its position? 
+    // Not needed as paperGroup keeps track of its position? 
     // Need way to account for position moving on rotation. 
     setPosition(x, y) {
         this._position.x = x;
         this._position.y = y;
         
         let deltaPos = this._position.subtract(this._currentPosition);
-        this.paperPath.translate(deltaPos.x, deltaPos.y);
+        this.paperGroup.translate(deltaPos.x, deltaPos.y);
     }
     
     translate(x, y) {   
         this._position.x = x;
         this._position.y = y;
-        this.paperPath.translate(new Point(x, y));
+        this.paperGroup.translate(new Point(x, y));
     }
     
     /*
@@ -30,12 +30,12 @@ class Component {
      */
     setRotation(angle) {        
         let deltaAngle = angle - this._orientation
-        this.paperPath.rotate(deltaAngle);
+        this.paperGroup.rotate(deltaAngle);
         this._orientation = angle;
     }
     
     rotate(deltaAngle) {
-        this.paperPath.rotate(deltaAngle);
+        this.paperGroup.rotate(deltaAngle);
         this._orientation += deltaAngle;
     }
     
@@ -52,14 +52,14 @@ class Component {
             deltaScale = new Point(1, 1);
         else
             deltaScale = this._deltaScale.multiply(this._scaleFactor);
-        this.paperPath.scale(deltaScale);
+        this.paperGroup.scale(deltaScale);
         
         this._scaleFactor.x = factorX;
         this._scaleFactor.y = factorY;
     }
     
     scale(factorX, factorY) {
-        this.paperPath.scale(factorX, factorY);
+        this.paperGroup.scale(factorX, factorY);
         
         this._scaleFactor.x *= factorX;
         this._scaleFactor.y *= factorY;
@@ -68,26 +68,36 @@ class Component {
 
 class PhysicsPlant extends Component {
      
-    constructor(paperPath, staticSegments) {
-        super(paperPath);
+    constructor(paperGroup, movingPaths, staticSegments) {
+        super(paperGroup);
         this.staticSegments = staticSegments;
         
         this.propsSet = [];
-        for(let i=0; i<paperPath.segments.length; i++) {
-            let props = new SegmentProperties(paperPath.segments[i].point)
-            this.propsSet.push(props);
+        console.log('moving: ' + movingPaths.length);
+        for(let pathIndex=0; pathIndex<movingPaths.length; pathIndex++) {
+            console.log('segs: ' + movingPaths[pathIndex].segments.length);
+            for(let segIndex=0; segIndex<movingPaths[pathIndex].segments.length; segIndex++) {
+                let seg = movingPaths[pathIndex].segments[segIndex];
+                let props = new SegmentProperties(seg, seg.point)
+                this.propsSet.push(props);
+            }
         }
+        console.log(this.propsSet);
     }
     
     applyForce(dTime, forceGenerator) {
         for(let i=0; i<this.propsSet.length; i++) {
+            
             if (this.staticSegments.includes(i)) {
                 continue;
             }
             
+            let forceTotalAtPoint = new Point(0, 0);
+            
             let props = this.propsSet[i];
-            let seg = this.paperPath.segments[i];
-            let force = forceGenerator.getForce(seg.point);
+            let seg = propsSet.segment;
+            
+            let forceAtPoint = forceGenerator.getForce(seg.point);
             
             // Handle Velocity
             let dPosV = props.velocity.multiply(dTime);
@@ -98,13 +108,12 @@ class PhysicsPlant extends Component {
             seg.point = seg.point.add(dPosV).add(dPosA);
             
             props.velocity = props.velocity.add(props.acceleration.multiply(dTime)).multiply(.97);
-            props.acceleration = force.add(props.base.subtract(seg.point).multiply(9));
+            props.acceleration = forceAtPoint.add(props.base.subtract(seg.point).multiply(9));
         }
     }
     
     applyForces(dTime, forceGenerators) {
         for(let i=0; i<this.propsSet.length; i++) {
-            
             if (this.staticSegments.includes(i)) {
                 continue;
             }
@@ -112,7 +121,7 @@ class PhysicsPlant extends Component {
             let forceTotalAtPoint = new Point(0, 0);
             
             let props = this.propsSet[i];
-            let seg = this.paperPath.segments[i];
+            let seg = props.segment;
             
             for(let f=0; f<forceGenerators.length; f++) {
                 forceTotalAtPoint = forceTotalAtPoint.add(forceGenerators[f].getForce(seg.point));
@@ -134,20 +143,21 @@ class PhysicsPlant extends Component {
 }
 
 class SegmentProperties {
-    constructor(basePoint, velocity, acceleration) {
-        if(arguments.length >= 1) {
-            this.base = basePoint.clone();
-        } else {
-            throw 'no base point provided';
-        }
-        
+    constructor(segment, basePoint, velocity, acceleration) {
         if(arguments.length >= 2) {
+            this.base = basePoint.clone();
+            this.segment = segment;
+        } else {
+            throw 'no segment or base point provided';
+        }
+                
+        if(arguments.length >= 3) {
             this.velocity = velocity.clone();
         } else {
             this.velocity = new Point(0, 0);
         }
         
-        if(arguments.length >= 3) {
+        if(arguments.length >= 4) {
             this.acceleration = acceleration.clone();
         } else {
             this.acceleration = new Point(0, 0);
