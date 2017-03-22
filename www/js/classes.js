@@ -198,14 +198,16 @@ class Component {
      * @param {Number} heightFactor - Amount to scale height by 
      */
     _scaleXY(widthFactor, heightFactor) {
-        let rads = this._orientation * (Math.PI / 180);
-        let total = Math.sqrt(Math.pow((widthFactor - 1), 2) + Math.pow((heightFactor - 1), 2));
-        let actualWidthScale = total * Math.cos(rads) + 1
-        let actualHeightScale = total * Math.sin(rads) + 1;
+        let rads = (this._orientation) * (Math.PI / 180);
+        let actualWidthScale = heightFactor * Math.sin(rads) + widthFactor * Math.cos(rads);
+        let actualHeightScale = heightFactor * Math.cos(rads) - widthFactor * Math.sin(rads);
 
         console.log('w: ' + actualWidthScale + ' h: ' + actualHeightScale);
         
-        this.paperGroup.scale(actualWidthScale, actualHeightScale);
+        //this.paperGroup.scale(actualWidthScale, actualHeightScale);
+        this.paperGroup.rotate(-this._orientation)
+        this.paperGroup.scale(widthFactor, heightFactor);
+        this.paperGroup.rotate(this._orientation);
         
         this._scaleFactor.x *= widthFactor;
         this._scaleFactor.y *= heightFactor;
@@ -406,7 +408,20 @@ class ScalingAnimation extends Animation {
         component.scale(actualScaleFactor.x, actualScaleFactor.y);
 
         this.scaledBy = this.scaledBy.add(deltaScale);
+        if (this.scaleRatio.x > 0) {
+            this.scaledBy.x += deltaScale.x;
+        } else {
+            this.scaledBy.x -= 1 - deltaScale.x;
+        }
+
+        if (this.scaleRatio.y > 0) {
+            this.scaledBy.y += deltaScale.y;
+        } else {
+            this.scaledBy.y -= deltaScale.y;
+        }
     }
+
+
 }
 
 class RotatingAnimation extends Animation {
