@@ -350,9 +350,6 @@ class Animation {
      * @returns {Boolean}
      */
     isValid() {
-        if(this.elapsed > this.duration) 
-            console.log('application');
-            
         return this.elapsed <= this.duration;
     }
 }
@@ -419,8 +416,6 @@ class ScalingAnimation extends Animation {
         }
 
         actualScaleFactor = actualScaleFactor.divide(this.scaledBy);
-        console.log('delta: ' + deltaScale);
-        console.log('actual: ' + actualScaleFactor);
         
         component.scale(actualScaleFactor.x, actualScaleFactor.y);
 
