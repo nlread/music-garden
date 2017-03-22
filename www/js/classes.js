@@ -168,6 +168,17 @@ class Component {
             this._scaleXY(args[0], args[1]);
         }
     }
+
+    /**
+     * Scales the path to match the provided values relative to it's
+     * starting size when it was created.  
+     * @param {Number} factorX 
+     * @param {Number} factorY 
+     */
+    setScaleFactor(factorX, factorY) {
+        let deltaScale = new Point(factorX, factorY);
+        this.setScaleFactor(deltaScale);
+    }
     
     /**
      * @private
@@ -187,8 +198,10 @@ class Component {
      * @param {Number} heightFactor - Amount to scale height by 
      */
     _scaleXY(widthFactor, heightFactor) {
+        this.paperGroup.rotate(-this._orientation)
         this.paperGroup.scale(widthFactor, heightFactor);
-        
+        this.paperGroup.rotate(this._orientation);
+
         this._scaleFactor.x *= widthFactor;
         this._scaleFactor.y *= heightFactor;
     }
@@ -364,30 +377,61 @@ class ScalingAnimation extends Animation {
      */
     applyChange(dTime, component) {
         let deltaScale = this.scaleRatio.multiply(dTime / this.duration);
-        
-        if(deltaScale.x + this.scaledBy.x >= this.scaleRatio.x) {
-            deltaScale.x = this.scaleRatio.x - this.scaledBy.x;
+
+        if (this.scaleRatio.x >= 1) {
+            if (deltaScale.x + this.scaledBy.x >= this.scaleRatio.x) {
+                deltaScale.x = this.scaleRatio.x - this.scaledBy.x;
+            }
+        } else {
+            if (this.scaledBy.x - deltaScale.x <= this.scaleRatio.x) {
+                deltaScale.x = this.scaledBy.x - this.scaleRatio.x;
+            }
         }
 
-        if(deltaScale.y + this.scaledBy.y >= this.scaleRatio.y) {
-            deltaScale.y = this.scaleRatio.y - this.scaledBy.y;
+        if (this.scaleRatio.y >= 1) {
+            if(deltaScale.y + this.scaledBy.y >= this.scaleRatio.y) {
+                deltaScale.y = this.scaleRatio.y - this.scaledBy.y;
+            }
+        } else {
+            if (this.scaledBy.y - deltaScale.y <= this.scaleRatio.y) {
+                deltaScale.y = this.scaledBy.y - this.scaleRatio.y;
+            }
         }
 
 
         // Need to account for fact that component.scale() uses values relative to its size
         // Must basically scale down then up to new value. 
-        let actualScaleFactor;
-        if(this.scaledBy.x === 0) {
-            actualScaleFactor = deltaScale.add(this.scaledBy);
+        let actualScaleFactor = new Point(1, 1);
+        if (this.scaleRatio.x >= 1) {
+            actualScaleFactor.x = deltaScale.x + this.scaledBy.x;
         } else {
-            actualScaleFactor = deltaScale.add(this.scaledBy);
-            actualScaleFactor = actualScaleFactor.divide(this.scaledBy);
+            actualScaleFactor.x = this.scaledBy.x - deltaScale.x;
         }
 
+        if (this.scaleRatio.y >= 1) {
+            actualScaleFactor.y = deltaScale.y + this.scaledBy.y;
+        } else {
+            actualScaleFactor.y = this.scaledBy.y - deltaScale.y;
+        }
+
+        actualScaleFactor = actualScaleFactor.divide(this.scaledBy);
+        
         component.scale(actualScaleFactor.x, actualScaleFactor.y);
 
-        this.scaledBy = this.scaledBy.add(deltaScale);
+        if (this.scaleRatio.x > 1) {
+            this.scaledBy.x += deltaScale.x;
+        } else {
+            this.scaledBy.x -= deltaScale.x;
+        }
+
+        if (this.scaleRatio.y > 1) {
+            this.scaledBy.y += deltaScale.y;
+        } else {
+            this.scaledBy.y -= deltaScale.y;
+        }
     }
+
+
 }
 
 class RotatingAnimation extends Animation {
