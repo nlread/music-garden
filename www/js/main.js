@@ -8,8 +8,6 @@ var resize = {
 }
 
 var mouseStates = {
-    menuChoice: -1,
-    menuChoiceClicked: false,
     droppedFlower: false,
     currentFlower: null,
     resizeOldFlower: false,
@@ -24,10 +22,10 @@ var modes = {
 
 //For each flower there is a dictionary for its different pitches
 var soundSources = {
-    "green": {1:"mp3/track1Individuals/Op4 louder.mp3"},
-    "red": {1:"mp3/track1Individuals/Op3 louder.mp3"},
-    "jade": {1:"mp3/track1Individuals/Op1 louder.mp3"},
-    "succulent": {1:"mp3/track1Individuals/Op2 louder.mp3"}
+    "green": {1:"mp3/MVP Plant Sounds/Plant A1.wav",2:"mp3/MVP Plant Sounds/Plant A2.wav",3:"mp3/MVP Plant Sounds/Plant A3.wav",4:"mp3/MVP Plant Sounds/Plant A4.wav",5:"mp3/MVP Plant Sounds/Plant A5.wav",6:"mp3/MVP Plant Sounds/Plant A6.wav",7:"mp3/MVP Plant Sounds/Plant A7.wav",8:"mp3/MVP Plant Sounds/Plant A8.wav"},
+    "red": {1:"mp3/MVP Plant Sounds/Plant B1.wav",2:"mp3/MVP Plant Sounds/Plant B2.wav",3:"mp3/MVP Plant Sounds/Plant B3.wav",4:"mp3/MVP Plant Sounds/Plant B4.wav",5:"mp3/MVP Plant Sounds/Plant B5.wav",6:"mp3/MVP Plant Sounds/Plant B6.wav",7:"mp3/MVP Plant Sounds/Plant B7.wav",8:"mp3/MVP Plant Sounds/Plant B8.wav"},
+    "jade": {1:"mp3/MVP Plant Sounds/Plant C1.wav",2:"mp3/MVP Plant Sounds/Plant C2.wav",3:"mp3/MVP Plant Sounds/Plant C3.wav",4:"mp3/MVP Plant Sounds/Plant C4.wav",5:"mp3/MVP Plant Sounds/Plant C5.wav",6:"mp3/MVP Plant Sounds/Plant C6.wav",7:"mp3/MVP Plant Sounds/Plant C7.wav",8:"mp3/MVP Plant Sounds/Plant C8.wav"},
+    "succulent": {1:"mp3/MVP Plant Sounds/Plant D1.wav",2:"mp3/MVP Plant Sounds/Plant D2.wav",3:"mp3/MVP Plant Sounds/Plant D3.wav",4:"mp3/MVP Plant Sounds/Plant D4.wav",5:"mp3/MVP Plant Sounds/Plant D5.wav",6:"mp3/MVP Plant Sounds/Plant D6.wav",7:"mp3/MVP Plant Sounds/Plant D7.wav",8:"mp3/MVP Plant Sounds/Plant D8.wav"}
 };
 
 var colors = {
@@ -40,7 +38,6 @@ var colors = {
 //Holds all the flower on the canvas at any time
 var canvasFlowers = {};
 
-//This track will play while any flower is on the canvas.
 var backgroundTrack = new Howl({
     src: ["mp3/track1Individuals/Au1 louder.mp3"]    
 });
@@ -61,7 +58,6 @@ var cursorFlower = null;
 
 /*ONLOAD*/
 window.onload = function(){
-    //sanity check
     console.log("window loaded");
     
     setUpScreen(); 
@@ -84,16 +80,25 @@ window.onload = function(){
         unHighlightMenuChoice(choice);
     });
     
-    $('#removeButton').on('click', function(){
-       removeButtonClicked();
+    $('#removeButton').on('click', removeButtonClicked);
+    
+    $('#sendToBackButton').on('click', sendToBackButtonClicked);
+
+    $('#plantButton').on('click', plantButtonClicked);
+    
+    $('.toolbarButton').on('mouseover', function(){
+        $(this.children[1]).animate({
+            height: '100%',
+            width: '100%'
+        })
     })
     
-    $('#sendToBackButton').on('click', function(){
-        sendToBackButtonClicked();
-    })
-
-    $('#plantButton').on('click', function(){
-        plantButtonClicked();
+    $('.toolbarButton').on('mouseout', function(){
+        console.log("mouseout")
+        $(this.children[1]).animate({
+            height: '95%',
+            width: '95%'
+        })
     })
         
     myTool.onMouseUp = function(event) {
@@ -119,11 +124,7 @@ window.onload = function(){
     
     myTool.onMouseMove = function(event){
         if(modes.plant && mouseStates.cursorFlower){
-            //make it lag less on initial click - kind of a hacky fix for now
-            if(event.point.x != 0  && event.point.y != 0){
-                cursorFlower.position.x = event.point.x+20;
-                cursorFlower.position.y = event.point.y+20;
-            }
+            moveCursorFlower(event);
         }
     }
 }
@@ -307,25 +308,19 @@ dropFlower = function(clickEvent){
     if(project.view.bounds.contains(clickEvent)){
         var newFlower;
         //all the code that deals with the SVG has to live in the callback function because it's asynchronous (https://groups.google.com/forum/#!searchin/paperjs/svg|sort:relevance/paperjs/ohy3oXUmLPg/G9ehRKhEfVgJ)
-        //for reference, item is the svg that's imported
         project.importSVG(currentMenuChoice.src, {
             onError: function(message){
                 console.log("import error");
             }, 
-            onLoad: function(item){ 
-                newFlower = new Flower(null, item.scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name],Math.floor(clickEvent.point.y/8)))//null is for the path since Component is path-based, also omitting sound argument for now
+            onLoad: function(item){
+                newFlower = new Flower(null, item.scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name],Math.floor(clickEvent.point.y/(window.innerHeight*.125))))//null is for the path since Component is path-based, also omitting sound argument for now
                 newFlower.playSound();
                 mouseStates.currentFlower = newFlower;
                 mouseStates.droppedFlower = true;
                 mouseStates.currentFlower.img.position = clickEvent.point;
                 mouseStates.currentFlower.img.scale(0.3);
-                
                 canvasFlowers[mouseStates.currentFlower.img.id] = newFlower;
-                if(!backgroundSound){
-                    backgroundTrack.play();
-                    backgroundTrack.loop(true);
-                    backgroundSound = true;
-                }
+                startBackgroundSound();
             }
         });
     } 
@@ -360,17 +355,13 @@ scaleFlower = function(clickEvent){
     change = calculateMouseDirection(clickEvent);
     if(change > 0){
         if(!(mouseStates.currentFlower.img.bounds.width > (project.view.size.width / 2))){
-           mouseStates.currentFlower.img.scale(resize.grow)
-           //Sound scales with size
-           canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);
+           mouseStates.currentFlower.img.scale(resize.grow); canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);
         }
     }
     else if(change < 0){
         //current fix for teeny flowers - should be solved if/when we move to distance-based sizing, but fixing for now
         if(!(mouseStates.currentFlower.img.bounds.width < (project.view.size.width / 20))){
-            mouseStates.currentFlower.img.scale(resize.shrink);
-            //Sound scales with siz
-            canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.shrink)
+            mouseStates.currentFlower.img.scale(resize.shrink); canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.shrink)
         }
     }
 }
@@ -389,10 +380,31 @@ calculateMouseDirection = function(dragEvent){
 }
 
 /*
+ * Starts background sound if it's not already started
+ */
+startBackgroundSound = function(){
+    if(!backgroundSound){
+        backgroundTrack.play();
+        backgroundTrack.loop(true);
+        backgroundSound = true;
+    }
+}
+
+/*
+ * Moves the "ghost" flower that tracks with the cursor
+ */ 
+
+moveCursorFlower = function(event){
+//make it lag less on initial click - kind of a hacky fix for now
+    if(event.point.x != 0  && event.point.y != 0){
+        cursorFlower.position.x = event.point.x+20;
+        cursorFlower.position.y = event.point.y+20;
+    }
+}
+
+/*
  * Euclidean distance (helper function for calculateMouseDirection)
  */
-
-
 pointDistance = function(point1, point2){
     distance = Math.sqrt(Math.pow((point2.x - point1.x), 2) + Math.pow((point2.y - point2.x), 2));
     return(distance);
