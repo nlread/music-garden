@@ -11,7 +11,7 @@ body {
     width: 30%;
     height: auto;
     padding-top: 30%;
-    background: #e887a2;
+    background: #a5b030;
     margin: auto;
     transform: translateY(50%);
     text-align: center;
@@ -23,7 +23,7 @@ body {
 }
 
 a:hover{
-    color: #77598a;
+    color: #7a5a8c;
 }
 
 a{
