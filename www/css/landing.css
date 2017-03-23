@@ -1,7 +1,8 @@
 
 
 body {
-    background-color: #C9FFDD
+    background-image: url(../img/floral_pattern.jpg);
+    text-align: center;
 }
 
 #circle {
@@ -10,7 +11,7 @@ body {
     width: 30%;
     height: auto;
     padding-top: 30%;
-    background: #54494b;
+    background: #e887a2;
     margin: auto;
     transform: translateY(50%);
     text-align: center;
@@ -22,17 +23,15 @@ body {
 }
 
 a:hover{
-    color: #b4a6c4;
+    color: #77598a;
 }
 
 a{
-    color: #d0C4dF;
+    color: #461c39;
     text-decoration: none;
     font-family: paperdaisy;
 }
 #gardenLink{
     margin-top: -60%;
     font-size: 5vw;
-    font-family: paperdaisy;
 }
-
