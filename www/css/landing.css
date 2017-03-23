@@ -1,0 +1,38 @@
+
+
+body {
+    background-color: #C9FFDD
+}
+
+#circle {
+    position: relative;
+    border-radius: 50%;
+    width: 30%;
+    height: auto;
+    padding-top: 30%;
+    background: #54494b;
+    margin: auto;
+    transform: translateY(50%);
+    text-align: center;
+}
+
+@font-face {
+    font-family: paperdaisy;
+    src: url(../font/paperdaisy-demo.ttf);
+}
+
+a:hover{
+    color: #b4a6c4;
+}
+
+a{
+    color: #d0C4dF;
+    text-decoration: none;
+    font-family: paperdaisy;
+}
+#gardenLink{
+    margin-top: -60%;
+    font-size: 5vw;
+    font-family: paperdaisy;
+}
+
