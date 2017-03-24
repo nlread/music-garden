@@ -245,23 +245,27 @@ class Plant extends AnimatedComponent {
     
     //takes both a path and a raster for now so it can extend component, 
     //but should amend that to just one or the other later
-    constructor(paperGroup, svg, music){
+    constructor(paperGroup, svg, music, length){
         super(paperGroup)
         this.img = svg;
 
         //in the future this could be set automatically depending on plant type
         //can you have default parameters like you can in Python?
         this.music = music;
-        this.volume = 0.5
+        this.length = length;
+        this.volume = .5
+        this.music.sound.volume(this.volume);
+        this.intervalID;
         
         //plays the music of the plant, setting it to loop and the volume at 0.5
         this.playSound = function(){
+//            this.intervalID = window.setInterval(this.music.sound.play, 100);
             this.music.sound.play();
-            this.music.sound.loop(true);
-            this.music.sound.volume(this.volume);
+            this.music.sound.loop();
         };
         
         this.stopSound = function(){
+//            window.clearInterval(this.intervalID);
             this.music.sound.stop();
         };
         
@@ -272,22 +276,15 @@ class Plant extends AnimatedComponent {
     };
 }
 
-class Flower extends Plant {
-    //later, this will have more specific animation/sound characteristics, placeholder for now
-    
-    constructor(paperGroup, raster, music){
-        super(paperGroup, raster, music);
-    };
-}
-
 //I'm not sure if this class is necessary. we could easily make the sound in plant
 
 class Music {
 
-    constructor(source){
+    constructor(source, pitch){
         this.source = source;
+        this.pitch = pitch+1;
         this.sound = new Howl({
-            src: [source]
+            src: [this.source[this.pitch]],
         });
     };
     
