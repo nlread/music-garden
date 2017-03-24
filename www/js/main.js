@@ -22,10 +22,10 @@ var modes = {
 
 //For each flower there is a dictionary for its different pitches
 var soundSources = {
-    "green": {1:"mp3/MVP Plant Sounds/Plant A1.wav",2:"mp3/MVP Plant Sounds/Plant A2.wav",3:"mp3/MVP Plant Sounds/Plant A3.wav",4:"mp3/MVP Plant Sounds/Plant A4.wav",5:"mp3/MVP Plant Sounds/Plant A5.wav",6:"mp3/MVP Plant Sounds/Plant A6.wav",7:"mp3/MVP Plant Sounds/Plant A7.wav",8:"mp3/MVP Plant Sounds/Plant A8.wav"},
-    "red": {1:"mp3/MVP Plant Sounds/Plant B1.wav",2:"mp3/MVP Plant Sounds/Plant B2.wav",3:"mp3/MVP Plant Sounds/Plant B3.wav",4:"mp3/MVP Plant Sounds/Plant B4.wav",5:"mp3/MVP Plant Sounds/Plant B5.wav",6:"mp3/MVP Plant Sounds/Plant B6.wav",7:"mp3/MVP Plant Sounds/Plant B7.wav",8:"mp3/MVP Plant Sounds/Plant B8.wav"},
-    "jade": {1:"mp3/MVP Plant Sounds/Plant C1.wav",2:"mp3/MVP Plant Sounds/Plant C2.wav",3:"mp3/MVP Plant Sounds/Plant C3.wav",4:"mp3/MVP Plant Sounds/Plant C4.wav",5:"mp3/MVP Plant Sounds/Plant C5.wav",6:"mp3/MVP Plant Sounds/Plant C6.wav",7:"mp3/MVP Plant Sounds/Plant C7.wav",8:"mp3/MVP Plant Sounds/Plant C8.wav"},
-    "succulent": {1:"mp3/MVP Plant Sounds/Plant D1.wav",2:"mp3/MVP Plant Sounds/Plant D2.wav",3:"mp3/MVP Plant Sounds/Plant D3.wav",4:"mp3/MVP Plant Sounds/Plant D4.wav",5:"mp3/MVP Plant Sounds/Plant D5.wav",6:"mp3/MVP Plant Sounds/Plant D6.wav",7:"mp3/MVP Plant Sounds/Plant D7.wav",8:"mp3/MVP Plant Sounds/Plant D8.wav"}
+    "green": {1:"mp3/MVP Plant Sounds/Plant A8.wav",2:"mp3/MVP Plant Sounds/Plant A7.wav",3:"mp3/MVP Plant Sounds/Plant A6.wav",4:"mp3/MVP Plant Sounds/Plant A5.wav",5:"mp3/MVP Plant Sounds/Plant A4.wav",6:"mp3/MVP Plant Sounds/Plant A3.wav",7:"mp3/MVP Plant Sounds/Plant A2.wav",8:"mp3/MVP Plant Sounds/Plant A1.wav"},
+    "red": {1:"mp3/MVP Plant Sounds/Plant B8.wav",2:"mp3/MVP Plant Sounds/Plant B7.wav",3:"mp3/MVP Plant Sounds/Plant B6.wav",4:"mp3/MVP Plant Sounds/Plant B5.wav",5:"mp3/MVP Plant Sounds/Plant B4.wav",6:"mp3/MVP Plant Sounds/Plant B3.wav",7:"mp3/MVP Plant Sounds/Plant B2.wav",8:"mp3/MVP Plant Sounds/Plant B1.wav"},
+    "jade": {1:"mp3/MVP Plant Sounds/Plant C8.wav",2:"mp3/MVP Plant Sounds/Plant C7.wav",3:"mp3/MVP Plant Sounds/Plant C6.wav",4:"mp3/MVP Plant Sounds/Plant C5.wav",5:"mp3/MVP Plant Sounds/Plant C4.wav",6:"mp3/MVP Plant Sounds/Plant C3.wav",7:"mp3/MVP Plant Sounds/Plant C2.wav",8:"mp3/MVP Plant Sounds/Plant C1.wav"},
+    "succulent": {1:"mp3/MVP Plant Sounds/Plant D8.wav",2:"mp3/MVP Plant Sounds/Plant D7.wav",3:"mp3/MVP Plant Sounds/Plant D6.wav",4:"mp3/MVP Plant Sounds/Plant D5.wav",5:"mp3/MVP Plant Sounds/Plant D4.wav",6:"mp3/MVP Plant Sounds/Plant D3.wav",7:"mp3/MVP Plant Sounds/Plant D2.wav",8:"mp3/MVP Plant Sounds/Plant D1.wav"}
 };
 
 var colors = {
@@ -41,8 +41,6 @@ var canvasFlowers = {};
 var backgroundTrack = new Howl({
     src: ["mp3/track1Individuals/Au1 louder.mp3"]    
 });
-
-var backgroundSound = false;
 
 var menuChoices = {}
 
@@ -62,6 +60,7 @@ window.onload = function(){
     
     setUpScreen(); 
     initializeGlobals();
+    startBackgroundSound();
     
     var myTool = new Tool();
     
@@ -287,7 +286,7 @@ unHighlightToolbarButton = function(button){
  */
 interactWithPlant = function(clickEvent){
     pointClicked = clickEvent.point;
-    mouseStates.currentFlower = new Flower(null,clickEvent.item);
+    mouseStates.currentFlower = new Plant(null,clickEvent.item);
     if(modes.remove){
         deleteFlower(event);
     }
@@ -313,14 +312,13 @@ dropFlower = function(clickEvent){
                 console.log("import error");
             }, 
             onLoad: function(item){
-                newFlower = new Flower(null, item.scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name],Math.floor(clickEvent.point.y/(window.innerHeight*.125))))//null is for the path since Component is path-based, also omitting sound argument for now
+                newFlower = new Plant(null, item.scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name],Math.floor(clickEvent.point.y/(window.innerHeight*.125))), clickEvent.point.x)//null is for the path since Component is path-based, also omitting sound argument for now
                 newFlower.playSound();
                 mouseStates.currentFlower = newFlower;
                 mouseStates.droppedFlower = true;
                 mouseStates.currentFlower.img.position = clickEvent.point;
                 mouseStates.currentFlower.img.scale(0.3);
                 canvasFlowers[mouseStates.currentFlower.img.id] = newFlower;
-                startBackgroundSound();
             }
         });
     } 
@@ -334,10 +332,6 @@ deleteFlower = function(clickEvent){
     canvasFlowers[mouseStates.currentFlower.img.id].stopSound();
     delete canvasFlowers[mouseStates.currentFlower.img.id];
     mouseStates.currentFlower.img.remove();
-    if(Object.keys(canvasFlowers).length == 0){
-        backgroundTrack.stop();
-        backgroundSound = false;
-    }
 }
 
 /*
@@ -383,11 +377,9 @@ calculateMouseDirection = function(dragEvent){
  * Starts background sound if it's not already started
  */
 startBackgroundSound = function(){
-    if(!backgroundSound){
-        backgroundTrack.play();
-        backgroundTrack.loop(true);
-        backgroundSound = true;
-    }
+    backgroundTrack.play();
+    backgroundTrack.loop(true);
+    backgroundTrack.volume(0.3);
 }
 
 /*
