@@ -55,14 +55,18 @@ var currentMenuChoice = {
 var cursorFlower = null;
 
 /*ONLOAD*/
+
+$(document).ready(function(){
+    console.log("starting");
+    $('body').chardinJs('start');
+});
+
 window.onload = function(){
     console.log("window loaded");
     
     setUpScreen(); 
     initializeGlobals();
     startBackgroundSound();
-    
-    $('body').chardinJs('start');
     
     var myTool = new Tool();
     
