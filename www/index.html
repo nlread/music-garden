@@ -3,6 +3,8 @@
 <head>
 
 <link rel ="stylesheet" type = "text/css" href = "css/style.css">
+<link href="css/chardinjs.css" rel="stylesheet">
+
 
 <!-- moved scripts up here because they weren't loading in the proper order -->
 <script type="text/javascript" src="lib/paper-full.js"></script>
@@ -11,11 +13,12 @@
 <script type="text/javascript" src="lib/howler.js"></script>
 <script type="text/javascript" src ="js/classes.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript" src="js/chardinjs.min.js"></script>
     
 
 </head>
 <body>
-    <div id="menu">
+    <div id="menu" data-intro = "Here's the menu" data-position = "right">
         <div id="choice1" class="menuChoice"><img src="img/jadeflower.svg" id="jade" draggable = "false"></div>
         <div id="choice2" class="menuChoice"><img src="img/succulentflower.svg" id="succulent" draggable = "false"> </div>
         <div id="choice3" class="menuChoice"><img src="img/redflower.svg" id="red" draggable = "false"> </div>
@@ -23,7 +26,7 @@
     </div>
     
 	<canvas id="canvas" resize>
-          <!-- images have to be here because Paper needs them to be preloaded - I put them inside the canvas bc I currently have the canvas set to fill the screen, but I'm not sure if that's necessary/right-->
+          <!-- images have to be here because Paper needs them to be preloaded -->
         <img src="img/jadeflower.svg" id="jade">
         <img src="img/succulentflower.svg" id="succulent">
         <img src="img/redflower.svg" id="red">

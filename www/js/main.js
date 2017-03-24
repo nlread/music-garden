@@ -61,6 +61,8 @@ window.onload = function(){
     setUpScreen(); 
     initializeGlobals();
     
+    $('body').chardinJs('start');
+    
     var myTool = new Tool();
     
     //plant button highlighted by default
@@ -168,6 +170,7 @@ stopResize = function(){
  */
 makeMenuChoice = function(){
     animateMenuChoice(this);
+    plantButtonClicked();
     currentMenuChoice.src = this.firstChild.src;
     currentMenuChoice.name = this.firstChild.id
     currentMenuChoice.div = this
