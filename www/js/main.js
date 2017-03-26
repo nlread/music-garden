@@ -19,6 +19,7 @@ var modes = {
     remove: false,
     orderLayers: false
 }
+
 var soundSources = {
     "green": "mp3/track1Individuals/Op4 louder.mp3",
     "red": "mp3/track1Individuals/Op3 louder.mp3",
@@ -53,7 +54,7 @@ var currentMenuChoice = {
     div: "" //div that contains it
 }
 
-/*ONLOAD*/
+/* ONLOAD */
 window.onload = function(){
     //sanity check
     console.log("window loaded");
@@ -110,6 +111,21 @@ window.onload = function(){
             scaleFlower(event);
         }
     };
+
+    paper.view.onFrame = globalOnFrame;
+}
+
+function globalOnFrame(frameEvent) {
+    let dTime = frameEvent.delta;
+    
+    for(let key in canvasFlowers){
+        if (canvasFlowers.hasOwnProperty(key)) {
+            let flower = canvasFlowers[key];
+            if (flower instanceof AnimatedComponent) {
+                flower.update(dTime);
+            }
+        }
+    }
 }
 
 //HELPER FUNCTIONS
@@ -268,13 +284,12 @@ unHighlightToolbarButton = function(button){
 interactWithPlant = function(clickEvent){
     pointClicked = clickEvent.point;
     mouseStates.currentFlower = new Flower(null,clickEvent.item);
+
     if(modes.remove){
         deleteFlower(event);
-    }
-    else if(modes.orderLayers){
+    } else if(modes.orderLayers){
        sendFlowerToBack();
-    }
-    else{
+    } else {
         mouseStates.resizeOldFlower = true;
     } 
 }
@@ -283,7 +298,6 @@ interactWithPlant = function(clickEvent){
 /*
  * Drop a plant on the screen
  */
-
 dropFlower = function(clickEvent){
     if(project.view.bounds.contains(clickEvent)){
         var newFlower;
@@ -317,7 +331,7 @@ dropFlower = function(clickEvent){
 /*
  * Delete a plant from screen and stop its associated sound
  */
-deleteFlower = function(clickEvent){
+deleteFlower = function(clickEvent){ 
     canvasFlowers[clickEvent.item.id].stopSound();
     delete canvasFlowers[clickEvent.item.id];
     mouseStates.currentFlower.img.remove();
@@ -375,8 +389,6 @@ calculateMouseDirection = function(dragEvent){
 /*
  * Euclidean distance (helper function for calculateMouseDirection)
  */
-
-
 pointDistance = function(point1, point2){
     distance = Math.sqrt(Math.pow((point2.x - point1.x), 2) + Math.pow((point2.y - point2.x), 2));
     return(distance);
