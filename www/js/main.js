@@ -54,7 +54,7 @@ var currentMenuChoice = {
 
 var cursorFlower = null;
 
-/*ONLOAD*/
+/* ONLOAD */
 
 $(document).ready(function(){
     console.log("starting");
@@ -125,14 +125,29 @@ window.onload = function(){
         if(modes.plant && mouseStates.droppedFlower){
             scaleFlower(event);
         }
-    };
-    
+    }
     myTool.onMouseMove = function(event){
         if(modes.plant && mouseStates.cursorFlower){
             moveCursorFlower(event);
         }
     }
+
+    paper.view.onFrame = globalOnFrame;
 }
+
+function globalOnFrame(frameEvent) {
+    let dTime = frameEvent.delta;
+    
+    for(let key in canvasFlowers){
+        if (canvasFlowers.hasOwnProperty(key)) {
+            let flower = canvasFlowers[key];
+            if (flower instanceof AnimatedComponent) {
+                flower.update(dTime);
+            }
+        }
+    }
+}
+
 
 //HELPER FUNCTIONS
 
@@ -294,13 +309,12 @@ unHighlightToolbarButton = function(button){
 interactWithPlant = function(clickEvent){
     pointClicked = clickEvent.point;
     mouseStates.currentFlower = new Plant(null,clickEvent.item);
+
     if(modes.remove){
         deleteFlower(event);
-    }
-    else if(modes.orderLayers){
+    } else if(modes.orderLayers){
        sendFlowerToBack();
-    }
-    else{
+    } else {
         mouseStates.resizeOldFlower = true;
     } 
 }
@@ -309,7 +323,6 @@ interactWithPlant = function(clickEvent){
 /*
  * Drop a plant on the screen
  */
-
 dropFlower = function(clickEvent){
     if(project.view.bounds.contains(clickEvent)){
         var newFlower;

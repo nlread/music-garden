@@ -246,7 +246,8 @@ class Plant extends AnimatedComponent {
     //takes both a path and a raster for now so it can extend component, 
     //but should amend that to just one or the other later
     constructor(paperGroup, svg, music, length){
-        super(paperGroup)
+        super(svg)
+
         this.img = svg;
 
         //in the future this could be set automatically depending on plant type
