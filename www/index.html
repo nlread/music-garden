@@ -2,8 +2,9 @@
 <html>
 <head>
 
+    <link href="css/chardinjs.css" rel="stylesheet">
 <link rel ="stylesheet" type = "text/css" href = "css/style.css">
-<link href="css/chardinjs.css" rel="stylesheet">
+
 
 
 <!-- moved scripts up here because they weren't loading in the proper order -->
@@ -19,26 +20,29 @@
 
 </head>
 <body>
-    <div id="menu" data-intro = "Here's the menu" data-position = "right">
-        <div id="choice1" class="menuChoice"><img src="img/jadeflower.svg" id="jade" draggable = "false"></div>
-        <div id="choice2" class="menuChoice"><img src="img/succulentflower.svg" id="succulent" draggable = "false"> </div>
-        <div id="choice3" class="menuChoice"><img src="img/redflower.svg" id="red" draggable = "false"> </div>
-        <div id="choice4" class="menuChoice"><img src="img/greenflower.svg" id="green" draggable = "false"></div>
+    <div id="menu">
+        <div id = "iconsContainer" data-intro = "Click these buttons to choose which flower to plant" data-position = "right">
+            <div id="choice1" class="menuChoice"><img src="img/jadeflower.svg" id="jade" draggable = "false"></div>
+            <div id="choice2" class="menuChoice"><img src="img/succulentflower.svg" id="succulent" draggable = "false"> </div>
+            <div id="choice3" class="menuChoice"><img src="img/redflower.svg" id="red" draggable = "false"> </div>
+            <div id="choice4" class="menuChoice"><img src="img/greenflower.svg" id="green" draggable = "false"></div>
+        </div>
     </div>
     
-    <div id = "dismiss"> I get it </div>
-	<canvas id="canvas" resize>
+    <canvas id="canvas" resize>
           <!-- images have to be here because Paper needs them to be preloaded -->
         <img src="img/jadeflower.svg" id="jade">
         <img src="img/succulentflower.svg" id="succulent">
         <img src="img/redflower.svg" id="red">
         <img src="img/greenflower.svg" id="green">
     </canvas>
+   
   
-    <div id = "toolbar" data-intro="Toolbar" data-position="top">
-        <div id="plantButton" class="toolbarButton"> <span class="align-helper"></span><img src="img/plantIcon.png"></div>
-        <div id ="sendToBackButton" class="toolbarButton"> <span class="align-helper"></span><img src="img/sendToBackIcon.png"></div>
-        <div id="removeButton" class="toolbarButton"> <span class="align-helper"></span><img src="img/removeIcon.png"></div>
+    <div id = "toolbar">
+            <div id = "invisibleOverlay" data-intro = "Click these buttons to switch between planting mode and remove mode" data-position = "top"></div>
+            <div id="plantButton" class="toolbarButton" > <span class="align-helper"></span><img src="img/plantIcon.png"></div>
+            <!-- <div id ="sendToBackButton" class="toolbarButton"> <span class="align-helper"></span><img src="img/sendToBackIcon.png"></div> -->
+            <div id="removeButton" class="toolbarButton"> <span class="align-helper"></span><img src="img/removeIcon.png"></div>
     </div>
  
    

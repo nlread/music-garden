@@ -59,9 +59,9 @@ canvas[resize] {
     margin: auto;  
 }
 
-#dismiss {
-    height: 40px;
-    width: 100px;
-    background-color: white;
+#invisibleOverlay{
+    display: inline-block;
+    float: left;
+    width: 30%;
 }
 
