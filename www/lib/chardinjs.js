@@ -84,7 +84,14 @@
         }
         overlay_layer = document.createElement("div");
         styleText = "";
+        console.log("created");
         overlay_layer.className = "chardinjs-overlay";
+        var dismiss = document.createElement("p");
+        var dismisstext = document.createTextNode("Click anywhere to dismiss");
+        dismiss.appendChild(dismisstext);
+        overlay_layer.appendChild(dismiss);
+        
+        
         if (this.$el.prop('tagName') === "BODY") {
           styleText += "top: 0;bottom: 0; left: 0;right: 0;position: fixed;";
           overlay_layer.setAttribute("style", styleText);
@@ -97,6 +104,7 @@
         }
         this.$el.get()[0].appendChild(overlay_layer);
         overlay_layer.onclick = function() {
+            console.log("dismissed");
           return _this.stop();
         };
         return setTimeout(function() {
