@@ -2,7 +2,7 @@ paper.install(window); //make paper scope global by injecting it into window - f
 
 /*DECLARE GLOBAL CONSTANTS AND VARIABLES*/
 var resize = {
-    initFlowerSize: 0.2,
+    initFlowerSize: 0.025,
     shrink: 0.95,
     grow: 1.05
 }
@@ -333,14 +333,16 @@ interactWithPlant = function(clickEvent){
  */
 dropFlower = function(clickEvent){
     if(project.view.bounds.contains(clickEvent)){
-        console.log(currentMenuChoice.src);
-        var newFlower = new Plant(new Raster(currentMenuChoice.src).scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name],Math.floor(clickEvent.point.y/(window.innerHeight*.125))), clickEvent.point.x)//null is for the path since Component is path-based, also omitting sound argument for now
+        var newFlower = new Plant(new Raster(currentMenuChoice.src).scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name],Math.floor(clickEvent.point.y/(window.innerHeight*.125))), clickEvent.point.x)
+        
         newFlower.playSound();
+        
         mouseStates.currentFlower = newFlower;
         mouseStates.droppedFlower = true;
         mouseStates.currentFlower.img.position = clickEvent.point;
         mouseStates.dropPoint = clickEvent.point;
         mouseStates.currentFlower.img.scale(0.3);
+        
         canvasFlowers[mouseStates.currentFlower.img.id] = newFlower;
 
     } 
