@@ -333,23 +333,16 @@ interactWithPlant = function(clickEvent){
  */
 dropFlower = function(clickEvent){
     if(project.view.bounds.contains(clickEvent)){
-        var newFlower;
-        //all the code that deals with the SVG has to live in the callback function because it's asynchronous (https://groups.google.com/forum/#!searchin/paperjs/svg|sort:relevance/paperjs/ohy3oXUmLPg/G9ehRKhEfVgJ)
-        project.importSVG(currentMenuChoice.src, {
-            onError: function(message){
-                console.log("import error");
-            }, 
-            onLoad: function(item){
-                newFlower = new Plant(null, item.scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name],Math.floor(clickEvent.point.y/(window.innerHeight*.125))), clickEvent.point.x)//null is for the path since Component is path-based, also omitting sound argument for now
-                newFlower.playSound();
-                mouseStates.currentFlower = newFlower;
-                mouseStates.droppedFlower = true;
-                mouseStates.currentFlower.img.position = clickEvent.point;
-                mouseStates.dropPoint = clickEvent.point;
-                mouseStates.currentFlower.img.scale(0.3);
-                canvasFlowers[mouseStates.currentFlower.img.id] = newFlower;
-            }
-        });
+        console.log(currentMenuChoice.src);
+        var newFlower = new Plant(new Raster(currentMenuChoice.src).scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name],Math.floor(clickEvent.point.y/(window.innerHeight*.125))), clickEvent.point.x)//null is for the path since Component is path-based, also omitting sound argument for now
+        newFlower.playSound();
+        mouseStates.currentFlower = newFlower;
+        mouseStates.droppedFlower = true;
+        mouseStates.currentFlower.img.position = clickEvent.point;
+        mouseStates.dropPoint = clickEvent.point;
+        mouseStates.currentFlower.img.scale(0.3);
+        canvasFlowers[mouseStates.currentFlower.img.id] = newFlower;
+
     } 
 }
 
@@ -383,9 +376,9 @@ scaleFlower = function(clickEvent){
             origPoint = mouseStates.dropPoint;
             newPoint = clickEvent.point;
 
-            rect = new Rectangle(origPoint, newPoint);
+            rect = new Rectangle(origPoint, newPoint); /*
             rectPath = new Path.Rectangle(rect);
-            rectPath.fillColor = 'red';
+            rectPath.fillColor = 'red'; */
             mouseStates.currentFlower.img.fitBounds(rect);
 
             canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);
@@ -398,9 +391,9 @@ scaleFlower = function(clickEvent){
             origPoint = mouseStates.dropPoint;
             newPoint = clickEvent.point;
             
-            rect = new Rectangle(origPoint, newPoint);
+            rect = new Rectangle(origPoint, newPoint); /*
             rectPath = new Path.Rectangle(rect);
-            rectPath.fillColor = 'blue';
+            rectPath.fillColor = 'blue'; */
             
             mouseStates.currentFlower.img.fitBounds(rect);
             /*mouseStates.currentFlower.img.scale(resize.shrink);*/ canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.shrink)
@@ -443,8 +436,8 @@ startBackgroundSound = function(){
 moveCursorFlower = function(event){
 //make it lag less on initial click - kind of a hacky fix for now
     if(event.point.x != 0  && event.point.y != 0){
-        cursorFlower.position.x = event.point.x+20;
-        cursorFlower.position.y = event.point.y+20;
+        cursorFlower.position.x = event.point.x+50;
+        cursorFlower.position.y = event.point.y+50;
     }
 }
 
