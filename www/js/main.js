@@ -54,10 +54,11 @@ var currentMenuChoice = {
 
 var cursorFlower = null;
 
+window.interactiveMode = true;
+
 /* ONLOAD */
 
 $(document).ready(function(){
-    console.log("starting");
     $('body').chardinJs('start');
 });
 
@@ -73,38 +74,44 @@ window.onload = function(){
     //plant button highlighted by default
     highlightToolbarButton(buttons.plant);
     
+    //prevent menus from responding during overlay tutorial
+   
     $('.menuChoice').on('click', makeMenuChoice);
-    
+
     $('.menuChoice').on('mouseover', function(){
         choice = this;
         animateMenuChoice(choice);
     });
-    
+
      $('.menuChoice').on('mouseout', function(){
         choice = this;
         unHighlightMenuChoice(choice);
     });
-    
+
     $('#removeButton').on('click', removeButtonClicked);
-    
+
     $('#sendToBackButton').on('click', sendToBackButtonClicked);
 
     $('#plantButton').on('click', plantButtonClicked);
-    
+
+    /* these aren't working, commenting out for now
     $('.toolbarButton').on('mouseover', function(){
         $(this.children[1]).animate({
             height: '100%',
             width: '100%'
         })
     })
-    
+
     $('.toolbarButton').on('mouseout', function(){
-        console.log("mouseout")
         $(this.children[1]).animate({
             height: '95%',
             width: '95%'
         })
     })
+    */
+    
+    
+   
         
     myTool.onMouseUp = function(event) {
         stopResize();
@@ -308,7 +315,7 @@ unHighlightToolbarButton = function(button){
  */
 interactWithPlant = function(clickEvent){
     pointClicked = clickEvent.point;
-    mouseStates.currentFlower = new Plant(null,clickEvent.item);
+    mouseStates.currentFlower = canvasFlowers[clickEvent.item.id];
 
     if(modes.remove){
         deleteFlower(event);
@@ -369,27 +376,51 @@ scaleFlower = function(clickEvent){
     change = calculateMouseDirection(clickEvent);
     if(change > 0){
         if(!(mouseStates.currentFlower.img.bounds.width > (project.view.size.width / 2))){
-           mouseStates.currentFlower.img.scale(resize.grow); canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);
+           /*mouseStates.currentFlower.img.scale(resize.grow);*/
+            topX = mouseStates.currentFlower.img.bounds.point.x;
+            topY = mouseStates.currentFlower.img.bounds.point.y;
+            origPoint = mouseStates.currentFlower.img.bounds.point;
+            newPoint = clickEvent.point;
+            
+            rect = new Rectangle(origPoint, newPoint);
+            mouseStates.currentFlower.img.fitBounds(rect);
+        
+            /*mouseStates.currentFlower.img.scale(distanceToFlowerCenter(clickEvent)/10)*/
+          canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);
+          
         }
     }
     else if(change < 0){
         //current fix for teeny flowers - should be solved if/when we move to distance-based sizing, but fixing for now
         if(!(mouseStates.currentFlower.img.bounds.width < (project.view.size.width / 20))){
-            mouseStates.currentFlower.img.scale(resize.shrink); canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.shrink)
+            topX = mouseStates.currentFlower.img.bounds.point.x;
+            topY = mouseStates.currentFlower.img.bounds.point.y;
+            origPoint = mouseStates.currentFlower.img.bounds.point;
+            newPoint = clickEvent.point;
+            
+            rect = new Rectangle(origPoint, newPoint);
+            mouseStates.currentFlower.img.fitBounds(rect);
+            /*mouseStates.currentFlower.img.scale(resize.shrink);*/ canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.shrink)
         }
     }
 }
 
+distanceToFlowerCenter = function(dragEvent){
+    var flowerCenter = mouseStates.currentFlower.img.position;
+    var mousePos = dragEvent.point;
+    var dist = pointDistance(mousePos, flowerCenter);
+    return(dist);
+}
 
 /*
  * Helper function to calculate direction mouse is moving in relation to plant on drag
  */
 calculateMouseDirection = function(dragEvent){
-    flowerCenter = mouseStates.currentFlower.img.position;
-    mousePos = dragEvent.point;
-    prevMousePos = dragEvent.lastPoint;
-    prevDist = pointDistance(prevMousePos, flowerCenter);
-    currentDist = pointDistance(mousePos, flowerCenter);
+    var flowerCenter = mouseStates.currentFlower.img.position;
+    var mousePos = dragEvent.point;
+    var prevMousePos = dragEvent.lastPoint;
+    var prevDist = pointDistance(prevMousePos, flowerCenter);
+    var currentDist = pointDistance(mousePos, flowerCenter);
     return(currentDist - prevDist);
 }
 

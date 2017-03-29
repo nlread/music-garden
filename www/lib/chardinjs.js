@@ -83,6 +83,7 @@
           return false;
         }
         overlay_layer = document.createElement("div");
+        interactiveMode = false;
         styleText = "";
         console.log("created");
         overlay_layer.className = "chardinjs-overlay";
@@ -104,7 +105,7 @@
         }
         this.$el.get()[0].appendChild(overlay_layer);
         overlay_layer.onclick = function() {
-            console.log("dismissed");
+            interactiveMode = true;
           return _this.stop();
         };
         return setTimeout(function() {
