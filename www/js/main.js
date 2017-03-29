@@ -12,6 +12,7 @@ var mouseStates = {
     currentFlower: null,
     resizeOldFlower: false,
     cursorFlower: false,
+    dropPoint: new Point(0, 0)
 };
 
 var modes = {
@@ -344,6 +345,7 @@ dropFlower = function(clickEvent){
                 mouseStates.currentFlower = newFlower;
                 mouseStates.droppedFlower = true;
                 mouseStates.currentFlower.img.position = clickEvent.point;
+                mouseStates.dropPoint = clickEvent.point;
                 mouseStates.currentFlower.img.scale(0.3);
                 canvasFlowers[mouseStates.currentFlower.img.id] = newFlower;
             }
@@ -373,32 +375,33 @@ sendFlowerToBack = function(){
  * decreasing
  */
 scaleFlower = function(clickEvent){
+    rectPath = null;
     change = calculateMouseDirection(clickEvent);
     if(change > 0){
         if(!(mouseStates.currentFlower.img.bounds.width > (project.view.size.width / 2))){
-           /*mouseStates.currentFlower.img.scale(resize.grow);*/
-            topX = mouseStates.currentFlower.img.bounds.point.x;
-            topY = mouseStates.currentFlower.img.bounds.point.y;
-            origPoint = mouseStates.currentFlower.img.bounds.point;
+            /*mouseStates.currentFlower.img.scale(resize.grow);*/
+            origPoint = mouseStates.dropPoint;
             newPoint = clickEvent.point;
-            
+
             rect = new Rectangle(origPoint, newPoint);
+            rectPath = new Path.Rectangle(rect);
+            rectPath.fillColor = 'red';
             mouseStates.currentFlower.img.fitBounds(rect);
-        
-            /*mouseStates.currentFlower.img.scale(distanceToFlowerCenter(clickEvent)/10)*/
-          canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);
+
+            canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);
           
         }
     }
     else if(change < 0){
         //current fix for teeny flowers - should be solved if/when we move to distance-based sizing, but fixing for now
         if(!(mouseStates.currentFlower.img.bounds.width < (project.view.size.width / 20))){
-            topX = mouseStates.currentFlower.img.bounds.point.x;
-            topY = mouseStates.currentFlower.img.bounds.point.y;
-            origPoint = mouseStates.currentFlower.img.bounds.point;
+            origPoint = mouseStates.dropPoint;
             newPoint = clickEvent.point;
             
             rect = new Rectangle(origPoint, newPoint);
+            rectPath = new Path.Rectangle(rect);
+            rectPath.fillColor = 'blue';
+            
             mouseStates.currentFlower.img.fitBounds(rect);
             /*mouseStates.currentFlower.img.scale(resize.shrink);*/ canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.shrink)
         }
