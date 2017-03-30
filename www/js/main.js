@@ -370,16 +370,18 @@ sendFlowerToBack = function(){
  * decreasing
  */
 scaleFlower = function(clickEvent){
-    rectPath = null;
     change = calculateMouseDirection(clickEvent);
     if(change > 0){
         if(!(mouseStates.currentFlower.img.bounds.width > (project.view.size.width / 2))){
             /*mouseStates.currentFlower.img.scale(resize.grow);*/
-            origPoint = mouseStates.dropPoint;
-            newPoint = clickEvent.point;
+            var origPoint = mouseStates.dropPoint;
+            var newPoint = clickEvent.point;
+            var dist = pointDistance(origPoint, newPoint);
+            var squareSideLength = dist / Math.sqrt(2)
 
-            rect = new Rectangle(origPoint, newPoint); /*
-            rectPath = new Path.Rectangle(rect);
+            var rect = new Rectangle(origPoint, new Size(squareSideLength, squareSideLength)); 
+            //for testing purposes
+            /*var rectPath = new Path.Rectangle(rect);
             rectPath.fillColor = 'red'; */
             mouseStates.currentFlower.img.fitBounds(rect);
 
@@ -390,11 +392,15 @@ scaleFlower = function(clickEvent){
     else if(change < 0){
         //current fix for teeny flowers - should be solved if/when we move to distance-based sizing, but fixing for now
         if(!(mouseStates.currentFlower.img.bounds.width < (project.view.size.width / 20))){
-            origPoint = mouseStates.dropPoint;
-            newPoint = clickEvent.point;
+            var origPoint = mouseStates.dropPoint;
+            var newPoint = clickEvent.point;
             
-            rect = new Rectangle(origPoint, newPoint); /*
-            rectPath = new Path.Rectangle(rect);
+            var dist = pointDistance(origPoint, newPoint);
+            var squareSideLength = dist / Math.sqrt(2)
+
+            var rect = new Rectangle(origPoint, new Size(squareSideLength, squareSideLength)); 
+            // for testing purposes
+            /*var rectPath = new Path.Rectangle(rect);
             rectPath.fillColor = 'blue'; */
             
             mouseStates.currentFlower.img.fitBounds(rect);
