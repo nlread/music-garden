@@ -373,8 +373,8 @@ scaleFlower = function(clickEvent){
     change = calculateMouseDirection(clickEvent);
     if(change > 0){
         if(!(mouseStates.currentFlower.img.bounds.width > (project.view.size.width / 2))){
-            /*mouseStates.currentFlower.img.scale(resize.grow);*/
-            var origPoint = mouseStates.dropPoint;
+            mouseStates.currentFlower.img.scale(resize.grow);
+            /*var origPoint = mouseStates.dropPoint;
             var newPoint = clickEvent.point;
             var dist = pointDistance(origPoint, newPoint);
             var squareSideLength = dist / Math.sqrt(2)
@@ -382,8 +382,8 @@ scaleFlower = function(clickEvent){
             var rect = new Rectangle(origPoint, new Size(squareSideLength, squareSideLength)); 
             //for testing purposes
             /*var rectPath = new Path.Rectangle(rect);
-            rectPath.fillColor = 'red'; */
-            mouseStates.currentFlower.img.fitBounds(rect);
+            rectPath.fillColor = 'red'; 
+            mouseStates.currentFlower.img.fitBounds(rect); */
 
             canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);
           
@@ -392,7 +392,7 @@ scaleFlower = function(clickEvent){
     else if(change < 0){
         //current fix for teeny flowers - should be solved if/when we move to distance-based sizing, but fixing for now
         if(!(mouseStates.currentFlower.img.bounds.width < (project.view.size.width / 20))){
-            var origPoint = mouseStates.dropPoint;
+            /* var origPoint = mouseStates.dropPoint;
             var newPoint = clickEvent.point;
             
             var dist = pointDistance(origPoint, newPoint);
@@ -400,11 +400,11 @@ scaleFlower = function(clickEvent){
 
             var rect = new Rectangle(origPoint, new Size(squareSideLength, squareSideLength)); 
             // for testing purposes
-            /*var rectPath = new Path.Rectangle(rect);
+            var rectPath = new Path.Rectangle(rect);
             rectPath.fillColor = 'blue'; */
             
             mouseStates.currentFlower.img.fitBounds(rect);
-            /*mouseStates.currentFlower.img.scale(resize.shrink);*/ canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.shrink)
+            mouseStates.currentFlower.img.scale(resize.shrink); canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.shrink)
         }
     }
 }
