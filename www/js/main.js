@@ -332,7 +332,7 @@ dropFlower = function(clickEvent){
                 console.log("import error");
             }, 
             onLoad: function(item){
-                newFlower = new Plant(null, item.scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name],Math.floor(clickEvent.point.y/(window.innerHeight*.125))), clickEvent.point.x)//null is for the path since Component is path-based, also omitting sound argument for now
+                newFlower = new Plant(null, item.scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name],Math.floor((clickEvent.point.y*8)/window.innerHeight)), Math.floor((clickEvent.point.x*8)/window.innerWidth))//null is for the path since Component is path-based, also omitting sound argument for now
                 newFlower.playSound();
                 mouseStates.currentFlower = newFlower;
                 mouseStates.droppedFlower = true;

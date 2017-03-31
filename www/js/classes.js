@@ -253,20 +253,20 @@ class Plant extends AnimatedComponent {
         //in the future this could be set automatically depending on plant type
         //can you have default parameters like you can in Python?
         this.music = music;
-        this.length = length;
+        this.space = length;
         this.volume = .5
         this.music.sound.volume(this.volume);
         this.intervalID;
         
         //plays the music of the plant, setting it to loop and the volume at 0.5
         this.playSound = function(){
-//            this.intervalID = window.setInterval(this.music.sound.play, 100);
+ //           this.intervalID = window.setInterval(this.music.sound.play, 100);
             this.music.sound.play();
-            this.music.sound.loop();
+            this.music.sound.loop(true,.1);
         };
         
         this.stopSound = function(){
-//            window.clearInterval(this.intervalID);
+ //           window.clearInterval(this.intervalID);
             this.music.sound.stop();
         };
         

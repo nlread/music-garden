@@ -1177,12 +1177,13 @@
      *   loop(id) -> Returns the sound id's loop value.
      *   loop(loop) -> Sets the loop value for all sounds in this Howl group.
      *   loop(loop, id) -> Sets the loop value of passed sound id.
+         expects(loop, space, id)
      * @return {Howl/Boolean} Returns self or current loop value.
      */
     loop: function() {
       var self = this;
       var args = arguments;
-      var loop, id, sound;
+      var loop, id, sound, space;
 
       // Determine the values for loop and id.
       if (args.length === 0) {
@@ -1192,14 +1193,19 @@
         if (typeof args[0] === 'boolean') {
           loop = args[0];
           self._loop = loop;
+          space = 2.5;
         } else {
           // Return this sound's loop value.
           sound = self._soundById(parseInt(args[0], 10));
           return sound ? sound._loop : false;
         }
-      } else if (args.length === 2) {
+      } else if (args.length === 2 ) {
         loop = args[0];
-        id = parseInt(args[1], 10);
+        space = 2.5 + args[1];
+      } else if (args.length === 3) {
+        loop = args[0];
+        space = 2.5 + args[1];
+        id = parseInt(args[2], 10);
       }
 
       // If no id is passed, get all ID's to be looped.
@@ -1213,7 +1219,8 @@
             sound._node.bufferSource.loop = loop;
             if (loop) {
               sound._node.bufferSource.loopStart = sound._start || 0;
-              sound._node.bufferSource.loopEnd = sound._stop;
+              sound._node.bufferSource.loopEnd = .1;
+              console.log(sound._node.bufferSource.loopEnd);
             }
           }
         }
