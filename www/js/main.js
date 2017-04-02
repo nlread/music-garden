@@ -341,7 +341,7 @@ dropFlower = function(clickEvent){
         mouseStates.droppedFlower = true;
         mouseStates.currentFlower.img.position = clickEvent.point;
         mouseStates.dropPoint = clickEvent.point;
-        mouseStates.currentFlower.img.scale(0.3);
+        mouseStates.currentFlower.img.scale(1.5);
         
         canvasFlowers[mouseStates.currentFlower.img.id] = newFlower;
 

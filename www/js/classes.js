@@ -258,13 +258,11 @@ class Plant extends AnimatedComponent {
         
         //plays the music of the plant, setting it to loop and the volume at 0.5
         this.playSound = function(){
-//            this.intervalID = window.setInterval(this.music.sound.play, 100);
             this.music.sound.play();
-            this.music.sound.loop();
+            this.music.sound.loop(true);
         };
         
         this.stopSound = function(){
-//            window.clearInterval(this.intervalID);
             this.music.sound.stop();
         };
         
