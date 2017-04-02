@@ -122,7 +122,10 @@ window.onload = function(){
     };
 
     myTool.onMouseDown = function(event){
+        console.log(event.point)
         if(project.hitTest(event.point)){
+            console.log("hit")
+            console.log(modes.remove)
             interactWithPlant(event);
             //return so that you don't drop a new flower on top of one to resize
             return;
@@ -167,7 +170,10 @@ function globalOnFrame(frameEvent) {
  */
 setUpScreen = function(){
     paper.setup('canvas')
-    view.draw();   
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = true;
+    view.draw();  
 }
 
 
@@ -200,9 +206,8 @@ stopResize = function(){
  * Switches current flower being dropped and resets state variables
  */
 makeMenuChoice = function(menuItemClicked){
-    console.log(menuItemClicked);
     animateMenuChoice(this);
-    plantButtonClicked();
+    //plantButtonClicked();
     currentMenuChoice.src = this.firstChild.src;
     currentMenuChoice.name = this.firstChild.id
     currentMenuChoice.div = this
@@ -273,6 +278,7 @@ plantButtonClicked = function(){
  * Resets states after remove button clicked
  */
 removeButtonClicked = function(){
+    console.log("clicked remove button")
     highlightToolbarButton(buttons.remove);
     unHighlightToolbarButton(buttons.sendToBack);
     unHighlightToolbarButton(buttons.plant);
@@ -319,6 +325,7 @@ unHighlightToolbarButton = function(button){
  * Determine whether to delete, send to back, or resize a plant that's been clicked on  * based on current mode
  */
 interactWithPlant = function(clickEvent){
+    console.log(modes.remove)
     pointClicked = clickEvent.point;
     mouseStates.currentFlower = canvasFlowers[clickEvent.item.id];
 
@@ -345,7 +352,7 @@ dropFlower = function(clickEvent){
         mouseStates.droppedFlower = true;
         mouseStates.currentFlower.img.position = clickEvent.point;
         mouseStates.dropPoint = clickEvent.point;
-        mouseStates.currentFlower.img.scale(0.3);
+        //mouseStates.currentFlower.img.scale(0.3);
         
         canvasFlowers[mouseStates.currentFlower.img.id] = newFlower;
 
