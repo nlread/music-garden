@@ -6,7 +6,12 @@ body {
     overflow: hidden;
     height: 100%;
     /*green color scheme*/
-    background-color: #C9FFDD;
+    /*background: repeating-linear-gradient(
+    180deg,#C9FFDD,
+    #C9FFDD 12.5%,
+    #E2FFEC 12.5%,
+    #E2FFEC 25%);*/
+    /*background-color: #C9FFDD;*/
 }
 
 /* Scale canvas with resize attribute to full size */
@@ -14,6 +19,11 @@ canvas[resize] {
     width: 90%;
     height: 92%;
     float: right;
+    background: repeating-linear-gradient(
+    180deg,#C9FFDD,
+    #C9FFDD 12.5%,
+    #E2FFEC 12.5%,
+    #E2FFEC 25%);
 }
 
 #menu{
@@ -27,13 +37,13 @@ canvas[resize] {
 #menu div img{
     height: 95%;
     width: 95%;
-    margin: auto;  
+    margin: auto;
 }
-
 
 #toolbar{
     height: 8%;
     width: 90%;
+    padding-bottom: 75%;
     float: right; /*i don't really understand css positioning but this seems to work - it's a little weird on resize though (so are the canvas and menu), that's something to work on */
     background-color: #aaeec5;
 }
@@ -41,7 +51,8 @@ canvas[resize] {
 #toolbar .toolbarButton{
     /*really I want the button to be a square no matter the screen size, but I'm not sure how to do that right now */
     height: 100%;
-    width: 8%;
+    width: 5%;
+    padding-bottom: 75%;
     float: left;
 }
 
@@ -57,11 +68,5 @@ canvas[resize] {
     width: 95%;
     vertical-align: middle;
     margin: auto;  
-}
-
-#invisibleOverlay{
-    display: inline-block;
-    float: left;
-    width: 30%;
 }
 

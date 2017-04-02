@@ -9,6 +9,22 @@
   -o-transition: all 0.3s ease-out;
   transition: all 0.3s ease-out; }
 
+/*new font face for tooltips to match landing page */
+@font-face {
+    font-family: paperdaisy;
+    src: url(../font/paperdaisy-demo.ttf);
+}
+
+/*p to dismiss the overlay added manually */
+
+.chardinjs-overlay p {
+    font-size: 50px;
+    font-family: paperdaisy;
+    color: white;
+    margin-top: 30%;
+    margin-left: 45%;
+}
+
 .chardinjs-helper-layer {
   position: absolute;
   z-index: 9999998;
@@ -30,11 +46,6 @@
   .chardinjs-helper-layer.chardinjs-top {
     border-top: solid white 1px;
     padding-top: 10px; }
-
-@font-face {
-    font-family: paperdaisy;
-    src: url(../font/paperdaisy-demo.ttf);
-}
 
 .chardinjs-tooltip {
   position: absolute;
