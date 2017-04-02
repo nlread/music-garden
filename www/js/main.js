@@ -78,6 +78,9 @@ window.onload = function(){
     //prevent menus from responding during overlay tutorial
    
     $('.menuChoice').on('click', makeMenuChoice);
+    
+    //manually trigger click on first menu item to auto-select it
+    $('#choice1').trigger("click");
 
     $('.menuChoice').on('mouseover', function(){
         choice = this;
@@ -196,7 +199,8 @@ stopResize = function(){
 /*
  * Switches current flower being dropped and resets state variables
  */
-makeMenuChoice = function(){
+makeMenuChoice = function(menuItemClicked){
+    console.log(menuItemClicked);
     animateMenuChoice(this);
     plantButtonClicked();
     currentMenuChoice.src = this.firstChild.src;
