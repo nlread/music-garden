@@ -12,7 +12,7 @@ var mouseStates = {
     currentFlower: null,
     resizeOldFlower: false,
     cursorFlower: false,
-    dropPoint: new Point(0, 0)
+    flowerUpperLeft: new Point(0, 0)
 };
 
 var modes = {
@@ -351,8 +351,8 @@ dropFlower = function(clickEvent){
         mouseStates.currentFlower = newFlower;
         mouseStates.droppedFlower = true;
         mouseStates.currentFlower.img.position = clickEvent.point;
-        mouseStates.dropPoint = clickEvent.point;
-        //mouseStates.currentFlower.img.scale(0.3);
+        mouseStates.flowerUpperLeft = mouseStates.currentFlower.img.bounds.point;
+        mouseStates.currentFlower.img.scale(0.3);
         
         canvasFlowers[mouseStates.currentFlower.img.id] = newFlower;
 
@@ -385,17 +385,15 @@ scaleFlower = function(clickEvent){
     if(change > 0){
         if(!(mouseStates.currentFlower.img.bounds.width > (project.view.size.width / 2))){
             /*mouseStates.currentFlower.img.scale(resize.grow);*/
-            var origPoint = mouseStates.dropPoint;
-            var newPoint = clickEvent.point;
-            var dist = pointDistance(origPoint, newPoint);
-            var squareSideLength = dist / Math.sqrt(2)
+            var upperLeft = mouseStates.flowerUpperLeft;
+            var mousePos = clickEvent.point;
+            var xDist = Math.abs(upperLeft.x - mousePos.x)
+            var yDist = Math.abs(upperLeft.y - mousePos.y)
 
-            var rect = new Rectangle(origPoint, new Size(squareSideLength, squareSideLength)); 
-            //for testing purposes
-            /*var rectPath = new Path.Rectangle(rect);
-            rectPath.fillColor = 'red'; */
+            var squareSideLength = Math.max(xDist, yDist)
+
+            var rect = new Rectangle(upperLeft, new Size(squareSideLength, squareSideLength)); 
             mouseStates.currentFlower.img.fitBounds(rect);
-
             canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);
           
         }
@@ -403,18 +401,16 @@ scaleFlower = function(clickEvent){
     else if(change < 0){
         //current fix for teeny flowers - should be solved if/when we move to distance-based sizing, but fixing for now
         if(!(mouseStates.currentFlower.img.bounds.width < (project.view.size.width / 20))){
-            var origPoint = mouseStates.dropPoint;
-            var newPoint = clickEvent.point;
-            
-            var dist = pointDistance(origPoint, newPoint);
-            var squareSideLength = dist / Math.sqrt(2)
+            var upperLeft = mouseStates.flowerUpperLeft;
+            var mousePos = clickEvent.point;
+            var xDist = Math.abs(upperLeft.x - mousePos.x)
+            var yDist = Math.abs(upperLeft.y - mousePos.y)
 
-            var rect = new Rectangle(origPoint, new Size(squareSideLength, squareSideLength)); 
-            // for testing purposes
-            /*var rectPath = new Path.Rectangle(rect);
-            rectPath.fillColor = 'blue'; */
-            
+            var squareSideLength = Math.max(xDist, yDist)
+
+            var rect = new Rectangle(upperLeft, new Size(squareSideLength, squareSideLength)); 
             mouseStates.currentFlower.img.fitBounds(rect);
+            
             /*mouseStates.currentFlower.img.scale(resize.shrink);*/ canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.shrink)
         }
     }
