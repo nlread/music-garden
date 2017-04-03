@@ -122,10 +122,7 @@ window.onload = function(){
     };
 
     myTool.onMouseDown = function(event){
-        console.log(event.point)
         if(project.hitTest(event.point)){
-            console.log("hit")
-            console.log(modes.remove)
             interactWithPlant(event);
             //return so that you don't drop a new flower on top of one to resize
             return;
@@ -278,7 +275,6 @@ plantButtonClicked = function(){
  * Resets states after remove button clicked
  */
 removeButtonClicked = function(){
-    console.log("clicked remove button")
     highlightToolbarButton(buttons.remove);
     unHighlightToolbarButton(buttons.sendToBack);
     unHighlightToolbarButton(buttons.plant);
@@ -325,7 +321,6 @@ unHighlightToolbarButton = function(button){
  * Determine whether to delete, send to back, or resize a plant that's been clicked on  * based on current mode
  */
 interactWithPlant = function(clickEvent){
-    console.log(modes.remove)
     pointClicked = clickEvent.point;
     mouseStates.currentFlower = canvasFlowers[clickEvent.item.id];
 
