@@ -55,6 +55,7 @@
       };
 
       chardinJs.prototype.stop = function() {
+        console.log("stop")
         this.$el.find(".chardinjs-overlay").fadeOut(function() {
           return $(this).remove();
         });
@@ -68,6 +69,7 @@
             document.detachEvent("onkeydown", this._onKeyDown);
           }
         }
+          
         return this.$el.trigger('chardinJs:stop');
       };
 
@@ -83,9 +85,7 @@
           return false;
         }
         overlay_layer = document.createElement("div");
-        interactiveMode = false;
         styleText = "";
-        console.log("created");
         overlay_layer.className = "chardinjs-overlay";
         var dismiss = document.createElement("p");
         var dismisstext = document.createTextNode("Click anywhere to dismiss");
@@ -105,7 +105,6 @@
         }
         this.$el.get()[0].appendChild(overlay_layer);
         overlay_layer.onclick = function() {
-            interactiveMode = true;
           return _this.stop();
         };
         return setTimeout(function() {

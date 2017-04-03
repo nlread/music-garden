@@ -55,8 +55,6 @@ var currentMenuChoice = {
 
 var cursorFlower = null;
 
-window.interactiveMode = true;
-
 /* ONLOAD */
 
 $(document).ready(function(){
@@ -224,12 +222,12 @@ makeMenuChoice = function(menuItemClicked){
  */
 animateMenuChoice = function(choice){
     if(currentMenuChoice.src){
-        oldMenuChoice =  document.getElementById(currentMenuChoice.name)
-        
-        $(oldMenuChoice.firstChild).animate({
-            height: "95%",
-            width: "95%",
-            backgroundColor: colors.menuColor
+    oldMenuChoice =  document.getElementById(currentMenuChoice.name)
+
+    $(oldMenuChoice.firstChild).animate({
+        height: "95%",
+        width: "95%",
+        backgroundColor: colors.menuColor
             }, 100
         );
     }
