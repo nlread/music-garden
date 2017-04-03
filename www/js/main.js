@@ -204,7 +204,7 @@ stopResize = function(){
  */
 makeMenuChoice = function(menuItemClicked){
     animateMenuChoice(this);
-    //plantButtonClicked();
+    plantButtonClicked();
     currentMenuChoice.src = this.firstChild.src;
     currentMenuChoice.name = this.firstChild.id
     currentMenuChoice.div = this
