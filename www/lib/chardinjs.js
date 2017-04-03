@@ -91,6 +91,8 @@
         var dismisstext = document.createTextNode("Click anywhere to dismiss");
         dismiss.appendChild(dismisstext);
         overlay_layer.appendChild(dismiss);
+          
+        document.getElementById("menu").style.pointerEvents = "none";
         
         
         if (this.$el.prop('tagName') === "BODY") {
@@ -105,6 +107,9 @@
         }
         this.$el.get()[0].appendChild(overlay_layer);
         overlay_layer.onclick = function() {
+            document.getElementById("menu").style.pointerEvents = "auto";
+            //manually trigger click on first menu item to auto-select it
+            $(document.getElementById("choice1")).trigger("click");
           return _this.stop();
         };
         return setTimeout(function() {

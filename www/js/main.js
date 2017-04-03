@@ -73,12 +73,9 @@ window.onload = function(){
     //plant button highlighted by default
     highlightToolbarButton(buttons.plant);
     
-    //prevent menus from responding during overlay tutorial
+
    
     $('.menuChoice').on('click', makeMenuChoice);
-    
-    //manually trigger click on first menu item to auto-select it
-    $('#choice1').trigger("click");
 
     $('.menuChoice').on('mouseover', function(){
         choice = this;
