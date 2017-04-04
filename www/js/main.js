@@ -55,8 +55,6 @@ var currentMenuChoice = {
 
 var cursorFlower = null;
 
-window.interactiveMode = true;
-
 /* ONLOAD */
 
 $(document).ready(function(){
@@ -75,12 +73,9 @@ window.onload = function(){
     //plant button highlighted by default
     highlightToolbarButton(buttons.plant);
     
-    //prevent menus from responding during overlay tutorial
+
    
     $('.menuChoice').on('click', makeMenuChoice);
-    
-    //manually trigger click on first menu item to auto-select it
-    $('#choice1').trigger("click");
 
     $('.menuChoice').on('mouseover', function(){
         choice = this;
@@ -133,7 +128,7 @@ window.onload = function(){
     }
     
     myTool.onMouseDrag = function(event) { 
-        if(modes.plant && mouseStates.droppedFlower){
+        if(modes.plant && (mouseStates.droppedFlower || mouseStates.resizeOldFlower)){
             scaleFlower(event);
         }
     }
@@ -216,6 +211,7 @@ makeMenuChoice = function(menuItemClicked){
     }
     cursorFlower = new Raster(currentMenuChoice.src).scale(0.07)
     cursorFlower.opacity = 0.4 
+    cursorFlower.visible = false; //invisible until mouse is on canvas
 }
 
 
@@ -224,12 +220,12 @@ makeMenuChoice = function(menuItemClicked){
  */
 animateMenuChoice = function(choice){
     if(currentMenuChoice.src){
-        oldMenuChoice =  document.getElementById(currentMenuChoice.name)
-        
-        $(oldMenuChoice.firstChild).animate({
-            height: "95%",
-            width: "95%",
-            backgroundColor: colors.menuColor
+    oldMenuChoice =  document.getElementById(currentMenuChoice.name)
+
+    $(oldMenuChoice.firstChild).animate({
+        height: "95%",
+        width: "95%",
+        backgroundColor: colors.menuColor
             }, 100
         );
     }
@@ -323,6 +319,7 @@ unHighlightToolbarButton = function(button){
 interactWithPlant = function(clickEvent){
     pointClicked = clickEvent.point;
     mouseStates.currentFlower = canvasFlowers[clickEvent.item.id];
+    mouseStates.flowerUpperLeft = mouseStates.currentFlower.img.bounds.point;
 
     if(modes.remove){
         deleteFlower(event);
@@ -375,39 +372,25 @@ sendFlowerToBack = function(){
  * decreasing
  */
 scaleFlower = function(clickEvent){
+
+    //handle size
+    var upperLeft = mouseStates.flowerUpperLeft;
+    var mousePos = clickEvent.point;
+    var xDist = Math.abs(upperLeft.x - mousePos.x)
+    var yDist = Math.abs(upperLeft.y - mousePos.y)
+
+    var squareSideLength = Math.max(xDist, yDist)
+
+    var rect = new Rectangle(upperLeft, new Size(squareSideLength, squareSideLength)); 
+    mouseStates.currentFlower.img.fitBounds(rect);
+    
+    //handle volume
     change = calculateMouseDirection(clickEvent);
-    if(change > 0){
-        if(!(mouseStates.currentFlower.img.bounds.width > (project.view.size.width / 2))){
-            /*mouseStates.currentFlower.img.scale(resize.grow);*/
-            var upperLeft = mouseStates.flowerUpperLeft;
-            var mousePos = clickEvent.point;
-            var xDist = Math.abs(upperLeft.x - mousePos.x)
-            var yDist = Math.abs(upperLeft.y - mousePos.y)
-
-            var squareSideLength = Math.max(xDist, yDist)
-
-            var rect = new Rectangle(upperLeft, new Size(squareSideLength, squareSideLength)); 
-            mouseStates.currentFlower.img.fitBounds(rect);
-            canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);
-          
-        }
+    if(change > 0){  canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);
     }
     else if(change < 0){
-        //current fix for teeny flowers - should be solved if/when we move to distance-based sizing, but fixing for now
-        if(!(mouseStates.currentFlower.img.bounds.width < (project.view.size.width / 20))){
-            var upperLeft = mouseStates.flowerUpperLeft;
-            var mousePos = clickEvent.point;
-            var xDist = Math.abs(upperLeft.x - mousePos.x)
-            var yDist = Math.abs(upperLeft.y - mousePos.y)
-
-            var squareSideLength = Math.max(xDist, yDist)
-
-            var rect = new Rectangle(upperLeft, new Size(squareSideLength, squareSideLength)); 
-            mouseStates.currentFlower.img.fitBounds(rect);
-            
-            /*mouseStates.currentFlower.img.scale(resize.shrink);*/ canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.shrink)
+        canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.shrink);
         }
-    }
 }
 
 distanceToFlowerCenter = function(dragEvent){
@@ -444,7 +427,8 @@ startBackgroundSound = function(){
 
 moveCursorFlower = function(event){
 //make it lag less on initial click - kind of a hacky fix for now
-    if(event.point.x != 0  && event.point.y != 0){
+    if(event.point.x > 0  && event.point.y > 0){
+        cursorFlower.visible = true;
         cursorFlower.position.x = event.point.x+50;
         cursorFlower.position.y = event.point.y+50;
     }

@@ -55,6 +55,7 @@
       };
 
       chardinJs.prototype.stop = function() {
+        console.log("stop")
         this.$el.find(".chardinjs-overlay").fadeOut(function() {
           return $(this).remove();
         });
@@ -68,6 +69,7 @@
             document.detachEvent("onkeydown", this._onKeyDown);
           }
         }
+          
         return this.$el.trigger('chardinJs:stop');
       };
 
@@ -83,14 +85,14 @@
           return false;
         }
         overlay_layer = document.createElement("div");
-        interactiveMode = false;
         styleText = "";
-        console.log("created");
         overlay_layer.className = "chardinjs-overlay";
         var dismiss = document.createElement("p");
         var dismisstext = document.createTextNode("Click anywhere to dismiss");
         dismiss.appendChild(dismisstext);
         overlay_layer.appendChild(dismiss);
+          
+        document.getElementById("menu").style.pointerEvents = "none";
         
         
         if (this.$el.prop('tagName') === "BODY") {
@@ -105,7 +107,9 @@
         }
         this.$el.get()[0].appendChild(overlay_layer);
         overlay_layer.onclick = function() {
-            interactiveMode = true;
+            document.getElementById("menu").style.pointerEvents = "auto";
+            //manually trigger click on first menu item to auto-select it
+            $(document.getElementById("choice1")).trigger("click");
           return _this.stop();
         };
         return setTimeout(function() {
