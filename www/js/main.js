@@ -211,6 +211,7 @@ makeMenuChoice = function(menuItemClicked){
     }
     cursorFlower = new Raster(currentMenuChoice.src).scale(0.07)
     cursorFlower.opacity = 0.4 
+    cursorFlower.visible = false; //invisible until mouse is on canvas
 }
 
 
@@ -426,7 +427,8 @@ startBackgroundSound = function(){
 
 moveCursorFlower = function(event){
 //make it lag less on initial click - kind of a hacky fix for now
-    if(event.point.x != 0  && event.point.y != 0){
+    if(event.point.x > 0  && event.point.y > 0){
+        cursorFlower.visible = true;
         cursorFlower.position.x = event.point.x+50;
         cursorFlower.position.y = event.point.y+50;
     }
