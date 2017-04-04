@@ -336,7 +336,7 @@ interactWithPlant = function(clickEvent){
  */
 dropFlower = function(clickEvent){
     if(project.view.bounds.contains(clickEvent)){
-        var newFlower = new Plant(new Raster(currentMenuChoice.src).scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name],Math.floor(clickEvent.point.y/(window.innerHeight*.125)),(clickEvent.point.x*5/window.innerWidth)))
+        var newFlower = new Plant(new Raster(currentMenuChoice.src).scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name],Math.floor((clickEvent.point.y*8)/canvas.height),(clickEvent.point.x*5/canvas.width)))
         
         newFlower.playSound();
         
