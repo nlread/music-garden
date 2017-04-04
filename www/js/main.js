@@ -128,7 +128,7 @@ window.onload = function(){
     }
     
     myTool.onMouseDrag = function(event) { 
-        if(modes.plant && mouseStates.droppedFlower){
+        if(modes.plant && (mouseStates.droppedFlower || mouseStates.resizeOldFlower)){
             scaleFlower(event);
         }
     }
@@ -319,6 +319,7 @@ unHighlightToolbarButton = function(button){
 interactWithPlant = function(clickEvent){
     pointClicked = clickEvent.point;
     mouseStates.currentFlower = canvasFlowers[clickEvent.item.id];
+    mouseStates.flowerUpperLeft = mouseStates.currentFlower.img.bounds.point;
 
     if(modes.remove){
         deleteFlower(event);
