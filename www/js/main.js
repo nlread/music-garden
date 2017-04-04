@@ -371,39 +371,25 @@ sendFlowerToBack = function(){
  * decreasing
  */
 scaleFlower = function(clickEvent){
+
+    //handle size
+    var upperLeft = mouseStates.flowerUpperLeft;
+    var mousePos = clickEvent.point;
+    var xDist = Math.abs(upperLeft.x - mousePos.x)
+    var yDist = Math.abs(upperLeft.y - mousePos.y)
+
+    var squareSideLength = Math.max(xDist, yDist)
+
+    var rect = new Rectangle(upperLeft, new Size(squareSideLength, squareSideLength)); 
+    mouseStates.currentFlower.img.fitBounds(rect);
+    
+    //handle volume
     change = calculateMouseDirection(clickEvent);
-    if(change > 0){
-        if(!(mouseStates.currentFlower.img.bounds.width > (project.view.size.width / 2))){
-            /*mouseStates.currentFlower.img.scale(resize.grow);*/
-            var upperLeft = mouseStates.flowerUpperLeft;
-            var mousePos = clickEvent.point;
-            var xDist = Math.abs(upperLeft.x - mousePos.x)
-            var yDist = Math.abs(upperLeft.y - mousePos.y)
-
-            var squareSideLength = Math.max(xDist, yDist)
-
-            var rect = new Rectangle(upperLeft, new Size(squareSideLength, squareSideLength)); 
-            mouseStates.currentFlower.img.fitBounds(rect);
-            canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);
-          
-        }
+    if(change > 0){  canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);
     }
     else if(change < 0){
-        //current fix for teeny flowers - should be solved if/when we move to distance-based sizing, but fixing for now
-        if(!(mouseStates.currentFlower.img.bounds.width < (project.view.size.width / 20))){
-            var upperLeft = mouseStates.flowerUpperLeft;
-            var mousePos = clickEvent.point;
-            var xDist = Math.abs(upperLeft.x - mousePos.x)
-            var yDist = Math.abs(upperLeft.y - mousePos.y)
-
-            var squareSideLength = Math.max(xDist, yDist)
-
-            var rect = new Rectangle(upperLeft, new Size(squareSideLength, squareSideLength)); 
-            mouseStates.currentFlower.img.fitBounds(rect);
-            
-            /*mouseStates.currentFlower.img.scale(resize.shrink);*/ canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.shrink)
+        canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.shrink);
         }
-    }
 }
 
 distanceToFlowerCenter = function(dragEvent){
