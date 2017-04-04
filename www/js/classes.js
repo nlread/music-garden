@@ -243,7 +243,7 @@ class AnimatedComponent extends Component {
 
 class Plant extends AnimatedComponent {
 
-    constructor(png, music, length){
+    constructor(png, music){
         super(png)
 
         this.img = png;
@@ -251,20 +251,17 @@ class Plant extends AnimatedComponent {
         //in the future this could be set automatically depending on plant type
         //can you have default parameters like you can in Python?
         this.music = music;
-        this.space = length;
         this.volume = .5
         this.music.sound.volume(this.volume);
         this.intervalID;
         
         //plays the music of the plant, setting it to loop and the volume at 0.5
         this.playSound = function(){
- //           this.intervalID = window.setInterval(this.music.sound.play, 100);
             this.music.sound.play();
-            this.music.sound.loop(true,.1);
+            this.music.sound.loop(true);
         };
         
         this.stopSound = function(){
- //           window.clearInterval(this.intervalID);
             this.music.sound.stop();
         };
         
@@ -275,15 +272,16 @@ class Plant extends AnimatedComponent {
     };
 }
 
-//I'm not sure if this class is necessary. we could easily make the sound in plant
-
 class Music {
 
-    constructor(source, pitch){
+    constructor(source, pitch, xLength){
         this.source = source;
         this.pitch = pitch+1;
+        console.log(this.pitch);
+        this.xLength = xLength;
         this.sound = new Howl({
             src: [this.source[this.pitch]],
+            space: this.xLength,
         });
     };
     

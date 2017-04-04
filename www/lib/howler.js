@@ -463,6 +463,7 @@
       self._sprite = o.sprite || {};
       self._src = (typeof o.src !== 'string') ? o.src : [o.src];
       self._volume = o.volume !== undefined ? o.volume : 1;
+      self._space = (o.space + 1.5) || 1.5;
 
       // Setup all other default properties.
       self._duration = 0;
@@ -684,7 +685,7 @@
       sound._sprite = sprite;
       sound._seek = seek;
       sound._start = self._sprite[sprite][0] / 1000;
-      sound._stop = (self._sprite[sprite][0] + self._sprite[sprite][1]) / 1000;
+      sound._stop = (self._sprite[sprite][0] / 1000) + self._space;
       sound._loop = !!(sound._loop || self._sprite[sprite][2]);
 
       // Begin the actual playback.
@@ -1177,13 +1178,12 @@
      *   loop(id) -> Returns the sound id's loop value.
      *   loop(loop) -> Sets the loop value for all sounds in this Howl group.
      *   loop(loop, id) -> Sets the loop value of passed sound id.
-         expects(loop, space, id)
      * @return {Howl/Boolean} Returns self or current loop value.
      */
     loop: function() {
       var self = this;
       var args = arguments;
-      var loop, id, sound, space;
+      var loop, id, sound;
 
       // Determine the values for loop and id.
       if (args.length === 0) {
@@ -1193,19 +1193,14 @@
         if (typeof args[0] === 'boolean') {
           loop = args[0];
           self._loop = loop;
-          space = 2.5;
         } else {
           // Return this sound's loop value.
           sound = self._soundById(parseInt(args[0], 10));
           return sound ? sound._loop : false;
         }
-      } else if (args.length === 2 ) {
+      } else if (args.length === 2) {
         loop = args[0];
-        space = 2.5 + args[1];
-      } else if (args.length === 3) {
-        loop = args[0];
-        space = 2.5 + args[1];
-        id = parseInt(args[2], 10);
+        id = parseInt(args[1], 10);
       }
 
       // If no id is passed, get all ID's to be looped.
@@ -1219,8 +1214,7 @@
             sound._node.bufferSource.loop = loop;
             if (loop) {
               sound._node.bufferSource.loopStart = sound._start || 0;
-              sound._node.bufferSource.loopEnd = .1;
-              console.log(sound._node.bufferSource.loopEnd);
+              sound._node.bufferSource.loopEnd = sound._stop;
             }
           }
         }

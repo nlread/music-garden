@@ -339,7 +339,7 @@ interactWithPlant = function(clickEvent){
  */
 dropFlower = function(clickEvent){
     if(project.view.bounds.contains(clickEvent)){
-        var newFlower = new Plant(new Raster(currentMenuChoice.src).scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name],Math.floor(clickEvent.point.y/(window.innerHeight*.125))), Math.floor((clickEvent.point.x*8)/window.innerWidth))
+        var newFlower = new Plant(new Raster(currentMenuChoice.src).scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name],Math.floor(clickEvent.point.y/(window.innerHeight*.125)),(clickEvent.point.x*5/window.innerWidth)))
         
         newFlower.playSound();
         
@@ -347,7 +347,7 @@ dropFlower = function(clickEvent){
         mouseStates.droppedFlower = true;
         mouseStates.currentFlower.img.position = clickEvent.point;
         mouseStates.flowerUpperLeft = mouseStates.currentFlower.img.bounds.point;
-        mouseStates.currentFlower.img.scale(0.3);
+        mouseStates.currentFlower.img.scale(1.5);
         
         canvasFlowers[mouseStates.currentFlower.img.id] = newFlower;
     } 
