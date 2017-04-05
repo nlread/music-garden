@@ -77,12 +77,13 @@ window.onload = function(){
    
     $('.menuChoice').on('click', makeMenuChoice);
 
-    $('.menuChoice').on('mouseover', function(){
+    $('.menuChoice').on('mouseenter', function(){
         choice = this;
+        $(this).stop();
         animateMenuChoice(choice);
     });
 
-     $('.menuChoice').on('mouseout', function(){
+     $('.menuChoice').on('mouseleave', function(){
         choice = this;
         unHighlightMenuChoice(choice);
     });
@@ -93,21 +94,20 @@ window.onload = function(){
 
     $('#plantButton').on('click', plantButtonClicked);
 
-    /* these aren't working, commenting out for now
-    $('.toolbarButton').on('mouseover', function(){
+    $('.toolbarButton').on('mouseenter', function(){
         $(this.children[1]).animate({
             height: '100%',
             width: '100%'
         })
     })
 
-    $('.toolbarButton').on('mouseout', function(){
+    $('.toolbarButton').on('mouseleave', function(){
         $(this.children[1]).animate({
             height: '95%',
             width: '95%'
         })
     })
-    */
+   
     
     
    

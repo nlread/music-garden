@@ -110,6 +110,7 @@
             document.getElementById("menu").style.pointerEvents = "auto";
             //manually trigger click on first menu item to auto-select it
             $(document.getElementById("choice1")).trigger("click");
+            $(document.getElementById("choice1")).trigger("mouseleave");
           return _this.stop();
         };
         return setTimeout(function() {
