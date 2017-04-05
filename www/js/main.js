@@ -368,6 +368,13 @@ dropFlower = function(clickEvent){
 //            newFlower.animate(new RotatingAnimation(-15,0.1,0.2));
         });
         
+        newFlower.music.sound.on('play', function() {
+            console.log("played");
+            
+//            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
+           newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
+           newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));}
+        
         canvasFlowers[mouseStates.currentFlower.img.id] = newFlower;
     } 
 }
@@ -409,10 +416,10 @@ scaleFlower = function(clickEvent){
 
         //handle volume
         change = calculateMouseDirection(clickEvent);
-        if(change > 0){  canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);
+        if(change > 0){  //canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);
         }
         else if(change < 0){
-        canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.shrink);
+        //canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.shrink);
         }
     }
     
