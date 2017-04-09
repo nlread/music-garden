@@ -51,7 +51,7 @@ canvas[resize] {
 #toolbar .toolbarButton{
     /*really I want the button to be a square no matter the screen size, but I'm not sure how to do that right now */
     height: 100%;
-    width: 5%;
+    width: 50%;
     padding-bottom: 75%;
     float: left;
 }
@@ -70,3 +70,7 @@ canvas[resize] {
     margin: auto;  
 }
 
+#invisibleOverlay{
+    width: 16%;
+    height: 100%;
+}

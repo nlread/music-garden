@@ -4,7 +4,8 @@ paper.install(window); //make paper scope global by injecting it into window - f
 var resize = {
     initFlowerSize: 0.025,
     shrink: 0.95,
-    grow: 1.05
+    grow: 1.05,
+    dragTolerance: 20
 }
 
 var mouseStates = {
@@ -12,7 +13,6 @@ var mouseStates = {
     currentFlower: null,
     resizeOldFlower: false,
     cursorFlower: false,
-    flowerUpperLeft: new Point(0, 0)
 };
 
 var modes = {
@@ -192,6 +192,9 @@ stopResize = function(){
     if(mouseStates.resizeOldFlower){
         mouseStates.resizeOldFlower = false;
     }
+    if(mouseStates.droppedFlower){
+        mouseStates.droppedFlower = false;
+    }
 }
 
 /*
@@ -320,6 +323,8 @@ interactWithPlant = function(clickEvent){
     pointClicked = clickEvent.point;
     mouseStates.currentFlower = canvasFlowers[clickEvent.item.id];
     mouseStates.flowerUpperLeft = mouseStates.currentFlower.img.bounds.point;
+    mouseStates.flowerCenter = mouseStates.currentFlower.img.position;
+   
 
     if(modes.remove){
         deleteFlower(event);
@@ -344,7 +349,10 @@ dropFlower = function(clickEvent){
         mouseStates.droppedFlower = true;
         mouseStates.currentFlower.img.position = clickEvent.point;
         mouseStates.flowerUpperLeft = mouseStates.currentFlower.img.bounds.point;
+        mouseStates.flowerCenter = mouseStates.currentFlower.img.position;
         mouseStates.currentFlower.img.scale(1.5);
+        
+  
         
         
         newFlower.music.sound.on('play', function() {
@@ -358,6 +366,14 @@ dropFlower = function(clickEvent){
 //            newFlower.animate(new RotatingAnimation(-15,0.1,0));
 //            newFlower.animate(new RotatingAnimation(30,0.1,0.1));
 //            newFlower.animate(new RotatingAnimation(-15,0.1,0.2));
+        });
+        
+        newFlower.music.sound.on('play', function() {
+            console.log("played");
+            
+        //Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
+           newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
+           newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
         });
         
         canvasFlowers[mouseStates.currentFlower.img.id] = newFlower;
@@ -386,25 +402,28 @@ sendFlowerToBack = function(){
  * decreasing
  */
 scaleFlower = function(clickEvent){
+    //if mouse distance from center is greater than drag tolerance
+    if(pointDistance(clickEvent.point, mouseStates.currentFlower.img.position) >resize.dragTolerance){
+        //handle size
+        var upperLeft = mouseStates.flowerUpperLeft;
+        var mousePos = clickEvent.point;
+        var xDist = Math.abs(upperLeft.x - mousePos.x)
+        var yDist = Math.abs(upperLeft.y - mousePos.y)
 
-    //handle size
-    var upperLeft = mouseStates.flowerUpperLeft;
-    var mousePos = clickEvent.point;
-    var xDist = Math.abs(upperLeft.x - mousePos.x)
-    var yDist = Math.abs(upperLeft.y - mousePos.y)
+        var squareSideLength = Math.max(xDist, yDist)
 
-    var squareSideLength = Math.max(xDist, yDist)
+        var rect = new Rectangle(upperLeft, new Size(squareSideLength, squareSideLength)); 
+        mouseStates.currentFlower.img.fitBounds(rect);
 
-    var rect = new Rectangle(upperLeft, new Size(squareSideLength, squareSideLength)); 
-    mouseStates.currentFlower.img.fitBounds(rect);
-    
-    //handle volume
-    change = calculateMouseDirection(clickEvent);
-    if(change > 0){  canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);
-    }
-    else if(change < 0){
-        canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.shrink);
+        //handle volume
+        change = calculateMouseDirection(clickEvent);
+        if(change > 0){  //canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);
         }
+        else if(change < 0){
+        //canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.shrink);
+        }
+    }
+    
 }
 
 distanceToFlowerCenter = function(dragEvent){
@@ -452,6 +471,6 @@ moveCursorFlower = function(event){
  * Euclidean distance (helper function for calculateMouseDirection)
  */
 pointDistance = function(point1, point2){
-    distance = Math.sqrt(Math.pow((point2.x - point1.x), 2) + Math.pow((point2.y - point2.x), 2));
+    distance = Math.sqrt(Math.pow((point2.x - point1.x), 2) + Math.pow((point2.y - point1.y), 2));
     return(distance);
 }
