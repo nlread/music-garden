@@ -67,7 +67,7 @@ canvas[resize] {
 
 .toolbarButton.right{
     height: 100%;
-    width: 100%;
+    width: 40%;
 }
 .toolbarButton img{
     height: 100%;
@@ -82,6 +82,10 @@ canvas[resize] {
     width: 100%;
 }
 
+
+.btn-group.right{
+    margin-left: 20%;
+}
 .btn{
     background-color: #aaeec5;
 }
