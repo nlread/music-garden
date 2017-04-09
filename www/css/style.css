@@ -24,6 +24,7 @@ body {
 
 #bottomToolbarRow{
     height: 8%;
+    background-color: #aaeec5;
 }
 /* Scale canvas with resize attribute to full size */
 canvas[resize] {

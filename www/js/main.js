@@ -93,6 +93,8 @@ window.onload = function(){
     $('#sendToBackButton').on('click', sendToBackButtonClicked);
 
     $('#plantButton').on('click', plantButtonClicked);
+    
+    $("#helpButton").on('click', helpButtonClicked);
 
     /* This looks bad with the bootstrap, might mess with it later
     $('.toolbarButton').on('mouseenter', function(){
@@ -183,6 +185,7 @@ initializeGlobals = function(){
     buttons.remove = document.getElementById("removeButton");
     buttons.plant = document.getElementById("plantButton");
     buttons.sendToBack = document.getElementById("sendToBackButton");
+    buttons.help = document.getElementById("helpButton");
     
 }
 
@@ -295,6 +298,11 @@ sendToBackButtonClicked = function(){
     modes.remove = false;
     modes.orderLayers = true; 
     mouseStates.cursorFlower = false;
+}
+
+/*Brings tutorial back up when help button is clicked*/
+helpButtonClicked = function(){
+    $('body').chardinJs('start');
 }
 
 /*
