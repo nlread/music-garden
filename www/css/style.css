@@ -88,6 +88,8 @@ canvas[resize] {
 }
 .btn{
     background-color: #aaeec5;
+    border-radius: 0;
+    border: none;
 }
 
 
