@@ -95,6 +95,8 @@ window.onload = function(){
     $('#plantButton').on('click', plantButtonClicked);
     
     $("#helpButton").on('click', helpButtonClicked);
+    
+    $("#trashButton").on("click", trashButtonClicked);
         
     myTool.onMouseUp = function(event) {
         stopResize();
@@ -286,27 +288,12 @@ helpButtonClicked = function(){
     $('body').chardinJs('start');
 }
 
-
-///*
-// * Helper function to highlight a given toolbar button
-// */
-//highlightToolbarButton = function(button){
-//    $(button).animate({
-//        backgroundColor: colors.toolbarSelectColor
-//        }, 100
-//    ); 
-//}
-//
-///*
-// * Helper function to unhighlight a given toolbar button
-// */
-//unHighlightToolbarButton = function(button){
-//     $(button).animate({
-//        backgroundColor: colors.toolbarColor
-//        }, 100
-//    ); 
-//}
-
+trashButtonClicked = function(){
+    var trash = confirm("Are you sure you want to delete all flowers?");
+    if (trash) {
+        deleteAllFlowers();
+    }
+}
 
 
 /*
@@ -381,6 +368,18 @@ deleteFlower = function(clickEvent){
     canvasFlowers[mouseStates.currentFlower.img.id].stopSound();
     delete canvasFlowers[mouseStates.currentFlower.img.id];
     mouseStates.currentFlower.img.remove();
+}
+
+/*
+ * Deetes all flowers on screen
+ */
+deleteAllFlowers = function(){
+    for(var flower in canvasFlowers){
+        canvasFlowers[flower].stopSound();
+        canvasFlowers[flower].img.remove();
+    }
+    
+    canvasFlowers = {}
 }
 
 /*
