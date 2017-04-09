@@ -685,7 +685,7 @@
       sound._sprite = sprite;
       sound._seek = seek;
       sound._start = self._sprite[sprite][0] / 1000;
-      sound._stop = (self._sprite[sprite][0] / 1000) + self._space;
+      sound._stop = (self._sprite[sprite][0] + self._sprite[sprite][1])/ 1000;
       sound._loop = !!(sound._loop || self._sprite[sprite][2]);
 
       // Begin the actual playback.
