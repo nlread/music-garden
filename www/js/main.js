@@ -94,6 +94,7 @@ window.onload = function(){
 
     $('#plantButton').on('click', plantButtonClicked);
 
+    /* This looks bad with the bootstrap, might mess with it later
     $('.toolbarButton').on('mouseenter', function(){
         $(this.children[1]).animate({
             height: '100%',
@@ -107,7 +108,7 @@ window.onload = function(){
             width: '95%'
         })
     })
-   
+   */
     
     
    

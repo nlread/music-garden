@@ -14,10 +14,21 @@ body {
     /*background-color: #C9FFDD;*/
 }
 
+.container-fluid{
+    height: 100%;
+}
+
+#menuAndCanvasRow{
+    height: 92%;
+}
+
+#bottomToolbarRow{
+    height: 8%;
+}
 /* Scale canvas with resize attribute to full size */
 canvas[resize] {
     width: 90%;
-    height: 92%;
+    height: 100%;
     float: right;
     background: repeating-linear-gradient(
     180deg,#C9FFDD,
@@ -40,21 +51,6 @@ canvas[resize] {
     margin: auto;
 }
 
-#toolbar{
-    height: 8%;
-    width: 90%;
-    padding-bottom: 75%;
-    float: right; /*i don't really understand css positioning but this seems to work - it's a little weird on resize though (so are the canvas and menu), that's something to work on */
-    background-color: #aaeec5;
-}
-
-#toolbar .toolbarButton{
-    /*really I want the button to be a square no matter the screen size, but I'm not sure how to do that right now */
-    height: 100%;
-    width: 50%;
-    padding-bottom: 75%;
-    float: left;
-}
 
 /*alignment helper to get images to center vertically - from here http://jsfiddle.net/kizu/4RPFa/4570/ */
 .align-helper{
@@ -63,14 +59,28 @@ canvas[resize] {
     vertical-align: middle;
 }
 
-#toolbar img{
-    height: 95%;
-    width: 95%;
+.toolbarButton.left{
+    height: 100%;
+    width: 40%;
+}
+
+.toolbarButton.right{
+    height: 100%;
+    width: 100%;
+}
+.toolbarButton img{
+    height: 100%;
+    width: 100%;
     vertical-align: middle;
     margin: auto;  
 }
 
-#invisibleOverlay{
-    width: 16%;
+.btn-group {
+    display: inline-block;
     height: 100%;
+    width: 100%;
 }
+
+
+
+

@@ -3,6 +3,7 @@
 <head>
 
 <link href="css/chardinjs.css" rel="stylesheet">
+<link rel="stylesheet" href="css/bootstrap.css">
 <link rel ="stylesheet" type = "text/css" href = "css/style.css">
 
 
@@ -13,6 +14,7 @@
 <script type="text/javascript" src ="lib/jquery-ui.js"></script>
 <script type="text/javascript" src="lib/howler.js"></script>
 <script type="text/javascript" src="lib/chardinjs.js"></script>
+<script type="text/javascript" src="lib/bootstrap.js"></script>
 <script type="text/javascript" src ="js/classes.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
 
@@ -20,30 +22,42 @@
 
 </head>
 <body>
-    <div id="menu">
-        <div id = "iconsContainer" data-intro = "These buttons choose which flower to plant" data-position = "right">
-            <div id="choice1" class="menuChoice"><img src="img/PNG/jade.png" id="jade" draggable = "false"></div>
-            <div id="choice2" class="menuChoice"><img src="img/PNG/succulent.png" id="succulent" draggable = "false"> </div>
-            <div id="choice3" class="menuChoice"><img src="img/PNG/redflower.png" id="red" draggable = "false"> </div>
-            <div id="choice4" class="menuChoice"><img src="img/PNG/greenflower.png" id="green" draggable = "false"></div>
+    <div class = "container-fluid">
+        <div id="menuAndCanvasRow" class = "row">
+            <div id="menu">
+                <div id = "iconsContainer" data-intro = "These buttons choose which flower to plant" data-position = "right">
+                    <div id="choice1" class="menuChoice"><img src="img/PNG/jade.png" id="jade" draggable = "false"></div>
+                    <div id="choice2" class="menuChoice"><img src="img/PNG/succulent.png" id="succulent" draggable = "false"> </div>
+                    <div id="choice3" class="menuChoice"><img src="img/PNG/redflower.png" id="red" draggable = "false"> </div>
+                    <div id="choice4" class="menuChoice"><img src="img/PNG/greenflower.png" id="green" draggable = "false"></div>
+                </div>
+            </div>
+
+            <canvas id="canvas" resize>
+                <img src="img/PNG/jade.png" id="jade">
+                <img src="img/PNG/succulent.png" id="succulent">
+                <img src="img/PNG/redflower.png" id = "red">
+                <img src="img/PNG/greenflower.png" id="green">
+            </canvas>
+        </div>
+
+        <div id = "bottomToolbarRow" class="row">
+            <div class = "col-md-2">
+                <div id = "modeButtonGroup" class = "btn-group" data-intro = "These buttons switch between planting mode and remove mode" data-position = "right">
+                        <button id="plantButton" type="button" class="btn btn-default toolbarButton left"><span class="align-helper"></span><img src="img/plantIcon.png"></button>
+                        <button id="removeButton" type="button" class="btn btn-default toolbarButton left"><span class="align-helper"></span><img src="img/removeIcon.png"></button>
+                        <!-- <div id ="sendToBackButton" class="toolbarButton"> <span class="align-helper"></span><img src="img/sendToBackIcon.png"></div> -->
+                    </div>
+                </div>
+            <div class = "col-md-1 col-md-offset-9">
+                <div id = "toolsButtonGroup" class ="btn-group">
+                    <button id = "help" class ="btn btn-default toolbarButton right"><span class="align-helper"></span><img src="img/helpIcon.png"></button>
+                </div>
+            </div>
         </div>
     </div>
-    
-    <canvas id="canvas" resize>
-        <img src="img/PNG/jade.png" id="jade">
-        <img src="img/PNG/succulent.png" id="succulent">
-        <img src="img/PNG/redflower.png" id = "red">
-        <img src="img/PNG/greenflower.png" id="green">
-    </canvas>
    
-  
-    <div id = "toolbar">
-        <div id = "invisibleOverlay" data-intro = "These buttons switch between planting mode and remove mode" data-position = "right">
-            <div id="plantButton" class="toolbarButton" > <span class="align-helper"></span><img src="img/plantIcon.png"></div>
-            <!-- <div id ="sendToBackButton" class="toolbarButton"> <span class="align-helper"></span><img src="img/sendToBackIcon.png"></div> -->
-            <div id="removeButton" class="toolbarButton"> <span class="align-helper"></span><img src="img/removeIcon.png"></div>
-        </div>
-    </div>
+
  
    
 </body>
