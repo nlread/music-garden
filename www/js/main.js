@@ -71,7 +71,7 @@ window.onload = function(){
     var myTool = new Tool();
     
     //plant button highlighted by default
-    highlightToolbarButton(buttons.plant);
+    $(buttons.plant).trigger("click");
     
 
    
@@ -95,25 +95,6 @@ window.onload = function(){
     $('#plantButton').on('click', plantButtonClicked);
     
     $("#helpButton").on('click', helpButtonClicked);
-
-    /* This looks bad with the bootstrap, might mess with it later
-    $('.toolbarButton').on('mouseenter', function(){
-        $(this.children[1]).animate({
-            height: '100%',
-            width: '100%'
-        })
-    })
-
-    $('.toolbarButton').on('mouseleave', function(){
-        $(this.children[1]).animate({
-            height: '95%',
-            width: '95%'
-        })
-    })
-   */
-    
-    
-   
         
     myTool.onMouseUp = function(event) {
         stopResize();
@@ -266,9 +247,9 @@ unHighlightMenuChoice = function(choice){
  * Resets states after plant button clicked
  */
 plantButtonClicked = function(){
-    highlightToolbarButton(buttons.plant);
-    unHighlightToolbarButton(buttons.remove);
-    unHighlightToolbarButton(buttons.sendToBack);
+//    highlightToolbarButton(buttons.plant);
+//    unHighlightToolbarButton(buttons.remove);
+//    unHighlightToolbarButton(buttons.sendToBack);
     modes.remove = false;
     modes.orderLayers = false; 
     modes.plant = true;
@@ -278,9 +259,9 @@ plantButtonClicked = function(){
  * Resets states after remove button clicked
  */
 removeButtonClicked = function(){
-    highlightToolbarButton(buttons.remove);
-    unHighlightToolbarButton(buttons.sendToBack);
-    unHighlightToolbarButton(buttons.plant);
+//    highlightToolbarButton(buttons.remove);
+//    unHighlightToolbarButton(buttons.sendToBack);
+//    unHighlightToolbarButton(buttons.plant);
     modes.plant = false;
     modes.orderLayers = false;
     modes.remove = true;  
@@ -291,9 +272,9 @@ removeButtonClicked = function(){
  * Resets states after send to back button clicked
  */
 sendToBackButtonClicked = function(){
-    highlightToolbarButton(buttons.sendToBack);
-    unHighlightToolbarButton(buttons.remove);
-    unHighlightToolbarButton(buttons.plant);
+//    highlightToolbarButton(buttons.sendToBack);
+//    unHighlightToolbarButton(buttons.remove);
+//    unHighlightToolbarButton(buttons.plant);
     modes.plant = false;
     modes.remove = false;
     modes.orderLayers = true; 
@@ -305,25 +286,28 @@ helpButtonClicked = function(){
     $('body').chardinJs('start');
 }
 
-/*
- * Helper function to highlight a given toolbar button
- */
-highlightToolbarButton = function(button){
-    $(button).animate({
-        backgroundColor: colors.toolbarSelectColor
-        }, 100
-    ); 
-}
 
-/*
- * Helper function to unhighlight a given toolbar button
- */
-unHighlightToolbarButton = function(button){
-     $(button).animate({
-        backgroundColor: colors.toolbarColor
-        }, 100
-    ); 
-}
+///*
+// * Helper function to highlight a given toolbar button
+// */
+//highlightToolbarButton = function(button){
+//    $(button).animate({
+//        backgroundColor: colors.toolbarSelectColor
+//        }, 100
+//    ); 
+//}
+//
+///*
+// * Helper function to unhighlight a given toolbar button
+// */
+//unHighlightToolbarButton = function(button){
+//     $(button).animate({
+//        backgroundColor: colors.toolbarColor
+//        }, 100
+//    ); 
+//}
+
+
 
 /*
  * Determine whether to delete, send to back, or resize a plant that's been clicked on  * based on current mode
