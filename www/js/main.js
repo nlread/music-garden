@@ -70,13 +70,12 @@ window.onload = function(){
     
     //plant button highlighted by default
     $(buttons.plant).trigger("click");
-    
-
    
     $('.menuChoice').on('click', makeMenuChoice);
 
     $('.menuChoice').on('mouseenter', function(){
         choice = this;
+        //prevent double-bounce
         $(this).stop();
         animateMenuChoice(choice);
     });
@@ -152,7 +151,6 @@ setUpScreen = function(){
     view.draw();  
 }
 
-
 /*
  * Initializes global namespaces that we don't have access to until onload() but need 
  * globally
@@ -189,8 +187,7 @@ makeMenuChoice = function(menuItemClicked){
     animateMenuChoice(this);
     plantButtonClicked();
     currentMenuChoice.src = this.firstChild.src;
-    currentMenuChoice.name = this.firstChild.id
-    currentMenuChoice.div = this
+    currentMenuChoice.name = this.firstChild.id;
     mouseStates.droppedFlower = false;
     mouseStates.cursorFlower = true;
     //delete old cursor flower
@@ -206,7 +203,7 @@ makeMenuChoice = function(menuItemClicked){
  */
 animateMenuChoice = function(choice){
     if(currentMenuChoice.src){
-    oldMenuChoice =  document.getElementById(currentMenuChoice.name)
+    oldMenuChoice =  currentMenuChoice;
 
     $(oldMenuChoice.firstChild).animate({
         height: "95%",
@@ -245,9 +242,6 @@ unHighlightMenuChoice = function(choice){
  * Resets states after plant button clicked
  */
 plantButtonClicked = function(){
-//    highlightToolbarButton(buttons.plant);
-//    unHighlightToolbarButton(buttons.remove);
-//    unHighlightToolbarButton(buttons.sendToBack);
     modes.remove = false;
     modes.orderLayers = false; 
     modes.plant = true;
@@ -262,9 +256,6 @@ plantButtonClicked = function(){
  * Resets states after remove button clicked
  */
 removeButtonClicked = function(){
-//    highlightToolbarButton(buttons.remove);
-//    unHighlightToolbarButton(buttons.sendToBack);
-//    unHighlightToolbarButton(buttons.plant);
     modes.plant = false;
     modes.orderLayers = false;
     modes.remove = true;  
@@ -275,9 +266,6 @@ removeButtonClicked = function(){
  * Resets states after send to back button clicked
  */
 sendToBackButtonClicked = function(){
-//    highlightToolbarButton(buttons.sendToBack);
-//    unHighlightToolbarButton(buttons.remove);
-//    unHighlightToolbarButton(buttons.plant);
     modes.plant = false;
     modes.remove = false;
     modes.orderLayers = true; 
@@ -306,9 +294,9 @@ interactWithPlant = function(clickEvent){
 
     if(modes.remove){
         deleteFlower(event);
-    } else if(modes.orderLayers){
+    } /*else if(modes.orderLayers){
        sendFlowerToBack();
-    } else {
+    }*/ else {
         mouseStates.resizeOldFlower = true;
     } 
 }
@@ -326,12 +314,8 @@ dropFlower = function(clickEvent){
         mouseStates.currentFlower = newFlower;
         mouseStates.droppedFlower = true;
         mouseStates.currentFlower.img.position = clickEvent.point;
-        mouseStates.flowerUpperLeft = mouseStates.currentFlower.img.bounds.point;
         mouseStates.flowerCenter = mouseStates.currentFlower.img.position;
         mouseStates.currentFlower.img.scale(1.5);
-        
-  
-        
         
         newFlower.music.sound.on('play', function() {
             console.log("played");
@@ -417,8 +401,7 @@ scaleFlower = function(clickEvent){
         change = calculateMouseDirection(clickEvent);
         if(change > 0){  //canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);
         }
-        else if(change < 0){
-        //canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.shrink);
+        else if(change < 0){  //canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.shrink);
         }
     }
     
@@ -429,18 +412,6 @@ distanceToFlowerCenter = function(dragEvent){
     var mousePos = dragEvent.point;
     var dist = pointDistance(mousePos, flowerCenter);
     return(dist);
-}
-
-/*
- * Helper function to calculate direction mouse is moving in relation to plant on drag
- */
-calculateMouseDirection = function(dragEvent){
-    var flowerCenter = mouseStates.currentFlower.img.position;
-    var mousePos = dragEvent.point;
-    var prevMousePos = dragEvent.lastPoint;
-    var prevDist = pointDistance(prevMousePos, flowerCenter);
-    var currentDist = pointDistance(mousePos, flowerCenter);
-    return(currentDist - prevDist);
 }
 
 /*
