@@ -349,7 +349,7 @@ dropFlower = function(clickEvent){
         });
         
         newFlower.music.sound.on('play', function() {
-//            console.log("played");
+           console.log("played");
 //            
 //        //Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
            newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
@@ -394,8 +394,9 @@ sendFlowerToBack = function(){
  * decreasing
  */
 scaleFlower = function(clickEvent){
+    console.log(clickEvent.count);
     //if mouse distance from center is greater than drag tolerance
-    if(pointDistance(clickEvent.point, mouseStates.currentFlower.img.position) >resize.dragTolerance){
+    if(pointDistance(clickEvent.point, mouseStates.currentFlower.img.position) > resize.dragTolerance && clickEvent.count > 5){
         //handle size
         var flowerCenter = mouseStates.flowerCenter
         var mousePos = clickEvent.point;
@@ -414,9 +415,7 @@ scaleFlower = function(clickEvent){
 
         var rect = new Rectangle(newUpperLeft, new Size(squareSideLength, squareSideLength)); 
         mouseStates.currentFlower.img.fitBounds(rect);
-        console.log(mouseStates.currentFlower.img.position);
-        console.log(mouseStates.flowerCenter);
-
+        
         //handle volume
         change = calculateMouseDirection(clickEvent);
         if(change > 0){  //canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);
