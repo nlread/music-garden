@@ -349,9 +349,9 @@ dropFlower = function(clickEvent){
         });
         
         newFlower.music.sound.on('play', function() {
-            console.log("played");
-            
-        //Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
+//            console.log("played");
+//            
+//        //Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
            newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
            newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
         });
@@ -397,15 +397,25 @@ scaleFlower = function(clickEvent){
     //if mouse distance from center is greater than drag tolerance
     if(pointDistance(clickEvent.point, mouseStates.currentFlower.img.position) >resize.dragTolerance){
         //handle size
-        var upperLeft = mouseStates.flowerUpperLeft;
+        var flowerCenter = mouseStates.flowerCenter
         var mousePos = clickEvent.point;
-        var xDist = Math.abs(upperLeft.x - mousePos.x)
-        var yDist = Math.abs(upperLeft.y - mousePos.y)
+        
+        var xDist = Math.abs(flowerCenter.x - mousePos.x);
+        var yDist = Math.abs(flowerCenter.y - mousePos.y);
+        
+        var maxDist = Math.max(xDist, yDist);
+        var squareDiagLength = 2 * maxDist;
+        var squareSideLength = squareDiagLength/(Math.sqrt(2))
+        
+        var halfSideLength = 0.5 * squareSideLength
+        var newULx = flowerCenter.x - halfSideLength;
+        var newULy = flowerCenter.y - halfSideLength;
+        var newUpperLeft = new Point(newULx, newULy);
 
-        var squareSideLength = Math.max(xDist, yDist)
-
-        var rect = new Rectangle(upperLeft, new Size(squareSideLength, squareSideLength)); 
+        var rect = new Rectangle(newUpperLeft, new Size(squareSideLength, squareSideLength)); 
         mouseStates.currentFlower.img.fitBounds(rect);
+        console.log(mouseStates.currentFlower.img.position);
+        console.log(mouseStates.flowerCenter);
 
         //handle volume
         change = calculateMouseDirection(clickEvent);
