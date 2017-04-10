@@ -32,8 +32,6 @@ var soundSources = {
 var colors = {
     menuColor: "#81E5A9",
     menuSelectColor: "#90F0B3",
-    toolbarColor: "#aaeec5",
-    toolbarSelectColor: "#55dd8b"
 };
 
 //Holds all the flower on the canvas at any time
@@ -199,9 +197,7 @@ makeMenuChoice = function(menuItemClicked){
     if(cursorFlower){
         cursorFlower.remove()
     }
-    cursorFlower = new Raster(currentMenuChoice.src).scale(0.07)
-    cursorFlower.opacity = 0.4 
-    cursorFlower.visible = false; //invisible until mouse is on canvas
+    createCursorFlower();
 }
 
 
@@ -255,6 +251,11 @@ plantButtonClicked = function(){
     modes.remove = false;
     modes.orderLayers = false; 
     modes.plant = true;
+    //delete old cursor flower
+    if(cursorFlower){
+        cursorFlower.remove()
+    }
+    createCursorFlower();
 }
 
 /*
@@ -300,11 +301,8 @@ trashButtonClicked = function(){
  * Determine whether to delete, send to back, or resize a plant that's been clicked on  * based on current mode
  */
 interactWithPlant = function(clickEvent){
-    pointClicked = clickEvent.point;
     mouseStates.currentFlower = canvasFlowers[clickEvent.item.id];
-    mouseStates.flowerUpperLeft = mouseStates.currentFlower.img.bounds.point;
     mouseStates.flowerCenter = mouseStates.currentFlower.img.position;
-   
 
     if(modes.remove){
         deleteFlower(event);
@@ -394,9 +392,8 @@ sendFlowerToBack = function(){
  * decreasing
  */
 scaleFlower = function(clickEvent){
-    console.log(clickEvent.count);
     //if mouse distance from center is greater than drag tolerance
-    if(pointDistance(clickEvent.point, mouseStates.currentFlower.img.position) > resize.dragTolerance && clickEvent.count > 5){
+    if(clickEvent.count > 10){
         //handle size
         var flowerCenter = mouseStates.flowerCenter
         var mousePos = clickEvent.point;
@@ -455,6 +452,11 @@ startBackgroundSound = function(){
     backgroundTrack.volume(0.3);
 }
 
+createCursorFlower = function(){
+    cursorFlower = new Raster(currentMenuChoice.src).scale(0.07)
+    cursorFlower.opacity = 0.4 
+    cursorFlower.visible = false;
+}
 /*
  * Moves the "ghost" flower that tracks with the cursor
  */ 
