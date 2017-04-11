@@ -463,7 +463,7 @@
       self._sprite = o.sprite || {};
       self._src = (typeof o.src !== 'string') ? o.src : [o.src];
       self._volume = o.volume !== undefined ? o.volume : 1;
-      self._space = (o.space + 1.5) || 1.5;
+      self._space = 1.5;
 
       // Setup all other default properties.
       self._duration = 0;
@@ -771,6 +771,25 @@
       }
 
       return sound._id;
+    },
+      
+    
+    soundLength: function(length) {
+      // If the sound hasn't loaded, add it to the load queue to pause when capable.
+      if (this._state !== 'loaded') {
+        this._queue.push({
+          event: 'soundLength',
+          action: function() {
+            this.soundLength(length);
+          }
+        });
+
+        return this;
+      }
+        
+      self._sound = 1.5 + length;
+      sound._stop = self._sound + (self._sprite[sprite][0] / 1000);
+      return this;
     },
 
     /**
