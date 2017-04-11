@@ -1,7 +1,5 @@
 paper.install(window); //make paper scope global by injecting it into window - from here http://blog.lindsayelia.com/post/128346565323/making-paperjs-work-in-an-external-file
 
-/*DECLARE GLOBAL CONSTANTS AND VARIABLES*/
-
 /* ONLOAD */
 
 $(document).ready(function(){
@@ -343,8 +341,12 @@ scaleFlower = function(clickEvent){
         var newULy = flowerCenter.y - halfSideLength;
         var newUpperLeft = new Point(newULx, newULy);
 
-        var rect = new Rectangle(newUpperLeft, new Size(squareSideLength, squareSideLength)); 
-        mouseStates.currentFlower.img.fitBounds(rect);
+        if(squareSideLength < 0.5*project.view.bounds.width && squareSideLength > 0.05*project.view.bounds.width){
+            var rect = new Rectangle(newUpperLeft, new Size(squareSideLength, squareSideLength)); 
+            mouseStates.currentFlower.img.fitBounds(rect);
+        
+        }
+       
         
         //handle loop length
         canvasFlowers[mouseStates.currentFlower.img.id].toggleSoundLength((squareDiagLength*5)/(canvas.width/2));
