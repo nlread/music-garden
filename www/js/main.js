@@ -332,7 +332,7 @@ scaleFlower = function(clickEvent){
         var xDist = Math.abs(flowerCenter.x - mousePos.x);
         var yDist = Math.abs(flowerCenter.y - mousePos.y);
         
-        var maxDist = Math.max(xDist, yDist);
+        var maxDist = Math.hypot(xDist, yDist);
         var squareDiagLength = 2 * maxDist;
         var squareSideLength = squareDiagLength/(Math.sqrt(2))
         
