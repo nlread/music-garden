@@ -47,12 +47,20 @@ window.onload = function(){
     };
 
     myTool.onMouseDown = function(event){
-        if(project.hitTest(event.point)){
-            interactWithPlant(event);
+        itemHit = project.hitTest(event.point, {
+            match: function(){
+                if(item = mouseStates.cursorFlower){
+                    return(false);
+                }
+            }
+        })
+        if(itemHit){
+             interactWithPlant(event);
             //return so that you don't drop a new flower on top of one to resize
             return;
+            
         } 
-        if(currentMenuChoice && modes.plant){
+       if(currentMenuChoice && modes.plant){
             dropFlower(event);
         }
     }
@@ -393,8 +401,8 @@ moveCursorFlower = function(event){
 //make it lag less on initial click - kind of a hacky fix for now
     if(event.point.x > 0  && event.point.y > 0){
         cursorFlower.visible = true;
-        cursorFlower.position.x = event.point.x+50;
-        cursorFlower.position.y = event.point.y+50;
+        cursorFlower.position.x = event.point.x;
+        cursorFlower.position.y = event.point.y;
     }
 }
 
