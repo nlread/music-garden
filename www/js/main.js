@@ -265,7 +265,7 @@ dropFlower = function(clickEvent){
         mouseStates.currentFlower.img.scale(1.5);
         
         newFlower.music.sound.on('play', function() {
-            console.log("played");
+           // console.log("played");
             
 //            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
 //            newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
@@ -278,7 +278,7 @@ dropFlower = function(clickEvent){
         });
         
         newFlower.music.sound.on('play', function() {
-           console.log("played");
+          // console.log("played");
 //            
 //        //Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
            newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));

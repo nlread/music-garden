@@ -463,7 +463,7 @@
       self._sprite = o.sprite || {};
       self._src = (typeof o.src !== 'string') ? o.src : [o.src];
       self._volume = o.volume !== undefined ? o.volume : 1;
-      self._space = 1.5;
+      self._space = 0;
 
       // Setup all other default properties.
       self._duration = 0;
@@ -685,7 +685,8 @@
       sound._sprite = sprite;
       sound._seek = seek;
       sound._start = self._sprite[sprite][0] / 1000;
-      sound._stop = (self._sprite[sprite][0] + self._sprite[sprite][1])/ 1000;
+      sound._stop = (self._sprite[sprite][0]/ 1000) +1.5;
+      //sound._stop = (self._sprite[sprite][0] + self._sprite[sprite][1])/ 1000;
       sound._loop = !!(sound._loop || self._sprite[sprite][2]);
 
       // Begin the actual playback.
@@ -774,21 +775,28 @@
     },
       
     
-    soundLength: function(length) {
+    soundLength: function(length,id) {
       // If the sound hasn't loaded, add it to the load queue to pause when capable.
       if (this._state !== 'loaded') {
         this._queue.push({
           event: 'soundLength',
           action: function() {
-            this.soundLength(length);
+            this.soundLength(length,id);
           }
         });
 
         return this;
       }
         
-      self._sound = 1.5 + length;
-      sound._stop = self._sound + (self._sprite[sprite][0] / 1000);
+      
+      var ids = this._getSoundIds(id);
+      for (var i=0; i<ids.length; i++) {
+        var sound = this._soundById(ids[i]);
+          console.log(sound._stop);
+        sound._stop = sound._stop - self._space + length;
+          console.log(sound._stop);
+        self._space = length;
+      }
       return this;
     },
 
@@ -1852,6 +1860,7 @@
       sound._node.bufferSource.loop = sound._loop;
       if (sound._loop) {
         sound._node.bufferSource.loopStart = sound._start || 0;
+          console.log(sound._stop);
         sound._node.bufferSource.loopEnd = sound._stop;
       }
       sound._node.bufferSource.playbackRate.value = sound._rate;
