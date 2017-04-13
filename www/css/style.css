@@ -1,3 +1,6 @@
+/*Style file for index.html, mostly involves positioning of toolbar and menu buttons */
+
+
 /* this is from here http://stackoverflow.com/questions/28896260/paper-js-wont-resize-the-canvas-correctly, to make the canvas full-screen */
 
 html,
@@ -19,7 +22,7 @@ body {
 }
 
 #invisibleRow{
-    height: 0;
+    height: 0; /*this row is just for the overlay */
 }
 #menuAndCanvasRow{
     height: 92%;
@@ -29,6 +32,7 @@ body {
     height: 8%;
     background-color: #aaeec5;
 }
+
 /* Scale canvas with resize attribute to full size */
 canvas[resize] {
     width: 90%;
@@ -63,6 +67,7 @@ canvas[resize] {
     vertical-align: middle;
 }
 
+/*left and right toolbar buttons are separated because there are different #s of buttons on each side */
 .toolbarButton.left{
     height: 100%;
     width: 25%;
@@ -86,7 +91,7 @@ canvas[resize] {
 }
 
 .btn-group.right{
-    margin-left: 20%;
+    margin-left: 20%; /*make the right-hand button group flush with the edge of the page */
 }
 .btn{
     background-color: #aaeec5;
@@ -96,7 +101,7 @@ canvas[resize] {
 }
 
 .btn:hover, .btn:focus, .btn:active, .btn:active:focus{
-    background-color: #55dd8b;
+    background-color: #55dd8b; /*change default bootstrap color for button highlight to match color scheme */
 }
 
 

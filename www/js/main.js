@@ -124,7 +124,7 @@ initializeGlobals = function(){
 }
 
 /*
- * Stops resizing plant
+ * Stops resizing plant + resets droppedFlower
  */
 stopResize = function(){
     if(mouseStates.resizeOldFlower){
@@ -137,6 +137,7 @@ stopResize = function(){
 
 /*
  * Switches current flower being dropped and resets state variables
+ * @param {event} menuItemClicked - flower selected from menu
  */
 makeMenuChoice = function(menuItemClicked){
     animateMenuChoice(this);
@@ -155,6 +156,7 @@ makeMenuChoice = function(menuItemClicked){
 
 /*
  * Animates the menu on click - increases image size and highlights it
+ * @param {HTML element} choice - div that is the menu button chosen
  */
 animateMenuChoice = function(choice){
     if(currentMenuChoice.src){
@@ -227,11 +229,16 @@ sendToBackButtonClicked = function(){
     mouseStates.cursorFlower = false;
 }
 
-/*Brings tutorial back up when help button is clicked*/
+/*
+ * Brings tutorial back up when help button is clicked
+ */
 helpButtonClicked = function(){
     $('body').chardinJs('start');
 }
 
+/*
+ * Dialog box to confirm deletion of all flowers
+ */
 trashButtonClicked = function(){
     var trash = confirm("Are you sure you want to delete all flowers?");
     if (trash) {
@@ -242,13 +249,14 @@ trashButtonClicked = function(){
 
 /*
  * Determine whether to delete, send to back, or resize a plant that's been clicked on  * based on current mode
+ * @param {event} clickEvent - event passed in from onMouseDown handler
  */
 interactWithPlant = function(clickEvent){
     mouseStates.currentFlower = canvasFlowers[clickEvent.item.id];
     mouseStates.flowerCenter = mouseStates.currentFlower.img.position;
 
     if(modes.remove){
-        deleteFlower(event);
+        deleteFlower();
     } /*else if(modes.orderLayers){
        sendFlowerToBack();
     }*/ else {
@@ -259,6 +267,7 @@ interactWithPlant = function(clickEvent){
 
 /*
  * Drop a plant on the screen
+ * @param {event} clickEvent - click event passed from onMouseDown
  */
 dropFlower = function(clickEvent){
     if(project.view.bounds.contains(clickEvent)){
@@ -301,7 +310,7 @@ dropFlower = function(clickEvent){
 /*
  * Delete a plant from screen and stop its associated sound
  */
-deleteFlower = function(clickEvent){
+deleteFlower = function(){
     canvasFlowers[mouseStates.currentFlower.img.id].stopSound();
     delete canvasFlowers[mouseStates.currentFlower.img.id];
     mouseStates.currentFlower.img.remove();
@@ -320,7 +329,7 @@ deleteAllFlowers = function(){
 }
 
 /*
- * Send to back
+ * Send to back - not currently used
  */
 sendFlowerToBack = function(){
     mouseStates.currentFlower.img.sendToBack();    
@@ -329,12 +338,11 @@ sendFlowerToBack = function(){
 /*
  * Scale a flower based on whether mouse distance to flower center is increasing or 
  * decreasing
+ * @param {event} clickEvent - event passed from onMouseDrag
  */
 scaleFlower = function(clickEvent){
-    //make sure old flowers don't jump to a smaller size if user drags in the middle of them
-    //if mouse distance from center is greater than drag tolerance
+    //make sure old flowers don't jump to a smaller size if user drags in the middle of the
     if(clickEvent.count > 10){
-        //handle size
         var flowerCenter = mouseStates.flowerCenter
         var mousePos = clickEvent.point;
         
@@ -371,6 +379,10 @@ scaleFlower = function(clickEvent){
     
 }
 
+/*
+ * Helper function used by scaleFlower to determine the distance from the mouse to the flower center
+ * @param {event} dragEvent - the mouse drag event passed from scaleFlower
+ */
 distanceToFlowerCenter = function(dragEvent){
     var flowerCenter = mouseStates.currentFlower.img.position;
     var mousePos = dragEvent.point;
@@ -387,6 +399,9 @@ startBackgroundSound = function(){
     backgroundTrack.volume(0.3);
 }
 
+/*
+ * Create the "ghost" flower that tracks with the cursor
+ */
 createCursorFlower = function(){
     cursorFlower = new Raster(currentMenuChoice.src).scale(0.07)
     cursorFlower.opacity = 0.4 
@@ -394,7 +409,8 @@ createCursorFlower = function(){
 }
 
 /*
- * Moves the "ghost" flower that tracks with the cursor
+ * Move the "ghost" flower that tracks with the cursor
+ * @param{event} event - the mouseMouve event
  */ 
 
 moveCursorFlower = function(event){
@@ -407,7 +423,7 @@ moveCursorFlower = function(event){
 }
 
 /*
- * Euclidean distance (helper function for calculateMouseDirection)
+ * Euclidean distance 
  */
 pointDistance = function(point1, point2){
     distance = Math.sqrt(Math.pow((point2.x - point1.x), 2) + Math.pow((point2.y - point1.y), 2));
