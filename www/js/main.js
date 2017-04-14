@@ -47,7 +47,7 @@ window.onload = function(){
         var itemHit = project.hitTest(event.point).item;
         
         //ignore hits on cursor Flower
-        if(itemHit == cursorFlower){
+        if(itemHit == cursorFlower || itemHit == arrows){
             itemHit = null;
         }
         
@@ -58,6 +58,10 @@ window.onload = function(){
             
         } 
        if(currentMenuChoice && modes.plant){
+           //make arrows invisible after first plant
+            if(arrows){
+                arrows.visible = false;
+            }
             dropFlower(event);
         }
     }
@@ -436,6 +440,17 @@ createCursorFlower = function(){
     cursorFlower = new Raster(currentMenuChoice.src).scale(0.07)
     cursorFlower.opacity = 0.4 
     cursorFlower.visible = false;
+    
+    //if there are flowers on screen don't show the arrows
+    
+    if(Object.keys(canvasFlowers).length == 0){
+        arrows = new Raster("www/img/PNG/arrows.PNG").scale(0.4)
+        arrows.rotate(45);
+        arrows.opacity = 0.4
+        arrows.visible = false;
+    }
+   
+   
 }
 
 /*
@@ -449,6 +464,13 @@ moveCursorFlower = function(event){
         cursorFlower.visible = true;
         cursorFlower.position.x = event.point.x;
         cursorFlower.position.y = event.point.y;
+        
+        //only show arrows if no flowers on screen
+        if(arrows && Object.keys(canvasFlowers).length == 0){
+            arrows.visible = true;
+            arrows.position.x = event.point.x;
+            arrows.position.y = event.point.y; 
+        }
     }
 }
 
