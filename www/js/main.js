@@ -47,15 +47,16 @@ window.onload = function(){
     };
 
     myTool.onMouseDown = function(event){
-        itemHit = project.hitTest(event.point, {
-            match: function(){
-                if(item = mouseStates.cursorFlower){
-                    return(false);
-                }
-            }
-        })
+        itemHit = project.hitTest(event.point).item;
+        
+        //ignore hits on cursor Flower
+        if(itemHit == cursorFlower){
+            itemHit = null;
+        }
+        
         if(itemHit){
-             interactWithPlant(event);
+            console.log("interacting");
+            interactWithPlant(event);
             //return so that you don't drop a new flower on top of one to resize
             return;
             

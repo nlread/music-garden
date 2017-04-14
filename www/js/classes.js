@@ -1,3 +1,5 @@
+/* Classes used in main.js - Plant, Music, and Animation are the most relevant/directly used in main.js */
+
 class Component {
     
     /**
