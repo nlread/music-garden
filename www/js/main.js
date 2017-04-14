@@ -70,10 +70,19 @@ window.onload = function(){
         if(modes.plant && (mouseStates.droppedFlower || mouseStates.resizeOldFlower)){
             scaleFlower(event);
         }
+        
     }
     myTool.onMouseMove = function(event){
         if(modes.plant && mouseStates.cursorFlower){
             moveCursorFlower(event);
+        }
+        
+        if(modes.remove && project.hitTest(event)){
+            console.log("remove")
+            if(project.hitTest(event).item != cursorFlower){
+                console.log("moused over")
+                item.img.opacity = 0.5
+            }
         }
     }
 
@@ -218,6 +227,8 @@ removeButtonClicked = function(){
     modes.orderLayers = false;
     modes.remove = true;  
     mouseStates.cursorFlower = false;
+    cursorFlower.remove();
+    
 }
 
 /*
