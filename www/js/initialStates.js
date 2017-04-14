@@ -37,7 +37,7 @@ var colors = {
 var canvasFlowers = {};
 
 var backgroundTrack = new Howl({
-    src: ["mp3/track1Individuals/Au1 louder.mp3"]    
+    src: ["www/mp3/track1Individuals/Au1 louder.mp3"]    
 });
 
 var menuChoices = {}
