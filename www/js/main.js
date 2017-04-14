@@ -47,7 +47,7 @@ window.onload = function(){
     };
 
     myTool.onMouseDown = function(event){
-        itemHit = project.hitTest(event.point).item;
+        var itemHit = project.hitTest(event.point).item;
         
         //ignore hits on cursor Flower
         if(itemHit == cursorFlower){
@@ -55,7 +55,6 @@ window.onload = function(){
         }
         
         if(itemHit){
-            console.log("interacting");
             interactWithPlant(event);
             //return so that you don't drop a new flower on top of one to resize
             return;
@@ -77,12 +76,21 @@ window.onload = function(){
             moveCursorFlower(event);
         }
         
-        if(modes.remove && project.hitTest(event)){
-            console.log("remove")
-            if(project.hitTest(event).item != cursorFlower){
-                console.log("moused over")
-                item.img.opacity = 0.5
+        //change opacity of flower that is moused over
+        if(modes.remove && project.hitTest(event.point)){
+            var itemHit = project.hitTest(event.point);
+            if(itemHit != cursorFlower){
+                itemHit.item.opacity = 0.5;
+                mouseStates.transparentFlower = itemHit.item;
             }
+        }
+        
+        //change it back once hit test no longer applies
+        else if(modes.remove){
+            if(mouseStates.transparentFlower){
+                mouseStates.transparentFlower.opacity = 1;
+            }
+            
         }
     }
 
