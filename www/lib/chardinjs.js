@@ -97,6 +97,7 @@
         overlay_layer.appendChild(dismiss);
           
         document.getElementById("menu").style.pointerEvents = "none";
+        document.getElementById("bottomToolbarRow").style.pointerEvents = "none";
         
         
         if (this.$el.prop('tagName') === "BODY") {
@@ -111,7 +112,7 @@
         }
         this.$el.get()[0].appendChild(overlay_layer);
         overlay_layer.onclick = function() {
-            document.getElementById("menu").style.pointerEvents = "auto";
+            document.getElementById("menu").style.pointerEvents = "auto";  document.getElementById("bottomToolbarRow").style.pointerEvents = "auto";
             //manually trigger click on first menu item to auto-select it
             $(document.getElementById("choice1")).trigger("click");
             $(document.getElementById("choice1")).trigger("mouseleave");
