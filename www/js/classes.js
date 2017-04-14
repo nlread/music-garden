@@ -271,11 +271,11 @@ class Plant extends AnimatedComponent {
         //Give it a length between 0-5
         this.toggleSoundLength = function(length){
             this.music.sound.soundLength(length);
-            this.music.sound.stop();
-            this.music.sound.play();
+            this.music.sound.loop(false);
             this.music.sound.loop(true);
         };
         
+        //Get rid of this?
 //        this.toggleVolume = function(x){
 //            this.volume = this.volume*x;
 //            this.music.sound.volume(this.volume);

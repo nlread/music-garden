@@ -684,9 +684,9 @@
       sound._sprite = sprite;
       sound._seek = seek;
       sound._start = self._sprite[sprite][0] / 1000;
+      //sound to use when we want different length.
       sound._stop = (self._sprite[sprite][0]/ 1000) +1.5;
       sound._space = 0;
-      //sound._stop = (self._sprite[sprite][0] + self._sprite[sprite][1])/ 1000;
       sound._loop = !!(sound._loop || self._sprite[sprite][2]);
 
       // Begin the actual playback.
@@ -793,9 +793,9 @@
       var ids = self._getSoundIds(id);
       for (var i=0; i<ids.length; i++) {
         var sound = self._soundById(ids[i]);
+        //Takes the given length and adds it to the stop point.
         sound._stop = sound._stop - sound._space + length;
         sound._space = length;
-        console.log(sound._stop);
       }
       return self;
     },
@@ -1241,7 +1241,6 @@
             sound._node.bufferSource.loop = loop;
             if (loop) {
               sound._node.bufferSource.loopStart = sound._start || 0;
-                console.log(sound._stop);
               sound._node.bufferSource.loopEnd = sound._stop;
             }
           }
@@ -1861,7 +1860,6 @@
       sound._node.bufferSource.loop = sound._loop;
       if (sound._loop) {
         sound._node.bufferSource.loopStart = sound._start || 0;
-        console.log(sound._stop);
         sound._node.bufferSource.loopEnd = sound._stop;
       }
       sound._node.bufferSource.playbackRate.value = sound._rate;
