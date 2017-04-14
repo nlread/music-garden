@@ -212,6 +212,9 @@ unHighlightMenuChoice = function(choice){
  */
 plantButtonClicked = function(){
     console.log("plant button clicked")
+    if($("#removeButton").hasClass("active")){
+            $("#removeButton").button("toggle");
+        }
     modes.remove = false;
     modes.orderLayers = false; 
     modes.plant = true;
@@ -228,6 +231,9 @@ plantButtonClicked = function(){
  * Resets states after remove button clicked
  */
 removeButtonClicked = function(){
+    if($("#plantButton").hasClass("active")){
+            $("#plantButton").button("toggle");
+    }
     modes.plant = false;
     modes.orderLayers = false;
     modes.remove = true;  
@@ -261,9 +267,8 @@ trashButtonClicked = function(){
     if (trash) {
         deleteAllFlowers();
     }
-    else{
-        $('#trashButton').button("toggle");
-    }
+    
+    $("#trashButton").button("toggle");
 }
 
 
