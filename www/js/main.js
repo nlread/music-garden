@@ -368,12 +368,14 @@ scaleFlower = function(clickEvent){
         if(squareSideLength < 0.5*project.view.bounds.width && squareSideLength > 0.05*project.view.bounds.width){
             var rect = new Rectangle(newUpperLeft, new Size(squareSideLength, squareSideLength)); 
             mouseStates.currentFlower.img.fitBounds(rect);
+            //handle loop length
+            canvasFlowers[mouseStates.currentFlower.img.id].toggleSoundLength((squareDiagLength*5)/(canvas.width/2));
         
         }
        
         
-        //handle loop length
-        canvasFlowers[mouseStates.currentFlower.img.id].toggleSoundLength((squareDiagLength*5)/(canvas.width/2));
+        
+        
         
         //handle volume
         //canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);

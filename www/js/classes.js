@@ -265,8 +265,13 @@ class Plant extends AnimatedComponent {
             this.music.sound.stop();
         };
         
+        //Changes the length that howler.js should loop which makes the sound longer or shorter
+        //Give it a length between 0-5
         this.toggleSoundLength = function(length){
             this.music.sound.soundLength(length);
+            this.music.sound.stop();
+            this.music.sound.play();
+            this.music.sound.loop(true);
         };
         
 //        this.toggleVolume = function(x){
@@ -276,6 +281,8 @@ class Plant extends AnimatedComponent {
     };
 }
 
+
+//Music class is given to Plant to associate a sound with it.
 class Music {
 
     constructor(source, pitch){

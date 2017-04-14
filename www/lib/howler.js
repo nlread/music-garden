@@ -463,7 +463,6 @@
       self._sprite = o.sprite || {};
       self._src = (typeof o.src !== 'string') ? o.src : [o.src];
       self._volume = o.volume !== undefined ? o.volume : 1;
-      self._space = 0;
 
       // Setup all other default properties.
       self._duration = 0;
@@ -686,6 +685,7 @@
       sound._seek = seek;
       sound._start = self._sprite[sprite][0] / 1000;
       sound._stop = (self._sprite[sprite][0]/ 1000) +1.5;
+      sound._space = 0;
       //sound._stop = (self._sprite[sprite][0] + self._sprite[sprite][1])/ 1000;
       sound._loop = !!(sound._loop || self._sprite[sprite][2]);
 
@@ -774,30 +774,30 @@
       return sound._id;
     },
       
-    
+    //Here we added a method to be able to change the length of the loops.
     soundLength: function(length,id) {
+      var self = this;
       // If the sound hasn't loaded, add it to the load queue to pause when capable.
-      if (this._state !== 'loaded') {
-        this._queue.push({
+      if (self._state !== 'loaded') {
+        self._queue.push({
           event: 'soundLength',
           action: function() {
-            this.soundLength(length,id);
+            self.soundLength(length,id);
           }
         });
 
-        return this;
+        return self;
       }
         
       
-      var ids = this._getSoundIds(id);
+      var ids = self._getSoundIds(id);
       for (var i=0; i<ids.length; i++) {
-        var sound = this._soundById(ids[i]);
-          console.log(sound._stop);
-        sound._stop = sound._stop - self._space + length;
-          console.log(sound._stop);
-        self._space = length;
+        var sound = self._soundById(ids[i]);
+        sound._stop = sound._stop - sound._space + length;
+        sound._space = length;
+        console.log(sound._stop);
       }
-      return this;
+      return self;
     },
 
     /**
@@ -1241,6 +1241,7 @@
             sound._node.bufferSource.loop = loop;
             if (loop) {
               sound._node.bufferSource.loopStart = sound._start || 0;
+                console.log(sound._stop);
               sound._node.bufferSource.loopEnd = sound._stop;
             }
           }
@@ -1860,7 +1861,7 @@
       sound._node.bufferSource.loop = sound._loop;
       if (sound._loop) {
         sound._node.bufferSource.loopStart = sound._start || 0;
-          console.log(sound._stop);
+        console.log(sound._stop);
         sound._node.bufferSource.loopEnd = sound._stop;
       }
       sound._node.bufferSource.playbackRate.value = sound._rate;
