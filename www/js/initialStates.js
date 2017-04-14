@@ -12,6 +12,8 @@ var mouseStates = {
     currentFlower: null,
     resizeOldFlower: false,
     cursorFlower: false,
+    transparentFlowers: [],
+    prevItemHit: null
 };
 
 var modes = {

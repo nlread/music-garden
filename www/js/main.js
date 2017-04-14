@@ -76,21 +76,18 @@ window.onload = function(){
             moveCursorFlower(event);
         }
         
+        
         //change opacity of flower that is moused over
         if(modes.remove && project.hitTest(event.point)){
             var itemHit = project.hitTest(event.point);
             if(itemHit != cursorFlower){
                 itemHit.item.opacity = 0.5;
-                mouseStates.transparentFlower = itemHit.item;
             }
-        }
-        
-        //change it back once hit test no longer applies
-        else if(modes.remove){
-            if(mouseStates.transparentFlower){
-                mouseStates.transparentFlower.opacity = 1;
+           
+            if(mouseStates.prevItemHit && itemHit.item != mouseStates.prevItemHit.item ){
+                mouseStates.prevItemHit.item.opacity = 1
             }
-            
+            mouseStates.prevItemHit = itemHit;
         }
     }
 
