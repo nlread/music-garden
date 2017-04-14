@@ -14,9 +14,6 @@ window.onload = function(){
     startBackgroundSound();
     
     var myTool = new Tool();
-    
-    //plant button highlighted by default
-    $(buttons.plant).trigger("click");
    
     $('.menuChoice').on('click', makeMenuChoice);
 
@@ -214,6 +211,7 @@ unHighlightMenuChoice = function(choice){
  * Resets states after plant button clicked
  */
 plantButtonClicked = function(){
+    console.log("plant button clicked")
     modes.remove = false;
     modes.orderLayers = false; 
     modes.plant = true;
@@ -222,6 +220,8 @@ plantButtonClicked = function(){
         cursorFlower.remove()
     }
     createCursorFlower();
+    //make sure trash isn't active
+    //$("#trashButton").removeClass("active")
 }
 
 /*
@@ -260,6 +260,9 @@ trashButtonClicked = function(){
     var trash = confirm("Are you sure you want to delete all flowers?");
     if (trash) {
         deleteAllFlowers();
+    }
+    else{
+        $('#trashButton').button("toggle");
     }
 }
 

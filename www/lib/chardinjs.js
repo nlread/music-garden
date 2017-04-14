@@ -112,10 +112,17 @@
         }
         this.$el.get()[0].appendChild(overlay_layer);
         overlay_layer.onclick = function() {
-            document.getElementById("menu").style.pointerEvents = "auto";  document.getElementById("bottomToolbarRow").style.pointerEvents = "auto";
+
+            //NOTE: this code added to reenable pointer events after overlay (first two lines) and to trigger clicks immediately after overlay removal for proper highlighting behavior (next 5 lines)
+            $(document).ready
+            document.getElementById("menu").style.pointerEvents = "auto";
+            document.getElementById("bottomToolbarRow").style.pointerEvents = "auto";
             //manually trigger click on first menu item to auto-select it
-            $(document.getElementById("choice1")).trigger("click");
+            $(document.getElementById("choice1")).click();
             $(document.getElementById("choice1")).trigger("mouseleave");
+            //manually trigger toggle on plant button to highlight it
+            $("#plantButton").button("toggle");
+        
           return _this.stop();
         };
         return setTimeout(function() {
