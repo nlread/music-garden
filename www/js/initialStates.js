@@ -24,10 +24,10 @@ var modes = {
 
 //For each flower there is a dictionary for its different pitches
 var soundSources = {
-    "green": {1:"mp3/MVP Plant Sounds/Plant A8.wav",2:"mp3/MVP Plant Sounds/Plant A7.wav",3:"mp3/MVP Plant Sounds/Plant A6.wav",4:"mp3/MVP Plant Sounds/Plant A5.wav",5:"mp3/MVP Plant Sounds/Plant A4.wav",6:"mp3/MVP Plant Sounds/Plant A3.wav",7:"mp3/MVP Plant Sounds/Plant A2.wav",8:"mp3/MVP Plant Sounds/Plant A1.wav"},
-    "red": {1:"mp3/MVP Plant Sounds/Plant B8.wav",2:"mp3/MVP Plant Sounds/Plant B7.wav",3:"mp3/MVP Plant Sounds/Plant B6.wav",4:"mp3/MVP Plant Sounds/Plant B5.wav",5:"mp3/MVP Plant Sounds/Plant B4.wav",6:"mp3/MVP Plant Sounds/Plant B3.wav",7:"mp3/MVP Plant Sounds/Plant B2.wav",8:"mp3/MVP Plant Sounds/Plant B1.wav"},
-    "jade": {1:"mp3/MVP Plant Sounds/Plant C8.wav",2:"mp3/MVP Plant Sounds/Plant C7.wav",3:"mp3/MVP Plant Sounds/Plant C6.wav",4:"mp3/MVP Plant Sounds/Plant C5.wav",5:"mp3/MVP Plant Sounds/Plant C4.wav",6:"mp3/MVP Plant Sounds/Plant C3.wav",7:"mp3/MVP Plant Sounds/Plant C2.wav",8:"mp3/MVP Plant Sounds/Plant C1.wav"},
-    "succulent": {1:"mp3/MVP Plant Sounds/Plant D8.wav",2:"mp3/MVP Plant Sounds/Plant D7.wav",3:"mp3/MVP Plant Sounds/Plant D6.wav",4:"mp3/MVP Plant Sounds/Plant D5.wav",5:"mp3/MVP Plant Sounds/Plant D4.wav",6:"mp3/MVP Plant Sounds/Plant D3.wav",7:"mp3/MVP Plant Sounds/Plant D2.wav",8:"mp3/MVP Plant Sounds/Plant D1.wav"}
+    "green": {1:"www/mp3/mvpPlantSounds/plantA8.wav",2:"www/mp3/mvpPlantSounds/plantA7.wav",3:"www/mp3/mvpPlantSounds/plantA6.wav",4:"www/mp3/mvpPlantSounds/plantA5.wav",5:"www/mp3/mvpPlantSounds/plantA4.wav",6:"www/mp3/mvpPlantSounds/plantA3.wav",7:"www/mp3/mvpPlantSounds/plantA2.wav",8:"www/mp3/mvpPlantSounds/plantA1.wav"},
+    "red": {1:"www/mp3/mvpPlantSounds/plantB8.wav",2:"www/mp3/mvpPlantSounds/plantB7.wav",3:"www/mp3/mvpPlantSounds/plantB6.wav",4:"www/mp3/mvpPlantSounds/plantB5.wav",5:"www/mp3/mvpPlantSounds/plantB4.wav",6:"www/mp3/mvpPlantSounds/plantB3.wav",7:"www/mp3/mvpPlantSounds/plantB2.wav",8:"www/mp3/mvpPlantSounds/plantB1.wav"},
+    "jade": {1:"www/mp3/mvpPlantSounds/plantC8.wav",2:"www/mp3/mvpPlantSounds/plantC7.wav",3:"www/mp3/mvpPlantSounds/plantC6.wav",4:"www/mp3/mvpPlantSounds/plantC5.wav",5:"www/mp3/mvpPlantSounds/plantC4.wav",6:"www/mp3/mvpPlantSounds/plantC3.wav",7:"www/mp3/mvpPlantSounds/plantC2.wav",8:"www/mp3/mvpPlantSounds/plantC1.wav"},
+    "succulent": {1:"www/mp3/mvpPlantSounds/plantD8.wav",2:"www/mp3/mvpPlantSounds/plantD7.wav",3:"www/mp3/mvpPlantSounds/plantD6.wav",4:"www/mp3/mvpPlantSounds/plantD5.wav",5:"www/mp3/mvpPlantSounds/plantD4.wav",6:"www/mp3/mvpPlantSounds/plantD3.wav",7:"www/mp3/mvpPlantSounds/plantD2.wav",8:"www/mp3/mvpPlantSounds/plantD1.wav"}
 };
 
 var colors = {
