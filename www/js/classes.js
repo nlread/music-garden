@@ -253,8 +253,8 @@ class Plant extends AnimatedComponent {
         //in the future this could be set automatically depending on plant type
         //can you have default parameters like you can in Python?
         this.music = music;
-        this.volume = 1;
-        this.music.sound.volume(this.volume);
+//        this.volume = 1;
+//        this.music.sound.volume(this.volume);
         this.intervalID;
         
         //plays the music of the plant, setting it to loop and the volume at 0.5
@@ -267,23 +267,31 @@ class Plant extends AnimatedComponent {
             this.music.sound.stop();
         };
         
-        this.toggleVolume = function(x){
-            this.volume = this.volume*x;
-            this.music.sound.volume(this.volume);
+        //Changes the length that howler.js should loop which makes the sound longer or shorter
+        //Give it a length between 0-5
+        this.toggleSoundLength = function(length){
+            this.music.sound.soundLength(length);
+            this.music.sound.loop(false);
+            this.music.sound.loop(true);
         };
+        
+        //Get rid of this?
+//        this.toggleVolume = function(x){
+//            this.volume = this.volume*x;
+//            this.music.sound.volume(this.volume);
+//        };
     };
 }
 
+
+//Music class is given to Plant to associate a sound with it.
 class Music {
 
-    constructor(source, pitch, xLength){
+    constructor(source, pitch){
         this.source = source;
         this.pitch = pitch+1;
-        console.log(this.pitch);
-        this.xLength = xLength;
         this.sound = new Howl({
             src: [this.source[this.pitch]],
-            space: this.xLength,
         });
     };
     

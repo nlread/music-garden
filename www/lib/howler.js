@@ -463,7 +463,6 @@
       self._sprite = o.sprite || {};
       self._src = (typeof o.src !== 'string') ? o.src : [o.src];
       self._volume = o.volume !== undefined ? o.volume : 1;
-      self._space = (o.space + 1.5) || 1.5;
 
       // Setup all other default properties.
       self._duration = 0;
@@ -685,7 +684,9 @@
       sound._sprite = sprite;
       sound._seek = seek;
       sound._start = self._sprite[sprite][0] / 1000;
-      sound._stop = (self._sprite[sprite][0] + self._sprite[sprite][1])/ 1000;
+      //sound to use when we want different length.
+      sound._stop = (self._sprite[sprite][0]/ 1000) +1.5;
+      sound._space = 0;
       sound._loop = !!(sound._loop || self._sprite[sprite][2]);
 
       // Begin the actual playback.
@@ -771,6 +772,32 @@
       }
 
       return sound._id;
+    },
+      
+    //Here we added a method to be able to change the length of the loops.
+    soundLength: function(length,id) {
+      var self = this;
+      // If the sound hasn't loaded, add it to the load queue to pause when capable.
+      if (self._state !== 'loaded') {
+        self._queue.push({
+          event: 'soundLength',
+          action: function() {
+            self.soundLength(length,id);
+          }
+        });
+
+        return self;
+      }
+        
+      
+      var ids = self._getSoundIds(id);
+      for (var i=0; i<ids.length; i++) {
+        var sound = self._soundById(ids[i]);
+        //Takes the given length and adds it to the stop point.
+        sound._stop = sound._stop - sound._space + length;
+        sound._space = length;
+      }
+      return self;
     },
 
     /**
