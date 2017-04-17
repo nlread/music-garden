@@ -53,3 +53,4 @@ var currentMenuChoice = {
 }
 
 var cursorFlower = null;
+var arrows = null;
