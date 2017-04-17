@@ -354,7 +354,7 @@ class Animation {
      * @returns {Boolean}
      */
     isValid() {
-        return this.elapsed <= this.duration;
+        return this.elapsed < this.duration;
     }
 }
 
@@ -521,7 +521,7 @@ class LoopManager {
         if (loop.isEnabled(runId)) {
             loop.run();
             let delay = loop.getTimeUntilNextRun();
-            console.log(delay);
+            // console.log(delay);
             setTimeout(() => {this._runAndRequeue(loop, runId)}, delay);
         }
     }
@@ -530,6 +530,7 @@ class LoopManager {
         let loopId = this.getNextId();
         let loop = new Loop(loopId, fn, interval);
         this.managedLoops[loopId] = loop;
+        return loopId;
     }
 
     startLoop(loopId, delay) {
