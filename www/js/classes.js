@@ -509,3 +509,80 @@ class TranslationAnimation extends Animation {
         this.translatedBy = this.translatedBy.add(deltaPos);
     }
 }
+
+class LoopManager {
+
+    constructor() {
+        this.lastId = -1;
+        this.managedLoops = [];
+    }
+
+    _runAndRequeue(loop, runId) {
+        if (loop.isEnabled(runId)) {
+            loop.run();
+            let delay = loop.getTimeUntilNextRun();
+            console.log(delay);
+            setTimeout(() => {this._runAndRequeue(loop, runId)}, delay);
+        }
+    }
+
+    registerLoop(fn, interval) {
+        let loopId = this.getNextId();
+        let loop = new Loop(loopId, fn, interval);
+        this.managedLoops[loopId] = loop;
+    }
+
+    startLoop(loopId, delay) {
+        let loop = this.managedLoops[loopId];
+        if (delay === undefined) {
+            delay = 0;
+        }
+        
+        let runId = this.getNextId();
+        loop.start(runId);
+        setTimeout(() => {this._runAndRequeue(loop, runId)}, delay);
+    }
+
+    stopLoop(loopId) {
+        let loop = this.managedLoops[loopId];
+        loop.stop();
+    }
+
+    getNextId() {
+        this.lastId++;
+        return this.lastId;
+    }
+
+}
+
+class Loop {
+
+    constructor(id, fn, interval) {
+        this.id = id;
+        this.fn = fn;
+        this.interval = interval;
+        this.runsActive = {};
+        this.lastRun = -1;
+    }
+
+    run() {
+        this.fn();
+        this.lastRun = Date.now();
+    }
+
+    start(runId) {
+        this.runsActive[runId] = true;
+    }
+
+    stop() {
+        this.runsActive = {};
+    }
+
+    isEnabled(runId) {
+        return this.runsActive[runId];
+    }
+
+    getTimeUntilNextRun() {
+        return Math.max(0, this.interval - (Date.now() - this.lastRun));
+    }
+}
