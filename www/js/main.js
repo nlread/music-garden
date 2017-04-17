@@ -6,6 +6,7 @@ $(document).ready(function(){
     $('body').chardinJs('start');
 });
 
+let loopManager = new LoopManager();
 window.onload = function(){
     console.log("window loaded");
     
@@ -309,7 +310,7 @@ dropFlower = function(clickEvent){
         mouseStates.currentFlower.img.position = clickEvent.point;
         mouseStates.flowerCenter = mouseStates.currentFlower.img.position;
         mouseStates.currentFlower.img.scale(1.5);
-        
+  /*      
         newFlower.music.sound.on('play', function() {
            // console.log("played");
             
@@ -330,6 +331,18 @@ dropFlower = function(clickEvent){
            newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
            newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
         });
+*/
+        let loopId = loopManager.registerLoop(function() {
+           //Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
+           newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
+           newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
+        }, 1500);
+
+        loopManager.startLoop(loopId);
+
+        
+
+
         
         canvasFlowers[mouseStates.currentFlower.img.id] = newFlower;
     } 
@@ -402,10 +415,6 @@ scaleFlower = function(clickEvent){
         
         }
        
-        
-        
-        
-        
         //handle volume
         //canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);
         //canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.shrink);
