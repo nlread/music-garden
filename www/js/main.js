@@ -14,6 +14,9 @@ window.onload = function(){
     startBackgroundSound();
     
     var myTool = new Tool();
+    
+    //plant button highlighted by default
+    $(buttons.plant).trigger("click");
    
     $('.menuChoice').on('click', makeMenuChoice);
 
@@ -44,24 +47,21 @@ window.onload = function(){
     };
 
     myTool.onMouseDown = function(event){
-        var itemHit = project.hitTest(event.point).item;
+        itemHit = project.hitTest(event.point).item;
         
         //ignore hits on cursor Flower
-        if(itemHit == cursorFlower || itemHit == arrows){
+        if(itemHit == cursorFlower){
             itemHit = null;
         }
         
         if(itemHit){
+            console.log("interacting");
             interactWithPlant(event);
             //return so that you don't drop a new flower on top of one to resize
             return;
             
         } 
        if(currentMenuChoice && modes.plant){
-           //make arrows invisible after first plant
-            if(arrows){
-                arrows.visible = false;
-            }
             dropFlower(event);
         }
     }
@@ -70,25 +70,10 @@ window.onload = function(){
         if(modes.plant && (mouseStates.droppedFlower || mouseStates.resizeOldFlower)){
             scaleFlower(event);
         }
-        
     }
     myTool.onMouseMove = function(event){
         if(modes.plant && mouseStates.cursorFlower){
             moveCursorFlower(event);
-        }
-        
-        
-        //change opacity of flower that is moused over
-        if(modes.remove && project.hitTest(event.point)){
-            var itemHit = project.hitTest(event.point);
-            if(itemHit != cursorFlower){
-                itemHit.item.opacity = 0.5;
-            }
-           
-            if(mouseStates.prevItemHit && itemHit.item != mouseStates.prevItemHit.item ){
-                mouseStates.prevItemHit.item.opacity = 1
-            }
-            mouseStates.prevItemHit = itemHit;
         }
     }
 
@@ -215,10 +200,6 @@ unHighlightMenuChoice = function(choice){
  * Resets states after plant button clicked
  */
 plantButtonClicked = function(){
-    console.log("plant button clicked")
-    if($("#removeButton").hasClass("active")){
-            $("#removeButton").button("toggle");
-        }
     modes.remove = false;
     modes.orderLayers = false; 
     modes.plant = true;
@@ -227,23 +208,16 @@ plantButtonClicked = function(){
         cursorFlower.remove()
     }
     createCursorFlower();
-    //make sure trash isn't active
-    //$("#trashButton").removeClass("active")
 }
 
 /*
  * Resets states after remove button clicked
  */
 removeButtonClicked = function(){
-    if($("#plantButton").hasClass("active")){
-            $("#plantButton").button("toggle");
-    }
     modes.plant = false;
     modes.orderLayers = false;
     modes.remove = true;  
     mouseStates.cursorFlower = false;
-    cursorFlower.remove();
-    
 }
 
 /*
@@ -271,8 +245,6 @@ trashButtonClicked = function(){
     if (trash) {
         deleteAllFlowers();
     }
-    
-    $("#trashButton").button("toggle");
 }
 
 
@@ -329,6 +301,10 @@ dropFlower = function(clickEvent){
 //        //Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
            newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
            newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
+            
+//            Animation 2: Does a little spin thing. Kinda fun. 
+//            newFlower.animate(new RotatingAnimation(90,0.5,0));
+//            newFlower.animate(new RotatingAnimation(-90,1,0.1));
         });
         
         canvasFlowers[mouseStates.currentFlower.img.id] = newFlower;
@@ -440,17 +416,6 @@ createCursorFlower = function(){
     cursorFlower = new Raster(currentMenuChoice.src).scale(0.07)
     cursorFlower.opacity = 0.4 
     cursorFlower.visible = false;
-    
-    //if there are flowers on screen don't show the arrows
-    
-    if(Object.keys(canvasFlowers).length == 0){
-        arrows = new Raster("www/img/PNG/arrows.PNG").scale(0.4)
-        arrows.rotate(45);
-        arrows.opacity = 0.4
-        arrows.visible = false;
-    }
-   
-   
 }
 
 /*
@@ -464,13 +429,6 @@ moveCursorFlower = function(event){
         cursorFlower.visible = true;
         cursorFlower.position.x = event.point.x;
         cursorFlower.position.y = event.point.y;
-        
-        //only show arrows if no flowers on screen
-        if(arrows && Object.keys(canvasFlowers).length == 0){
-            arrows.visible = true;
-            arrows.position.x = event.point.x;
-            arrows.position.y = event.point.y; 
-        }
     }
 }
 
