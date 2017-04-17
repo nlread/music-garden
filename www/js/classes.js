@@ -4,7 +4,7 @@ class Component {
     
     /**
      * Class which wraps a paper.js Group or Path and gives it the ability
-     * to set the rotation and scaling, instead of only changing the rotation
+     * to set the rotation and scaling, instead } only changing the rotation
      * and scaling. 
      * @param {Group} paperGroup 
      */
@@ -354,7 +354,7 @@ class Animation {
      * @returns {Boolean}
      */
     isValid() {
-        return this.elapsed <= this.duration;
+        return this.elapsed < this.duration;
     }
 }
 
