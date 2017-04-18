@@ -374,7 +374,8 @@ scaleFlower = function(clickEvent){
             var rect = new Rectangle(newUpperLeft, new Size(squareSideLength, squareSideLength)); 
             mouseStates.currentFlower.img.fitBounds(rect);
             //handle loop length
-          //uncomment when our animations are working. //canvasFlowers[mouseStates.currentFlower.img.id].toggleSoundLength((squareDiagLength*5)/(canvas.width/2));
+          //uncomment when our animations are working. 
+            canvasFlowers[mouseStates.currentFlower.img.id].toggleSoundLength((squareDiagLength*5)/(canvas.width/2));
         
         }
        
