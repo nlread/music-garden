@@ -44,15 +44,28 @@ window.onload = function(){
     };
 
     myTool.onMouseDown = function(event){
-        var itemHit = project.hitTest(event.point).item;
-        
-        //ignore hits on cursor Flower
-        if(itemHit == cursorFlower || itemHit == arrows){
-            itemHit = null;
+        hitOptions = {
+            match: function(result){
+                if(result.item == cursorFlower){
+                    return false;
+                }
+                if(result.item == arrows){
+                    return false;
+                }
+                else{
+                    return true;
+                }
+            }
+        }
+        var itemHit;
+        var hit = project.hitTest(event.point, hitOptions)
+        if(hit){
+            itemHit = hit.item
         }
         
+        //there's some kind of problem here with interacting with the event - you can only resize plants of same type
         if(itemHit){
-            interactWithPlant(event);
+            interactWithPlant(itemHit);
             //return so that you don't drop a new flower on top of one to resize
             return;
             
@@ -280,8 +293,8 @@ trashButtonClicked = function(){
  * Determine whether to delete, send to back, or resize a plant that's been clicked on  * based on current mode
  * @param {event} clickEvent - event passed in from onMouseDown handler
  */
-interactWithPlant = function(clickEvent){
-    mouseStates.currentFlower = canvasFlowers[clickEvent.item.id];
+interactWithPlant = function(plantClicked){
+    mouseStates.currentFlower = canvasFlowers[plantClicked.id];
     mouseStates.flowerCenter = mouseStates.currentFlower.img.position;
 
     if(modes.remove){
@@ -387,12 +400,12 @@ scaleFlower = function(clickEvent){
         var newULy = flowerCenter.y - halfSideLength;
         var newUpperLeft = new Point(newULx, newULy);
         
-        //make sure old flowers don't get super small if users drag inside of them
+        /*//make sure old flowers don't get super small if users drag inside of them
         if(mouseStates.resizeOldFlower){
             if(squareSideLength < mouseStates.currentFlower.img.bounds.width){
                 return;
             }
-        }
+        }*/
 
         if(squareSideLength < 0.5*project.view.bounds.width && squareSideLength > 0.05*project.view.bounds.width){
             var rect = new Rectangle(newUpperLeft, new Size(squareSideLength, squareSideLength)); 
