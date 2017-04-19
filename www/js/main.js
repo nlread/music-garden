@@ -124,11 +124,6 @@ setUpScreen = function(){
  * globally
  */
 initializeGlobals = function(){
-    menuChoices.choice1 = document.getElementById("choice1");
-    menuChoices.choice2 = document.getElementById("choice2");
-    menuChoices.choice3 = document.getElementById("choice3");
-    menuChoices.choice4 = document.getElementById("choice4");
-    
     buttons.remove = document.getElementById("removeButton");
     buttons.plant = document.getElementById("plantButton");
     buttons.sendToBack = document.getElementById("sendToBackButton");
@@ -390,14 +385,6 @@ scaleFlower = function(clickEvent){
             canvasFlowers[mouseStates.currentFlower.img.id].toggleSoundLength((squareDiagLength*5)/(canvas.width/2));
         
         }
-       
-        
-        
-        
-        
-        //handle volume
-        //canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);
-        //canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.shrink);
     }
     
 }
