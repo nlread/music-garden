@@ -66,7 +66,6 @@ window.onload = function(){
             itemHit = hit.item
         }
         
-        //there's some kind of problem here with interacting with the event - you can only resize plants of same type
         if(itemHit){
             interactWithPlant(itemHit);
             //return so that you don't drop a new flower on top of one to resize
@@ -114,8 +113,6 @@ function globalOnFrame(frameEvent) {
 setUpScreen = function(){
     paper.setup('canvas')
     var canvas = document.getElementById('canvas');
-    var ctx = canvas.getContext('2d');
-    ctx.imageSmoothingEnabled = true;
     view.draw();  
 }
 
@@ -127,8 +124,7 @@ initializeGlobals = function(){
     buttons.remove = document.getElementById("removeButton");
     buttons.plant = document.getElementById("plantButton");
     buttons.sendToBack = document.getElementById("sendToBackButton");
-    buttons.help = document.getElementById("helpButton");
-    
+    buttons.help = document.getElementById("helpButton");  
 }
 
 /*
@@ -279,7 +275,11 @@ interactWithPlant = function(plantClicked){
  */
 dropFlower = function(clickEvent){
     if(project.view.bounds.contains(clickEvent)){
-        var newFlower = new Plant(new Raster(currentMenuChoice.src).scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name],Math.floor((clickEvent.point.y*8)/canvas.height)))
+        var newFlower = new Plant(
+            new Raster(currentMenuChoice.src).scale(resize.initFlowerSize), 
+            new Music(soundSources[currentMenuChoice.name],
+            Math.floor((clickEvent.point.y*8)/canvas.height))
+        )
         
         newFlower.playSound();
         
@@ -290,7 +290,7 @@ dropFlower = function(clickEvent){
         mouseStates.currentFlower.img.scale(1.5);
         
         newFlower.music.sound.on('play', function() {
-           // console.log("played");
+     
             
 //            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
 //            newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
@@ -303,7 +303,7 @@ dropFlower = function(clickEvent){
         });
         
         newFlower.music.sound.on('play', function() {
-          // console.log("played");
+       
 //            
 //        //Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
            newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
@@ -355,6 +355,8 @@ sendFlowerToBack = function(){
 scaleFlower = function(clickEvent){
     //make sure old flowers don't jump to a smaller size if user drags in the middle of the
     if(clickEvent.count > 10){
+        
+        //math that creates a square around the center of the flower. Side length of the square is 2*sqrt(x distance of mouse to flower center^2 + y distance of mouse to  flower center^2)
         var flowerCenter = mouseStates.flowerCenter
         var mousePos = clickEvent.point;
         
@@ -377,13 +379,14 @@ scaleFlower = function(clickEvent){
             }
         }
 
+        //make sure flower is not going to be larger than 1/2 view width or smaller than 1/20 view width. If so, resize to fit bounds
         if(squareSideLength < 0.5*project.view.bounds.width && squareSideLength > 0.05*project.view.bounds.width){
+            //resize image
             var rect = new Rectangle(newUpperLeft, new Size(squareSideLength, squareSideLength)); 
             mouseStates.currentFlower.img.fitBounds(rect);
-            //handle loop length
-          //uncomment when our animations are working. 
-            canvasFlowers[mouseStates.currentFlower.img.id].toggleSoundLength((squareDiagLength*5)/(canvas.width/2));
-        
+            //set loop length 
+            canvasFlowers[mouseStates.currentFlower.img.id].toggleSoundLength((squareDiaglength*5)/(canvas.width/2));
+          
         }
     }
     
@@ -424,7 +427,7 @@ createCursorFlower = function(){
  */ 
 
 moveCursorFlower = function(event){
-//make it lag less on initial click - kind of a hacky fix for now
+//make it lag less on initial click
     if(event.point.x > 0  && event.point.y > 0){
         cursorFlower.visible = true;
         cursorFlower.position.x = event.point.x;
