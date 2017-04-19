@@ -400,12 +400,12 @@ scaleFlower = function(clickEvent){
         var newULy = flowerCenter.y - halfSideLength;
         var newUpperLeft = new Point(newULx, newULy);
         
-        /*//make sure old flowers don't get super small if users drag inside of them
+        //make sure old flowers don't get super small if users drag inside of them
         if(mouseStates.resizeOldFlower){
-            if(squareSideLength < mouseStates.currentFlower.img.bounds.width){
+            if(squareSideLength < mouseStates.currentFlower.img.bounds.width && clickEvent.count < 5){
                 return;
             }
-        }*/
+        }
 
         if(squareSideLength < 0.5*project.view.bounds.width && squareSideLength > 0.05*project.view.bounds.width){
             var rect = new Rectangle(newUpperLeft, new Size(squareSideLength, squareSideLength)); 
