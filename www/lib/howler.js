@@ -684,9 +684,9 @@
       sound._sprite = sprite;
       sound._seek = seek;
       sound._start = self._sprite[sprite][0] / 1000;
-      //sound to use when we want different length.
-      sound._stop = (self._sprite[sprite][0]/ 1000) +1.5;
+      //A space added to the loop in order to add sound length
       sound._space = 0;
+      sound._stop = (self._sprite[sprite][0]/ 1000) +1.5 + sound._space;
       sound._loop = !!(sound._loop || self._sprite[sprite][2]);
 
       // Begin the actual playback.
@@ -774,7 +774,7 @@
       return sound._id;
     },
       
-    //Here we added a method to be able to change the length of the loops.
+    //Here we added a method to be able to change the length of the loops in order to create longer spaces between .
     soundLength: function(length,id) {
       var self = this;
       // If the sound hasn't loaded, add it to the load queue to pause when capable.
@@ -793,7 +793,7 @@
       var ids = self._getSoundIds(id);
       for (var i=0; i<ids.length; i++) {
         var sound = self._soundById(ids[i]);
-        //Takes the given length and adds it to the stop point.
+        //Adds length in order to put more space before the loop restarts.
         sound._stop = sound._stop - sound._space + length;
         sound._space = length;
       }

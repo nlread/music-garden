@@ -286,8 +286,8 @@ dropFlower = function(clickEvent){
            // console.log("played");
             
 //            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
-//            newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
-//            newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
+            newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
+            newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
             
 //            Animation 2: Does a little spin thing. Kinda fun. 
 //            newFlower.animate(new RotatingAnimation(-15,0.1,0));
@@ -299,12 +299,19 @@ dropFlower = function(clickEvent){
           // console.log("played");
 //            
 //        //Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
-           newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
-           newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
+            //test flower
+          // newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.2,-1));
+           //newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1.1,0.1));
+            //Red flower
+      //     newFlower.animate(new ScalingAnimation(new Point(1/1.3,1.3),0.8,0));
+      //     newFlower.animate(new ScalingAnimation(new Point(1.3,1/1.3),1.2,0));
             
 //            Animation 2: Does a little spin thing. Kinda fun. 
-//            newFlower.animate(new RotatingAnimation(90,0.5,0));
-//            newFlower.animate(new RotatingAnimation(-90,1,0.1));
+         //   newFlower.animate(new RotatingAnimation(-30,0.1,0));
+         //   newFlower.animate(new RotatingAnimation(15,0.1,0.1));
+         //   newFlower.animate(new RotatingAnimation(-5,0.1,0.2));
+         //   newFlower.animate(new RotatingAnimation(5,0.1,0.3));
+            
         });
         
         canvasFlowers[mouseStates.currentFlower.img.id] = newFlower;
@@ -375,7 +382,7 @@ scaleFlower = function(clickEvent){
             mouseStates.currentFlower.img.fitBounds(rect);
             //handle loop length
           //uncomment when our animations are working. 
-            canvasFlowers[mouseStates.currentFlower.img.id].toggleSoundLength((squareDiagLength*5)/(canvas.width/2));
+            //canvasFlowers[mouseStates.currentFlower.img.id].toggleSoundLength((squareDiagLength*5)/(canvas.width/2));
         
         }
        

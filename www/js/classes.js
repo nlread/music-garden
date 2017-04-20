@@ -270,6 +270,7 @@ class Plant extends AnimatedComponent {
         
         //Changes the length that howler.js should loop which makes the sound longer or shorter
         //Give it a length between 0-5
+        //Need to restart the loop in order for the new length to be applied.
         this.toggleSoundLength = function(length){
             this.length = length + 1.5;
             this.music.sound.soundLength(length);
