@@ -1,10 +1,7 @@
 /*This file contains the initial and state variables that are used in main.js - they exist here mostly to keep main.js to a usable length */
 
 var resize = {
-    initFlowerSize: 0.025,
-    shrink: 0.95,
-    grow: 1.05,
-    dragTolerance: 20
+    initFlowerSize: 0.025
 }
 
 var mouseStates = {
@@ -42,14 +39,13 @@ var backgroundTrack = new Howl({
     src: ["www/mp3/track1Individuals/au1_louder.mp3"]    
 });
 
-var menuChoices = {}
 
 var buttons = {}
 
 var currentMenuChoice = {
     src: "", //actual image source
     name: "", //flower name - "pink", "blue", etc
-    div: "", //div that contains it
 }
 
 var cursorFlower = null;
+var arrows = null;

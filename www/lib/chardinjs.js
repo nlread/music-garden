@@ -95,7 +95,8 @@
         dismiss.style.borderRadius = "3px";
         dismiss.style.display = "inline-block";
         overlay_layer.appendChild(dismiss);
-          
+        
+        //Disable pointer events
         document.getElementById("menu").style.pointerEvents = "none";
         document.getElementById("bottomToolbarRow").style.pointerEvents = "none";
         
@@ -114,7 +115,6 @@
         overlay_layer.onclick = function() {
 
             //NOTE: this code added to reenable pointer events after overlay (first two lines) and to trigger clicks immediately after overlay removal for proper highlighting behavior (next 5 lines)
-            $(document).ready
             document.getElementById("menu").style.pointerEvents = "auto";
             document.getElementById("bottomToolbarRow").style.pointerEvents = "auto";
             //manually trigger click on first menu item to auto-select it

@@ -47,16 +47,27 @@ window.onload = function(){
     };
 
     myTool.onMouseDown = function(event){
-        itemHit = project.hitTest(event.point).item;
-        
-        //ignore hits on cursor Flower
-        if(itemHit == cursorFlower){
-            itemHit = null;
+        hitOptions = {
+            match: function(result){
+                if(result.item == cursorFlower){
+                    return false;
+                }
+                if(result.item == arrows){
+                    return false;
+                }
+                else{
+                    return true;
+                }
+            }
+        }
+        var itemHit;
+        var hit = project.hitTest(event.point, hitOptions)
+        if(hit){
+            itemHit = hit.item
         }
         
         if(itemHit){
-            console.log("interacting");
-            interactWithPlant(event);
+            interactWithPlant(itemHit);
             //return so that you don't drop a new flower on top of one to resize
             return;
             
@@ -102,8 +113,6 @@ function globalOnFrame(frameEvent) {
 setUpScreen = function(){
     paper.setup('canvas')
     var canvas = document.getElementById('canvas');
-    var ctx = canvas.getContext('2d');
-    ctx.imageSmoothingEnabled = true;
     view.draw();  
 }
 
@@ -112,16 +121,10 @@ setUpScreen = function(){
  * globally
  */
 initializeGlobals = function(){
-    menuChoices.choice1 = document.getElementById("choice1");
-    menuChoices.choice2 = document.getElementById("choice2");
-    menuChoices.choice3 = document.getElementById("choice3");
-    menuChoices.choice4 = document.getElementById("choice4");
-    
     buttons.remove = document.getElementById("removeButton");
     buttons.plant = document.getElementById("plantButton");
     buttons.sendToBack = document.getElementById("sendToBackButton");
-    buttons.help = document.getElementById("helpButton");
-    
+    buttons.help = document.getElementById("helpButton");  
 }
 
 /*
@@ -252,8 +255,8 @@ trashButtonClicked = function(){
  * Determine whether to delete, send to back, or resize a plant that's been clicked on  * based on current mode
  * @param {event} clickEvent - event passed in from onMouseDown handler
  */
-interactWithPlant = function(clickEvent){
-    mouseStates.currentFlower = canvasFlowers[clickEvent.item.id];
+interactWithPlant = function(plantClicked){
+    mouseStates.currentFlower = canvasFlowers[plantClicked.id];
     mouseStates.flowerCenter = mouseStates.currentFlower.img.position;
 
     if(modes.remove){
@@ -272,7 +275,11 @@ interactWithPlant = function(clickEvent){
  */
 dropFlower = function(clickEvent){
     if(project.view.bounds.contains(clickEvent)){
-        var newFlower = new Plant(new Raster(currentMenuChoice.src).scale(resize.initFlowerSize), new Music(soundSources[currentMenuChoice.name],Math.floor((clickEvent.point.y*8)/canvas.height)))
+        var newFlower = new Plant(
+            new Raster(currentMenuChoice.src).scale(resize.initFlowerSize), 
+            new Music(soundSources[currentMenuChoice.name],
+            Math.floor((clickEvent.point.y*8)/canvas.height))
+        )
         
         newFlower.playSound();
         
@@ -283,7 +290,7 @@ dropFlower = function(clickEvent){
         mouseStates.currentFlower.img.scale(1.5);
         
         newFlower.music.sound.on('play', function() {
-           // console.log("played");
+     
             
 //            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
             newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
@@ -296,7 +303,7 @@ dropFlower = function(clickEvent){
         });
         
         newFlower.music.sound.on('play', function() {
-          // console.log("played");
+       
 //            
 //        //Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
             //test flower
@@ -355,6 +362,8 @@ sendFlowerToBack = function(){
 scaleFlower = function(clickEvent){
     //make sure old flowers don't jump to a smaller size if user drags in the middle of the
     if(clickEvent.count > 10){
+        
+        //math that creates a square around the center of the flower. Side length of the square is 2*sqrt(x distance of mouse to flower center^2 + y distance of mouse to  flower center^2)
         var flowerCenter = mouseStates.flowerCenter
         var mousePos = clickEvent.point;
         
@@ -372,27 +381,23 @@ scaleFlower = function(clickEvent){
         
         //make sure old flowers don't get super small if users drag inside of them
         if(mouseStates.resizeOldFlower){
-            if(squareSideLength < mouseStates.currentFlower.img.bounds.width){
+            if(squareSideLength < mouseStates.currentFlower.img.bounds.width && clickEvent.count < 5){
                 return;
             }
         }
 
+        //make sure flower is not going to be larger than 1/2 view width or smaller than 1/20 view width. If so, resize to fit bounds
         if(squareSideLength < 0.5*project.view.bounds.width && squareSideLength > 0.05*project.view.bounds.width){
+            //resize image
             var rect = new Rectangle(newUpperLeft, new Size(squareSideLength, squareSideLength)); 
             mouseStates.currentFlower.img.fitBounds(rect);
+            
             //handle loop length
           //uncomment when our animations are working. 
             //canvasFlowers[mouseStates.currentFlower.img.id].toggleSoundLength((squareDiagLength*5)/(canvas.width/2));
-        
+
+          
         }
-       
-        
-        
-        
-        
-        //handle volume
-        //canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.grow);
-        //canvasFlowers[mouseStates.currentFlower.img.id].toggleVolume(resize.shrink);
     }
     
 }
@@ -432,7 +437,7 @@ createCursorFlower = function(){
  */ 
 
 moveCursorFlower = function(event){
-//make it lag less on initial click - kind of a hacky fix for now
+//make it lag less on initial click
     if(event.point.x > 0  && event.point.y > 0){
         cursorFlower.visible = true;
         cursorFlower.position.x = event.point.x;
