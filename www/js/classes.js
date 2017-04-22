@@ -209,6 +209,68 @@ class Component {
     }
 }
 
+class Clickable extends Component {
+    constructor(paperRepresentation) {
+        super(paperRepresentation);
+        this.collisionRaster = null;
+        this.trueSize = null;
+        this.offset = null;
+    }
+
+    setCollisionRaster(collisionRaster) {
+        this.collisionRaster = collisionRaster;
+    }
+
+    setTrueSize(trueSize) {
+        this.trueSize = trueSize;
+    }
+
+    setOffset(offset) {
+        this.offset = offset;
+    }
+    /**
+     * Hit test for the given point in the canvas for this object
+     * @param {Point} eventPoint 
+     */
+    _isPresentAtPoint(eventPoint, angle) {
+        return this._isPresentAtXY(eventPoint.x, eventPoint.y, angle);
+    }
+
+    /**
+     * Hit test for the given point in the canvas for this object
+     * @param {Number} eventX 
+     * @param {Number} eventY 
+     */
+    _isPresentAtXY(eventX, eventY, angle) {
+        if (this.collisionRaster === undefined || this.collisionRaster == null) {
+            return false;
+        } 
+
+        let trueWidth, trueHeight;
+        if (this.trueSize == null) {
+            trueWidth = this.paperRepresentation.width;
+            trueHeight = this.paperRepresentation.height;
+        } else {
+            trueWidth = this.trueSize.x;
+            trueHeight = this.trueSize.y;
+        }
+
+        if(eventX > this.x && eventX < this.x + trueWidth &&
+           eventY > this.Y && eventY < this.y + trueHeight ) {
+                let rasterX = (eventX - this.x) / trueWidth * this.collisionRaster.width;
+                let rasterY = (eventY - this.y) / trueHeight * this.collisionRaster.height;
+                
+                 if (angle !== undefined) {
+                    rasterX = rasterX * Math.cos(angle) - rasterY * Math.sin(angle);
+                    rasterY = rasterX * Math.sin(angle) + rasterY * Math.cos(angle);    
+                }  
+
+                return this.collisionRaster.getPixel(rasterX, rasterY).alpha > .25;
+        }
+        return false;
+    }
+}
+
 class AnimatedComponent extends Component {
 
     constructor(paperGroup) {
