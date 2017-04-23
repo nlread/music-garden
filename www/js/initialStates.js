@@ -43,14 +43,13 @@ var plantDisplaySizes = {
 }
 
 var plantBoundsRatios = {
-    'jade' : new Point(0.15625, 0.17633410672),
-    'red' : new Point(0.18795180722, 0.17194570135),
-    'succulent' : new Point(0.2027027027, 0.18661971831),
-    'green' : new Point(0.17757009345, 0.1715116279)
+    'jade' : .18,
+    'red' : .175,
+    'succulent' : .2,
+    'green' : .175,
 }
 
 var plantDisplayOffsets = {
-    
     'jade' : new Point(50, 40),
     'red' : new Point(500, 500), 
     'succulent' : new Point(500, 450), 
