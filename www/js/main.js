@@ -417,7 +417,7 @@ scaleFlower = function(clickEvent){
         //make sure flower is not going to be larger than 1/2 view width or smaller than 1/20 view width. If so, resize to fit bounds
         if(squareSideLength < 0.5*project.view.bounds.width && squareSideLength > 0.05*project.view.bounds.width){
             //resize image
-            var rect = new Rectangle(newUpperLeft, new Size(squareSideLength, squareSideLength)); 
+            var rect = new Rectangle(newUpperLeft, new Size(squareSideLength * .17, squareSideLength * .17)); 
             mouseStates.currentFlower.img.fitBounds(rect);
             
             //handle loop length
