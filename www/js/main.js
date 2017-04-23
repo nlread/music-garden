@@ -1,15 +1,14 @@
-paper.install(window); //make paper scope global by injecting it into window - from here http://blog.lindsayelia.com/post/128346565323/making-paperjs-work-in-an-external-file
-
 /* ONLOAD */
 
 $(document).ready(function(){
     $('body').chardinJs('start');
 });
 
-window.onload = function(){
+window.onload = function() {
     console.log("window loaded");
     
     setUpScreen(); 
+    setupPlants();
     initializeGlobals();
     startBackgroundSound();
     
@@ -46,33 +45,21 @@ window.onload = function(){
         stopResize();
     };
 
-    myTool.onMouseDown = function(event){
-        hitOptions = {
-            match: function(result){
-                if(result.item == cursorFlower){
-                    return false;
-                }
-                if(result.item == arrows){
-                    return false;
-                }
-                else{
-                    return true;
-                }
-            }
-        }
-        var itemHit;
-        var hit = project.hitTest(event.point, hitOptions)
-        if(hit){
-            itemHit = hit.item
-        }
-        
-        if(itemHit){
-            interactWithPlant(itemHit);
-            //return so that you don't drop a new flower on top of one to resize
+    myTool.onMouseDown = function(event) {
+
+        if(window.printHitTest) {
+            console.log('hit test at ' + event.point.x + ',' + event.point.y);
+            console.log(hitTestFlowers(event.point));;
             return;
-            
+        }
+        let hit = hitTestFlowers(event.point)
+
+        if (hit) {
+            interactWithPlant(hit);
+            return;
         } 
-       if(currentMenuChoice && modes.plant){
+
+        if (currentMenuChoice && modes.plant){
             dropFlower(event);
         }
     }
@@ -87,10 +74,22 @@ window.onload = function(){
             moveCursorFlower(event);
         }
     }
+    
+    myTool.onKeyDown = function(event) {
+        if (event.key == 'p') {
+            printHitTest = true;            
+        }
+    }
+
+    myTool.onKeyUp = function(event) {
+        if (event.key == 'p') {
+            printHitTest = false;            
+        }
+    }
 
     paper.view.onFrame = globalOnFrame;
 }
-
+window.printHitTest = false;
 function globalOnFrame(frameEvent) {
     let dTime = frameEvent.delta;
     
@@ -102,6 +101,34 @@ function globalOnFrame(frameEvent) {
             }
         }
     }
+}
+
+function hitTestFlowers(eventPoint) {
+    for(let flowerId in canvasFlowers) {
+        let flower = canvasFlowers[flowerId]
+        if(flower.isPresentAt(eventPoint)) {
+            return flower;
+        }
+    }
+    return undefined;
+}
+
+function setupPlants() {
+    for (let plant in plantDisplaySources) {
+        project.importSVG(plantDisplaySources[plant], 
+                          {insert: false, 
+                           onLoad: (loadedData) => plantSVGLoadSuccess(plant, loadedData),
+                           onError: plantSVGLoadFailure});
+    }
+}
+
+function plantSVGLoadSuccess(plant, loadedData) {
+    let plantRaster = loadedData.rasterize();
+    loadedPlantRasters[plant] = plantRaster;
+}
+
+function plantSVGLoadFailure(error) {
+    console.log(error);
 }
 
 
@@ -255,11 +282,11 @@ trashButtonClicked = function(){
  * Determine whether to delete, send to back, or resize a plant that's been clicked on  * based on current mode
  * @param {event} clickEvent - event passed in from onMouseDown handler
  */
-interactWithPlant = function(plantClicked){
-    mouseStates.currentFlower = canvasFlowers[plantClicked.id];
+interactWithPlant = function(plantClicked) {
+    mouseStates.currentFlower = plantClicked;
     mouseStates.flowerCenter = mouseStates.currentFlower.img.position;
 
-    if(modes.remove){
+    if (modes.remove) {
         deleteFlower();
     } /*else if(modes.orderLayers){
        sendFlowerToBack();
@@ -273,16 +300,17 @@ interactWithPlant = function(plantClicked){
  * Drop a plant on the screen
  * @param {event} clickEvent - click event passed from onMouseDown
  */
-dropFlower = function(clickEvent){
+function dropFlower(clickEvent) {
     if(project.view.bounds.contains(clickEvent)){
-        var newFlower = new Plant(
-            new Raster(currentMenuChoice.src).scale(resize.initFlowerSize), 
-            new Music(soundSources[currentMenuChoice.name],
-            Math.floor((clickEvent.point.y*8)/canvas.height))
-        )
-        
+        let flowerDisplay = new Raster(currentMenuChoice.src).scale(resize.initFlowerSize);
+        let flowerPitch = Math.floor((clickEvent.point.y*8)/canvas.height);
+        let flowerMusic = new Music(soundSources[currentMenuChoice.name], flowerPitch);
+
+        let newFlower = new Plant(flowerDisplay, flowerMusic);
         newFlower.playSound();
-        
+        newFlower.setCollisionRaster(loadedPlantRasters[currentMenuChoice.name])
+        newFlower.setBoundsRatio(plantBoundsRatios[currentMenuChoice.name])
+
         mouseStates.currentFlower = newFlower;
         mouseStates.droppedFlower = true;
         mouseStates.currentFlower.img.position = clickEvent.point;

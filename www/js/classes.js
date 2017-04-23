@@ -6,16 +6,16 @@ class Component {
      * Class which wraps a paper.js Group or Path and gives it the ability
      * to set the rotation and scaling, instead } only changing the rotation
      * and scaling. 
-     * @param {Group} paperGroup 
+     * @param {Group} paperRepresentation 
      */
-    constructor(paperGroup) {
+    constructor(paperRepresentation) {
         //null check enables having components with only Rasters and not Paths
-        if(paperGroup != null){
-            this.paperGroup = paperGroup;
+        if(paperRepresentation != null){
+            this.paperRepresentation = paperRepresentation;
         
-            this._position = paperGroup.getPosition().clone();
-            this._orientation = paperGroup.getRotation();
-            this._scaleFactor = paperGroup.getScaling().clone();
+            this._position = paperRepresentation.getPosition().clone();
+            this._orientation = paperRepresentation.getRotation();
+            this._scaleFactor = paperRepresentation.getScaling().clone();
         }
     }
 
@@ -52,7 +52,7 @@ class Component {
         this._position.y = y;
         
         let deltaPos = this._position.subtract(this._currentPosition);
-        this.paperGroup.translate(deltaPos.x, deltaPos.y);
+        this.paperRepresentation.translate(deltaPos.x, deltaPos.y);
     }
     
 
@@ -77,7 +77,7 @@ class Component {
     _translatePoint(deltaPoint) {
         this._position.x += deltaPoint.x;
         this._position.y += deltaPoint.y;
-        this.paperGroup.translate(deltaPoint);
+        this.paperRepresentation.translate(deltaPoint);
     }
 
     /**
@@ -98,7 +98,7 @@ class Component {
      */
     setRotation(angle) {        
         let deltaAngle = angle - this._orientation
-        this.paperGroup.rotate(deltaAngle);
+        this.paperRepresentation.rotate(deltaAngle);
         this._orientation = angle;
     }
     
@@ -108,7 +108,7 @@ class Component {
      * @param {Number} deltaAngle 
      */
     rotate(deltaAngle) {
-        this.paperGroup.rotate(deltaAngle);
+        this.paperRepresentation.rotate(deltaAngle);
         this._orientation += deltaAngle;
     }
     
@@ -140,7 +140,7 @@ class Component {
             deltaScale = deltaScale.divide(this._scaleFactor);
         }
 
-        this.paperGroup.scale(deltaScale);
+        this.paperRepresentation.scale(deltaScale);
         
         this._scaleFactor.x = deltaScale.x;
         this._scaleFactor.y = deltaScale.y;
@@ -200,20 +200,29 @@ class Component {
      * @param {Number} heightFactor - Amount to scale height by 
      */
     _scaleXY(widthFactor, heightFactor) {
-        this.paperGroup.rotate(-this._orientation)
-        this.paperGroup.scale(widthFactor, heightFactor);
-        this.paperGroup.rotate(this._orientation);
+        this.paperRepresentation.rotate(-this._orientation)
+        this.paperRepresentation.scale(widthFactor, heightFactor);
+        this.paperRepresentation.rotate(this._orientation);
 
         this._scaleFactor.x *= widthFactor;
         this._scaleFactor.y *= heightFactor;
     }
+
+    getWidth() {
+        return paperRepresentation.width;
+    }
+
+    getHeight() {
+        return paperRepresentation.height;
+    }
 }
 
 class Clickable extends Component {
+
     constructor(paperRepresentation) {
         super(paperRepresentation);
         this.collisionRaster = null;
-        this.trueSize = null;
+        this.boundsRatio = null;
         this.offset = null;
     }
 
@@ -221,13 +230,28 @@ class Clickable extends Component {
         this.collisionRaster = collisionRaster;
     }
 
-    setTrueSize(trueSize) {
-        this.trueSize = trueSize;
+    setBoundsRatio(boundsRatio) {
+        this.boundsRatio = boundsRatio;
     }
 
     setOffset(offset) {
         this.offset = offset;
     }
+
+    isPresentAt(...args) {
+        if(args.length == 1) {
+            return this._isPresentAtPoint(args[0])
+        } else if (args.length == 2) {
+            if (args[0] instanceof Point) {
+                return this._isPresentAtPoint(args[0], args[1]);
+            } else {
+                return this._isPresentAtXY(args[0], args[1]);
+            }
+        } else {
+            return this._isPresentAtXY(args[0], args[1], args[2]);
+        }
+    }
+
     /**
      * Hit test for the given point in the canvas for this object
      * @param {Point} eventPoint 
@@ -245,21 +269,25 @@ class Clickable extends Component {
         if (this.collisionRaster === undefined || this.collisionRaster == null) {
             return false;
         } 
-
+        
         let trueWidth, trueHeight;
-        if (this.trueSize == null) {
+        if (this.boundsRatio == null) {
             trueWidth = this.paperRepresentation.width;
             trueHeight = this.paperRepresentation.height;
         } else {
-            trueWidth = this.trueSize.x;
-            trueHeight = this.trueSize.y;
+            trueWidth = this.paperRepresentation.bounds.width * (1/this.boundsRatio.x);
+            trueHeight = this.paperRepresentation.bounds.height * (1/this.boundsRatio.y);
         }
 
-        if(eventX > this.x && eventX < this.x + trueWidth &&
-           eventY > this.Y && eventY < this.y + trueHeight ) {
-                let rasterX = (eventX - this.x) / trueWidth * this.collisionRaster.width;
-                let rasterY = (eventY - this.y) / trueHeight * this.collisionRaster.height;
+        
+        let x = this.img.bounds.x;
+        let y = this.img.bounds.y;
+        if(eventX > x && eventX < x + trueWidth &&
+           eventY > y && eventY < y + trueHeight ) {
+                let rasterX = (eventX - x) / trueWidth * this.collisionRaster.width;
+                let rasterY = (eventY - y) / trueHeight * this.collisionRaster.height;
                 
+                let angle = this._orientation;
                  if (angle !== undefined) {
                     rasterX = rasterX * Math.cos(angle) - rasterY * Math.sin(angle);
                     rasterY = rasterX * Math.sin(angle) + rasterY * Math.cos(angle);    
@@ -269,12 +297,13 @@ class Clickable extends Component {
         }
         return false;
     }
+
 }
 
-class AnimatedComponent extends Component {
+class AnimatedComponent extends Clickable {
 
-    constructor(paperGroup) {
-        super(paperGroup);
+    constructor(paperRepresentation) {
+        super(paperRepresentation);
         this.animations = [];
     }
 
