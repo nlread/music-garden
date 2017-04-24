@@ -4,7 +4,7 @@ var resize = {
     initFlowerSize: 0.025
 }
 
-var mouseStates = {
+var appStates = {
     droppedFlower: false,
     currentFlower: null,
     resizeOldFlower: false,
@@ -13,7 +13,7 @@ var mouseStates = {
     prevItemHit: null
 };
 
-var modes = {
+var interactionModes = {
     plant: true,
     remove: false,
     orderLayers: false
