@@ -51,7 +51,7 @@ window.onload = function(){
                 if(result.item == screenItems.cursorFlower){
                     return false;
                 }
-                if(result.item == arrows){
+                if(result.item == screenItems.arrows){
                     return false;
                 }
                 else{
@@ -72,6 +72,10 @@ window.onload = function(){
             
         } 
        if(currentMenuChoice && interactionModes.plant){
+            //make arrows invisible after first plant
+             if(screenItems.arrows){
+                screenItems.arrows.visible = false;
+             }
             dropFlower(event);
         }
     }
@@ -385,6 +389,15 @@ createCursorFlower = function(){
     screenItems.cursorFlower = new Raster(currentMenuChoice.src).scale(0.07)
     screenItems.cursorFlower.opacity = 0.4 
     screenItems.cursorFlower.visible = false;
+    
+    //TODO: pull this out into a separate method
+     //if there are flowers on screen don't show the arrows
+     if(Object.keys(canvasFlowers).length == 0){
+         screenItems.arrows = new Raster("www/img/PNG/arrows.PNG").scale(0.4)
+         screenItems.arrows.rotate(45);
+         screenItems.arrows.opacity = 0.4
+         screenItems.arrows.visible = false;
+     }
 }
 
 /*
@@ -398,6 +411,14 @@ moveCursorFlower = function(event){
         screenItems.cursorFlower.visible = true;
         screenItems.cursorFlower.position.x = event.point.x;
         screenItems.cursorFlower.position.y = event.point.y;
+        
+        //TODO: pull this out into a separate method
+        //only show arrows if no flowers on screen
+        if(screenItems.arrows && Object.keys(canvasFlowers).length == 0){
+             screenItems.arrows.visible = true;
+             screenItems.arrows.position.x = event.point.x;
+             screenItems.arrows.position.y = event.point.y; 
+        }
     }
 }
 
