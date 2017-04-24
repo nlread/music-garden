@@ -168,9 +168,7 @@ plantButtonClicked = function(){
     interactionModes.remove = false;
     interactionModes.orderLayers = false; 
     interactionModes.plant = true;
-    if($("#removeButton").hasClass("active")){
-        $("#removeButton").button("toggle") ;       
-    }
+    toggleButton(buttons.remove);
     resetCursorFlower();
 }
 
@@ -181,9 +179,7 @@ removeButtonClicked = function(){
     interactionModes.plant = false;
     interactionModes.orderLayers = false;
     interactionModes.remove = true;
-    if($("#plantButton").hasClass("active")){
-        $("#plantButton").button("toggle") ;       
-    }
+    toggleButton(buttons.plant);
     appStates.cursorFlower = false;
     screenItems.cursorFlower.remove();
 }
@@ -217,6 +213,16 @@ trashButtonClicked = function(){
     $("#trashButton").button("toggle");
 }
 
+/*
+ * Toggles a button's active class
+ * @param{HTML button} button - the button to toggle
+ */
+
+toggleButton = function(button){
+    if($(button).hasClass("active")){
+        $(button).button("toggle");
+    }
+}
 
 /*
  * Determine whether to delete, send to back, or resize a plant that's been clicked on  * based on current mode
