@@ -274,6 +274,7 @@ interactWithPlant = function(plantClicked){
  * @param {event} clickEvent - click event passed from onMouseDown
  */
 function dropFlower(clickEvent) {
+    console.log(currentMenuChoice)
     if(project.view.bounds.contains(clickEvent)){
         let flowerDisplay = new Raster(currentMenuChoice.src).scale(resize.initFlowerSize);
         let flowerPitch = Math.floor((clickEvent.point.y*8)/canvas.height);
