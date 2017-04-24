@@ -387,7 +387,7 @@ sendFlowerToBack = function(){
  * decreasing
  * @param {event} clickEvent - event passed from onMouseDrag
  */
-scaleFlower = function(clickEvent){
+function scaleFlower (clickEvent) {
     //make sure old flowers don't jump to a smaller size if user drags in the middle of the
     if(clickEvent.count > 10){
         

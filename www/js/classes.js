@@ -275,8 +275,8 @@ class Clickable extends Component {
             trueWidth = this.paperRepresentation.width;
             trueHeight = this.paperRepresentation.height;
         } else {
-            trueWidth = this.paperRepresentation.bounds.width * (1/this.boundsRatio.x);
-            trueHeight = this.paperRepresentation.bounds.height * (1/this.boundsRatio.y);
+            trueWidth = this.paperRepresentation.bounds.width * (1/this.boundsRatio);
+            trueHeight = this.paperRepresentation.bounds.height * (1/this.boundsRatio);
         }
 
         
