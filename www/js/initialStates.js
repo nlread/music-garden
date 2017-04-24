@@ -5,16 +5,15 @@ var resize = {
     initFlowerSize: 0.025
 }
 
-var mouseStates = {
+var appStates = {
     droppedFlower: false,
     currentFlower: null,
     resizeOldFlower: false,
     cursorFlower: false,
-    transparentFlowers: [],
-    prevItemHit: null
+    transparentFlowers: []
 };
 
-var modes = {
+var interactionModes = {
     plant: true,
     remove: false,
     orderLayers: false
@@ -63,6 +62,11 @@ var colors = {
     menuSelectColor: "#90F0B3",
 };
 
+//namespace for things on screen that may or may not exist at a given time
+var screenItems = {
+    cursorFlower: null,
+    arrows: null
+}
 //Holds all the flower on the canvas at any time
 var canvasFlowers = {};
 
@@ -78,5 +82,3 @@ var currentMenuChoice = {
     name: "", //flower name - "pink", "blue", etc
 }
 
-var cursorFlower = null;
-var arrows = null;
