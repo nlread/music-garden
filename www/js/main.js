@@ -165,6 +165,7 @@ makeMenuChoice = function(menuItemClicked){
  * Resets states after plant button clicked
  */
 plantButtonClicked = function(){
+    ($(buttons.plant)).addClass("active");
     interactionModes.remove = false;
     interactionModes.orderLayers = false; 
     interactionModes.plant = true;
