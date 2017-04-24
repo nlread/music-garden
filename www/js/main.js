@@ -54,6 +54,7 @@ window.onload = function() {
 
         let hit = hitTestFlowers(event.point)
         if (hit) {
+            appStates.currentFlower = hit;
             interactWithPlant(hit);
             return;
         } 
@@ -280,7 +281,6 @@ toggleButton = function(button){
  * @param {event} clickEvent - event passed in from onMouseDown handler
  */
 interactWithPlant = function(plantClicked){
-    appStates.currentFlower = canvasFlowers;
     appStates.flowerCenter = appStates.currentFlower.img.position;
 
     if(interactionModes.remove){
