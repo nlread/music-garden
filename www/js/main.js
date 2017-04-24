@@ -284,11 +284,11 @@ function dropFlower(clickEvent) {
         newFlower.setCollisionRaster(loadedPlantRasters[currentMenuChoice.name])
         newFlower.setBoundsRatio(plantBoundsRatios[currentMenuChoice.name])
 
-        mouseStates.currentFlower = newFlower;
-        mouseStates.droppedFlower = true;
-        mouseStates.currentFlower.img.position = clickEvent.point;
-        mouseStates.flowerCenter = mouseStates.currentFlower.img.position;
-        mouseStates.currentFlower.img.scale(1.5);
+        appStates.currentFlower = newFlower;
+        appStates.droppedFlower = true;
+        appStates.currentFlower.img.position = clickEvent.point;
+        appStates.flowerCenter = appStates.currentFlower.img.position;
+        appStates.currentFlower.img.scale(1.5);
         
         newFlower.music.sound.on('play', function() {
      
@@ -376,8 +376,8 @@ function scaleFlower (clickEvent) {
         var squareSideLength = squareDiagLength/(Math.sqrt(2))
         
         var halfSideLength = 0.5 * squareSideLength
-        var newULx = flowerCenter.x;// - halfSideLength;
-        var newULy = flowerCenter.y;// - halfSideLength;
+        var newULx = flowerCenter.x - halfSideLength;
+        var newULy = flowerCenter.y - halfSideLength;
         var newUpperLeft = new Point(newULx, newULy);
         
         //make sure old flowers don't get super small if users drag inside of them
@@ -390,13 +390,13 @@ function scaleFlower (clickEvent) {
         //make sure flower is not going to be larger than 1/2 view width or smaller than 1/20 view width. If so, resize to fit bounds
         if(squareSideLength < 0.5*project.view.bounds.width && squareSideLength > 0.05*project.view.bounds.width){
             //resize image
-            var rect = new Rectangle(newUpperLeft, new Size(squareSideLength * mouseStates.currentFlower.boundsRatio, 
-                                                            squareSideLength * mouseStates.currentFlower.boundsRatio)); 
+            var rect = new Rectangle(newUpperLeft, new Size(squareSideLength * appStates.currentFlower.boundsRatio, 
+                                                            squareSideLength * appStates.currentFlower.boundsRatio)); 
             appStates.currentFlower.img.fitBounds(rect);
             
             //handle loop length
             //un-comment when our animations are working. 
-            //canvasFlowers[mouseStates.currentFlower.img.id].toggleSoundLength((squareDiagLength*5)/(canvas.width/2));          
+            //canvasFlowers[appStates.currentFlower.img.id].toggleSoundLength((squareDiagLength*5)/(canvas.width/2));          
         }
     }
     
