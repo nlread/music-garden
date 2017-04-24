@@ -183,7 +183,7 @@ makeMenuChoice = function(menuItemClicked){
     appStates.droppedFlower = false;
     
     appStates.cursorFlower = true;
-    resetCursorFlower();
+    resetCursorFlowerAndArrows();
 }
 
 
@@ -196,7 +196,7 @@ plantButtonClicked = function(){
     interactionModes.orderLayers = false; 
     interactionModes.plant = true;
     toggleButton(buttons.remove);
-    resetCursorFlower();
+    resetCursorFlowerAndArrows();
 }
 
 /*
@@ -423,9 +423,9 @@ startBackgroundSound = function(){
 }
 
 /*
- * Create the "ghost" flower that tracks with the cursor
+ * Create the "ghost" flower and arrows that tracks with the cursor
  */
-createCursorFlower = function(){
+createCursorFlowerAndArrows = function(){
     screenItems.cursorFlower = new Raster(currentMenuChoice.src).scale(0.07)
     screenItems.cursorFlower.opacity = 0.4 
     screenItems.cursorFlower.visible = false;
@@ -450,11 +450,16 @@ moveCursorFlower = function(event){
     }
 }
 
-resetCursorFlower = function(){
+resetCursorFlowerAndArrows = function(){
     if(screenItems.cursorFlower){
         screenItems.cursorFlower.remove()
     }
-    createCursorFlower();
+    
+    if(screenItems.arrows){
+        screenItems.arrows.remove()
+    }
+    
+    createCursorFlowerAndArrows();
 }
 
 /*
@@ -463,6 +468,7 @@ resetCursorFlower = function(){
 
 optionalArrows = function(){
      if(Object.keys(canvasFlowers).length == 0){
+         console.log(screenItems.arrows)
          screenItems.arrows = new Raster("www/img/PNG/arrows.PNG").scale(0.4)
          screenItems.arrows.rotate(45);
          screenItems.arrows.opacity = 0.4
