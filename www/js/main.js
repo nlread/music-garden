@@ -403,14 +403,7 @@ createCursorFlower = function(){
     screenItems.cursorFlower.opacity = 0.4 
     screenItems.cursorFlower.visible = false;
     
-    //TODO: pull this out into a separate method
-     //if there are flowers on screen don't show the arrows
-     if(Object.keys(canvasFlowers).length == 0){
-         screenItems.arrows = new Raster("www/img/PNG/arrows.PNG").scale(0.4)
-         screenItems.arrows.rotate(45);
-         screenItems.arrows.opacity = 0.4
-         screenItems.arrows.visible = false;
-     }
+    optionalArrows();
 }
 
 /*
@@ -425,13 +418,8 @@ moveCursorFlower = function(event){
         screenItems.cursorFlower.position.x = event.point.x;
         screenItems.cursorFlower.position.y = event.point.y;
         
-        //TODO: pull this out into a separate method
-        //only show arrows if no flowers on screen
-        if(screenItems.arrows && Object.keys(canvasFlowers).length == 0){
-             screenItems.arrows.visible = true;
-             screenItems.arrows.position.x = event.point.x;
-             screenItems.arrows.position.y = event.point.y; 
-        }
+        makeArrowsVisible(event);
+        
     }
 }
 
@@ -442,6 +430,30 @@ resetCursorFlower = function(){
     createCursorFlower();
 }
 
+/*
+ * Creates "guide arrows" for resize if there are no flowers on the screen - invisible on creation
+ */
+
+optionalArrows = function(){
+     if(Object.keys(canvasFlowers).length == 0){
+         screenItems.arrows = new Raster("www/img/PNG/arrows.PNG").scale(0.4)
+         screenItems.arrows.rotate(45);
+         screenItems.arrows.opacity = 0.4
+         screenItems.arrows.visible = false;
+     }
+}
+
+/*
+ * Makes arrows visible if they exist & there are no flowers on screen
+ * @param{mouseEvent} event - the mouse event to center the arrows at
+ */
+makeArrowsVisible = function(event){
+    if(screenItems.arrows && Object.keys(canvasFlowers).length == 0){
+             screenItems.arrows.visible = true;
+             screenItems.arrows.position.x = event.point.x;
+             screenItems.arrows.position.y = event.point.y; 
+    }
+}
 /*
  * Euclidean distance 
  */
