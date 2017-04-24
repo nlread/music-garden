@@ -1,20 +1,20 @@
 # Music Garden
-Plant flowers to create a "garden" that produces ambient music. JavaScript/HTML5 web app, built with Paper.js (graphics) and Howler.js (audio)
+Plant flowers to create a "garden" that produces ambient music. JavaScript/HTML5 web app, built with Paper.js (graphics) and Howler.js (audio). Check out our [demo here ] (https://nlread.github.io/music-garden/)
 
 ## How does it work? 
-
+Each flower has a different sound associated with it. Depending on where you place your flower along the y-axis, the pitch will be different. You can resize flowers by clicking and dragging - larger flowers will loop over their sound slower, and smaller ones will loop faster. Have fun creating your own unique mini-garden/musical piece!
 
 ## Want to play with code?
-Fork us, and feel free to play around with the code. No installations needed - the libraries are all in the repo - though you will need a web server to test your code. We used Brackets, which has a web server built in and a nice live update feature, but feel free to use whatever you're comfortable with.
+Fork us, and feel free to play around with the code. No installations needed - the libraries are all in the repo - though you will need a web server to test your code. We used Brackets, which has a web server built in and a nice live update feature, but feel free to use whatever you're comfortable with. Take a look at the technical notes below for a few important notes about the code.
 
 ## Technical Notes
 ### Changes to Libraries
 We've made a few changes to Howler.js and Chardin.js to fit the needs of this project. This means you should NOT use a CDN or your own local copy for these libraries - you'll need to use the versions in this repo. If you want to use a CDN or your own copy, this is where the changes are in our code:
 
 #### howler.js
-Line 689 a variable called sound._space that is initiated at 0 in order to keep track of the size of the loop we are using for a flower's sound. 
+Line 689 a variable called sound.\_space that is initiated at 0 in order to keep track of the size of the loop we are using for a flower's sound. 
 
-Lines 788-801 a new function called soundLength that can be used by a Howler object in order to put more space in the looping mechanism. It uses sound._space to keep track of the current spacing in the loop.
+Lines 788-801 a new function called soundLength that can be used by a Howler object in order to put more space in the looping mechanism. It uses sound.\_space to keep track of the current spacing in the loop.
 
 #### chardinjs.js
 Lines 99-101 disable mouse events on the buttons and menu while the overlay is displayed
