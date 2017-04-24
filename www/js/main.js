@@ -492,7 +492,7 @@ resetCursorFlowerAndArrows = function(){
 
 optionalArrows = function(){
      if(Object.keys(canvasFlowers).length == 0){
-         screenItems.arrows = new Raster("www/img/PNG/arrows.PNG").scale(0.4)
+         screenItems.arrows = new Raster("www/img/PNG/arrows.png").scale(0.4)
          screenItems.arrows.rotate(45);
          screenItems.arrows.opacity = 0.4
          screenItems.arrows.visible = false;
