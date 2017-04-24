@@ -168,6 +168,9 @@ plantButtonClicked = function(){
     interactionModes.remove = false;
     interactionModes.orderLayers = false; 
     interactionModes.plant = true;
+    if($("#removeButton").hasClass("active")){
+        $("#removeButton").button("toggle") ;       
+    }
     resetCursorFlower();
 }
 
@@ -177,7 +180,10 @@ plantButtonClicked = function(){
 removeButtonClicked = function(){
     interactionModes.plant = false;
     interactionModes.orderLayers = false;
-    interactionModes.remove = true;  
+    interactionModes.remove = true;
+    if($("#plantButton").hasClass("active")){
+        $("#plantButton").button("toggle") ;       
+    }
     appStates.cursorFlower = false;
     screenItems.cursorFlower.remove();
 }
@@ -208,6 +214,7 @@ trashButtonClicked = function(){
     if (trash) {
         deleteAllFlowers();
     }
+    $("#trashButton").button("toggle");
 }
 
 
