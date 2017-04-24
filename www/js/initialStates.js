@@ -10,6 +10,7 @@ var appStates = {
     currentFlower: null,
     resizeOldFlower: false,
     cursorFlower: false,
+    prevItemHit: null,
     transparentFlowers: []
 };
 

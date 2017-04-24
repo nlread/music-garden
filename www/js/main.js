@@ -64,7 +64,14 @@ window.onload = function() {
              }
             dropFlower(event);
         }
-    }
+        
+        
+     if(appStates.prevItemHit && hit != mouseStates.prevItemHit ){
+         mouseStates.prevItemHit.img.opacity = 1
+      }
+
+     appStates.prevItemHit = hit;
+}
     
     myTool.onMouseDrag = function(event) { 
         if(interactionModes.plant && (appStates.droppedFlower || appStates.resizeOldFlower)){
@@ -75,6 +82,25 @@ window.onload = function() {
         if(interactionModes.plant && appStates.cursorFlower){
             moveCursorFlower(event);
         }
+        
+        console.log(hitTestFlowers(event.point))
+        
+        //change opacity of flower that is moused over
+         if(interactionModes.remove && hitTestFlowers(event.point)){
+             var itemHit = hitTestFlowers(event.point);
+             if(itemHit != screenItems.cursorFlower){
+                 itemHit.img.opacity = 0.5;
+                 appStates.transparentFlower = itemHit;
+              }
+          }
+         
+         //change it back once hit test no longer applies
+         else if(interactionModes.remove){
+             if(appStates.transparentFlower){
+                 appStates.transparentFlower.opacity = 1;
+            }
+            
+    }
     }
     
     myTool.onKeyDown = function(event) {
@@ -274,7 +300,6 @@ interactWithPlant = function(plantClicked){
  * @param {event} clickEvent - click event passed from onMouseDown
  */
 function dropFlower(clickEvent) {
-    console.log(currentMenuChoice)
     if(project.view.bounds.contains(clickEvent)){
         let flowerDisplay = new Raster(currentMenuChoice.src).scale(resize.initFlowerSize);
         let flowerPitch = Math.floor((clickEvent.point.y*8)/canvas.height);
@@ -469,7 +494,6 @@ resetCursorFlowerAndArrows = function(){
 
 optionalArrows = function(){
      if(Object.keys(canvasFlowers).length == 0){
-         console.log(screenItems.arrows)
          screenItems.arrows = new Raster("www/img/PNG/arrows.PNG").scale(0.4)
          screenItems.arrows.rotate(45);
          screenItems.arrows.opacity = 0.4
