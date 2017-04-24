@@ -22,14 +22,13 @@ window.onload = function(){
 
     $('.menuChoice').on('mouseenter', function(){
         choice = this;
-        //prevent double-bounce
-        $(this).stop();
-        animateMenuChoice(choice);
+        $(this).stop(); //prevent double-bounce
+        menuAnims.animateMenuChoice(choice);
     });
 
      $('.menuChoice').on('mouseleave', function(){
         choice = this;
-        unHighlightMenuChoice(choice);
+        menuAnims.unHighlightMenuChoice(choice);
     });
 
     $('#removeButton').on('click', removeButtonClicked);
@@ -144,60 +143,19 @@ stopResize = function(){
  * @param {event} menuItemClicked - flower selected from menu
  */
 makeMenuChoice = function(menuItemClicked){
-    animateMenuChoice(this);
+    menuAnims.animateMenuChoice(this);
+    
     plantButtonClicked();
+    
     currentMenuChoice.src = this.firstChild.src;
     currentMenuChoice.name = this.firstChild.id;
+    
     mouseStates.droppedFlower = false;
+    
     mouseStates.cursorFlower = true;
-    //delete old cursor flower
-    if(cursorFlower){
-        cursorFlower.remove()
-    }
-    createCursorFlower();
+    resetCursorFlower();
 }
 
-
-/*
- * Animates the menu on click - increases image size and highlights it
- * @param {HTML element} choice - div that is the menu button chosen
- */
-animateMenuChoice = function(choice){
-    if(currentMenuChoice.src){
-    oldMenuChoice =  currentMenuChoice;
-
-    $(oldMenuChoice.firstChild).animate({
-        height: "95%",
-        width: "95%",
-        backgroundColor: colors.menuColor
-            }, 100
-        );
-    }
-
-    $(choice.firstChild).animate({
-        height: "100%",
-        width: "100%"
-        }, 100
-    );
-
-    $(choice).animate({
-        backgroundColor: colors.menuSelectColor
-        }, 100
-    );  
-}
-
-unHighlightMenuChoice = function(choice){
-    $(choice.firstChild).animate({
-        height: "95%",
-        width: "95%"
-        }, 100
-    );
-
-    $(choice).animate({
-        backgroundColor: colors.menuColor
-        }, 100
-    );  
-}
 
 /*
  * Resets states after plant button clicked
@@ -206,11 +164,7 @@ plantButtonClicked = function(){
     modes.remove = false;
     modes.orderLayers = false; 
     modes.plant = true;
-    //delete old cursor flower
-    if(cursorFlower){
-        cursorFlower.remove()
-    }
-    createCursorFlower();
+    resetCursorFlower();
 }
 
 /*
@@ -443,6 +397,13 @@ moveCursorFlower = function(event){
         cursorFlower.position.x = event.point.x;
         cursorFlower.position.y = event.point.y;
     }
+}
+
+resetCursorFlower = function(){
+    if(cursorFlower){
+        cursorFlower.remove()
+    }
+    createCursorFlower();
 }
 
 /*
