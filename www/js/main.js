@@ -1,15 +1,14 @@
-paper.install(window); //make paper scope global by injecting it into window - from here http://blog.lindsayelia.com/post/128346565323/making-paperjs-work-in-an-external-file
-
 /* ONLOAD */
 
 $(document).ready(function(){
     $('body').chardinJs('start');
 });
 
-window.onload = function(){
+window.onload = function() {
     console.log("window loaded");
     
     setUpScreen(); 
+    setupPlants();
     initializeGlobals();
     startBackgroundSound();
     
@@ -22,14 +21,13 @@ window.onload = function(){
 
     $('.menuChoice').on('mouseenter', function(){
         choice = this;
-        //prevent double-bounce
-        $(this).stop();
-        animateMenuChoice(choice);
+        $(this).stop(); //prevent double-bounce
+        menuAnims.animateMenuChoice(choice);
     });
 
      $('.menuChoice').on('mouseleave', function(){
         choice = this;
-        unHighlightMenuChoice(choice);
+        menuAnims.unHighlightMenuChoice(choice);
     });
 
     $('#removeButton').on('click', removeButtonClicked);
@@ -46,51 +44,54 @@ window.onload = function(){
         stopResize();
     };
 
-    myTool.onMouseDown = function(event){
-        hitOptions = {
-            match: function(result){
-                if(result.item == cursorFlower){
-                    return false;
-                }
-                if(result.item == arrows){
-                    return false;
-                }
-                else{
-                    return true;
-                }
-            }
-        }
-        var itemHit;
-        var hit = project.hitTest(event.point, hitOptions)
-        if(hit){
-            itemHit = hit.item
-        }
-        
-        if(itemHit){
-            interactWithPlant(itemHit);
-            //return so that you don't drop a new flower on top of one to resize
+    myTool.onMouseDown = function(event) {
+
+        if(window.printHitTest) {
+            console.log('hit test at ' + event.point.x + ',' + event.point.y);
+            console.log(hitTestFlowers(event.point));;
             return;
-            
+        }
+
+        let hit = hitTestFlowers(event.point)
+        if (hit) {
+            interactWithPlant(hit);
+            return;
         } 
-       if(currentMenuChoice && modes.plant){
+       if(currentMenuChoice && interactionModes.plant){
+            //make arrows invisible after first plant
+             if(screenItems.arrows){
+                screenItems.arrows.visible = false;
+             }
             dropFlower(event);
         }
     }
     
     myTool.onMouseDrag = function(event) { 
-        if(modes.plant && (mouseStates.droppedFlower || mouseStates.resizeOldFlower)){
+        if(interactionModes.plant && (appStates.droppedFlower || appStates.resizeOldFlower)){
             scaleFlower(event);
         }
     }
     myTool.onMouseMove = function(event){
-        if(modes.plant && mouseStates.cursorFlower){
+        if(interactionModes.plant && appStates.cursorFlower){
             moveCursorFlower(event);
+        }
+    }
+    
+    myTool.onKeyDown = function(event) {
+        if (event.key == 'p') {
+            printHitTest = true;            
+        }
+    }
+
+    myTool.onKeyUp = function(event) {
+        if (event.key == 'p') {
+            printHitTest = false;            
         }
     }
 
     paper.view.onFrame = globalOnFrame;
 }
-
+window.printHitTest = false;
 function globalOnFrame(frameEvent) {
     let dTime = frameEvent.delta;
     
@@ -102,6 +103,34 @@ function globalOnFrame(frameEvent) {
             }
         }
     }
+}
+
+function hitTestFlowers(eventPoint) {
+    for(let flowerId in canvasFlowers) {
+        let flower = canvasFlowers[flowerId]
+        if(flower.isPresentAt(eventPoint)) {
+            return flower;
+        }
+    }
+    return undefined;
+}
+
+function setupPlants() {
+    for (let plant in plantDisplaySources) {
+        project.importSVG(plantDisplaySources[plant], 
+                          {insert: false, 
+                           onLoad: (loadedData) => plantSVGLoadSuccess(plant, loadedData),
+                           onError: plantSVGLoadFailure});
+    }
+}
+
+function plantSVGLoadSuccess(plant, loadedData) {
+    let plantRaster = loadedData.rasterize();
+    loadedPlantRasters[plant] = plantRaster;
+}
+
+function plantSVGLoadFailure(error) {
+    console.log(error);
 }
 
 
@@ -131,11 +160,11 @@ initializeGlobals = function(){
  * Stops resizing plant + resets droppedFlower
  */
 stopResize = function(){
-    if(mouseStates.resizeOldFlower){
-        mouseStates.resizeOldFlower = false;
+    if(appStates.resizeOldFlower){
+        appStates.resizeOldFlower = false;
     }
-    if(mouseStates.droppedFlower){
-        mouseStates.droppedFlower = false;
+    if(appStates.droppedFlower){
+        appStates.droppedFlower = false;
     }
 }
 
@@ -144,93 +173,53 @@ stopResize = function(){
  * @param {event} menuItemClicked - flower selected from menu
  */
 makeMenuChoice = function(menuItemClicked){
-    animateMenuChoice(this);
+    menuAnims.animateMenuChoice(this);
+    
     plantButtonClicked();
+    
     currentMenuChoice.src = this.firstChild.src;
     currentMenuChoice.name = this.firstChild.id;
-    mouseStates.droppedFlower = false;
-    mouseStates.cursorFlower = true;
-    //delete old cursor flower
-    if(cursorFlower){
-        cursorFlower.remove()
-    }
-    createCursorFlower();
+    
+    appStates.droppedFlower = false;
+    
+    appStates.cursorFlower = true;
+    resetCursorFlower();
 }
 
-
-/*
- * Animates the menu on click - increases image size and highlights it
- * @param {HTML element} choice - div that is the menu button chosen
- */
-animateMenuChoice = function(choice){
-    if(currentMenuChoice.src){
-    oldMenuChoice =  currentMenuChoice;
-
-    $(oldMenuChoice.firstChild).animate({
-        height: "95%",
-        width: "95%",
-        backgroundColor: colors.menuColor
-            }, 100
-        );
-    }
-
-    $(choice.firstChild).animate({
-        height: "100%",
-        width: "100%"
-        }, 100
-    );
-
-    $(choice).animate({
-        backgroundColor: colors.menuSelectColor
-        }, 100
-    );  
-}
-
-unHighlightMenuChoice = function(choice){
-    $(choice.firstChild).animate({
-        height: "95%",
-        width: "95%"
-        }, 100
-    );
-
-    $(choice).animate({
-        backgroundColor: colors.menuColor
-        }, 100
-    );  
-}
 
 /*
  * Resets states after plant button clicked
  */
 plantButtonClicked = function(){
-    modes.remove = false;
-    modes.orderLayers = false; 
-    modes.plant = true;
-    //delete old cursor flower
-    if(cursorFlower){
-        cursorFlower.remove()
-    }
-    createCursorFlower();
+    ($(buttons.plant)).addClass("active");
+    interactionModes.remove = false;
+    interactionModes.orderLayers = false; 
+    interactionModes.plant = true;
+    toggleButton(buttons.remove);
+    resetCursorFlower();
 }
 
 /*
  * Resets states after remove button clicked
  */
 removeButtonClicked = function(){
-    modes.plant = false;
-    modes.orderLayers = false;
-    modes.remove = true;  
-    mouseStates.cursorFlower = false;
+    interactionModes.plant = false;
+    interactionModes.orderLayers = false;
+    interactionModes.remove = true;
+    toggleButton(buttons.plant);
+    appStates.cursorFlower = false;
+    screenItems.cursorFlower.remove();
 }
 
 /*
  * Resets states after send to back button clicked
  */
 sendToBackButtonClicked = function(){
-    modes.plant = false;
-    modes.remove = false;
-    modes.orderLayers = true; 
-    mouseStates.cursorFlower = false;
+    interactionModes.plant = false;
+    interactionModes.remove = false;
+    interactionModes.orderLayers = true; 
+    appStates.cursorFlower = false;
+    screenItems.cursorFlower.remove();
 }
 
 /*
@@ -248,23 +237,34 @@ trashButtonClicked = function(){
     if (trash) {
         deleteAllFlowers();
     }
+    $("#trashButton").button("toggle");
 }
 
+/*
+ * Toggles a button's active class
+ * @param{HTML button} button - the button to toggle
+ */
+
+toggleButton = function(button){
+    if($(button).hasClass("active")){
+        $(button).button("toggle");
+    }
+}
 
 /*
  * Determine whether to delete, send to back, or resize a plant that's been clicked on  * based on current mode
  * @param {event} clickEvent - event passed in from onMouseDown handler
  */
 interactWithPlant = function(plantClicked){
-    mouseStates.currentFlower = canvasFlowers[plantClicked.id];
-    mouseStates.flowerCenter = mouseStates.currentFlower.img.position;
+    appStates.currentFlower = canvasFlowers;
+    appStates.flowerCenter = appStates.currentFlower.img.position;
 
-    if(modes.remove){
+    if(interactionModes.remove){
         deleteFlower();
-    } /*else if(modes.orderLayers){
+    } /*else if(interactionModes.orderLayers){
        sendFlowerToBack();
     }*/ else {
-        mouseStates.resizeOldFlower = true;
+        appStates.resizeOldFlower = true;
     } 
 }
 
@@ -273,21 +273,22 @@ interactWithPlant = function(plantClicked){
  * Drop a plant on the screen
  * @param {event} clickEvent - click event passed from onMouseDown
  */
-dropFlower = function(clickEvent){
+function dropFlower(clickEvent) {
     if(project.view.bounds.contains(clickEvent)){
-        var newFlower = new Plant(
-            new Raster(currentMenuChoice.src).scale(resize.initFlowerSize), 
-            new Music(soundSources[currentMenuChoice.name],
-            Math.floor((clickEvent.point.y*8)/canvas.height))
-        )
-        
+        let flowerDisplay = new Raster(currentMenuChoice.src).scale(resize.initFlowerSize);
+        let flowerPitch = Math.floor((clickEvent.point.y*8)/canvas.height);
+        let flowerMusic = new Music(soundSources[currentMenuChoice.name], flowerPitch);
+
+        let newFlower = new Plant(flowerDisplay, flowerMusic);
         newFlower.playSound();
-        
-        mouseStates.currentFlower = newFlower;
-        mouseStates.droppedFlower = true;
-        mouseStates.currentFlower.img.position = clickEvent.point;
-        mouseStates.flowerCenter = mouseStates.currentFlower.img.position;
-        mouseStates.currentFlower.img.scale(1.5);
+        newFlower.setCollisionRaster(loadedPlantRasters[currentMenuChoice.name])
+        newFlower.setBoundsRatio(plantBoundsRatios[currentMenuChoice.name])
+
+        appStates.currentFlower = newFlower;
+        appStates.droppedFlower = true;
+        appStates.currentFlower.img.position = clickEvent.point;
+        appStates.flowerCenter = appStates.currentFlower.img.position;
+        appStates.currentFlower.img.scale(1.5);
         
         newFlower.music.sound.on('play', function() {
      
@@ -321,7 +322,7 @@ dropFlower = function(clickEvent){
             
         });
         
-        canvasFlowers[mouseStates.currentFlower.img.id] = newFlower;
+        canvasFlowers[appStates.currentFlower.img.id] = newFlower;
     } 
 }
 
@@ -330,9 +331,9 @@ dropFlower = function(clickEvent){
  * Delete a plant from screen and stop its associated sound
  */
 deleteFlower = function(){
-    canvasFlowers[mouseStates.currentFlower.img.id].stopSound();
-    delete canvasFlowers[mouseStates.currentFlower.img.id];
-    mouseStates.currentFlower.img.remove();
+    canvasFlowers[appStates.currentFlower.img.id].stopSound();
+    delete canvasFlowers[appStates.currentFlower.img.id];
+    appStates.currentFlower.img.remove();
 }
 
 /*
@@ -351,7 +352,7 @@ deleteAllFlowers = function(){
  * Send to back - not currently used
  */
 sendFlowerToBack = function(){
-    mouseStates.currentFlower.img.sendToBack();    
+    appStates.currentFlower.img.sendToBack();    
 }
 
 /*
@@ -359,12 +360,12 @@ sendFlowerToBack = function(){
  * decreasing
  * @param {event} clickEvent - event passed from onMouseDrag
  */
-scaleFlower = function(clickEvent){
+function scaleFlower (clickEvent) {
     //make sure old flowers don't jump to a smaller size if user drags in the middle of the
     if(clickEvent.count > 10){
         
         //math that creates a square around the center of the flower. Side length of the square is 2*sqrt(x distance of mouse to flower center^2 + y distance of mouse to  flower center^2)
-        var flowerCenter = mouseStates.flowerCenter
+        var flowerCenter = appStates.flowerCenter
         var mousePos = clickEvent.point;
         
         var xDist = Math.abs(flowerCenter.x - mousePos.x);
@@ -380,8 +381,8 @@ scaleFlower = function(clickEvent){
         var newUpperLeft = new Point(newULx, newULy);
         
         //make sure old flowers don't get super small if users drag inside of them
-        if(mouseStates.resizeOldFlower){
-            if(squareSideLength < mouseStates.currentFlower.img.bounds.width && clickEvent.count < 5){
+        if(appStates.resizeOldFlower){
+            if(squareSideLength < appStates.currentFlower.img.bounds.width && clickEvent.count < 5){
                 return;
             }
         }
@@ -389,14 +390,13 @@ scaleFlower = function(clickEvent){
         //make sure flower is not going to be larger than 1/2 view width or smaller than 1/20 view width. If so, resize to fit bounds
         if(squareSideLength < 0.5*project.view.bounds.width && squareSideLength > 0.05*project.view.bounds.width){
             //resize image
-            var rect = new Rectangle(newUpperLeft, new Size(squareSideLength, squareSideLength)); 
-            mouseStates.currentFlower.img.fitBounds(rect);
+            var rect = new Rectangle(newUpperLeft, new Size(squareSideLength * appStates.currentFlower.boundsRatio, 
+                                                            squareSideLength * appStates.currentFlower.boundsRatio)); 
+            appStates.currentFlower.img.fitBounds(rect);
             
             //handle loop length
-          //uncomment when our animations are working. 
-            //canvasFlowers[mouseStates.currentFlower.img.id].toggleSoundLength((squareDiagLength*5)/(canvas.width/2));
-
-          
+            //un-comment when our animations are working. 
+            //canvasFlowers[appStates.currentFlower.img.id].toggleSoundLength((squareDiagLength*5)/(canvas.width/2));          
         }
     }
     
@@ -407,7 +407,7 @@ scaleFlower = function(clickEvent){
  * @param {event} dragEvent - the mouse drag event passed from scaleFlower
  */
 distanceToFlowerCenter = function(dragEvent){
-    var flowerCenter = mouseStates.currentFlower.img.position;
+    var flowerCenter = appStates.currentFlower.img.position;
     var mousePos = dragEvent.point;
     var dist = pointDistance(mousePos, flowerCenter);
     return(dist);
@@ -426,9 +426,11 @@ startBackgroundSound = function(){
  * Create the "ghost" flower that tracks with the cursor
  */
 createCursorFlower = function(){
-    cursorFlower = new Raster(currentMenuChoice.src).scale(0.07)
-    cursorFlower.opacity = 0.4 
-    cursorFlower.visible = false;
+    screenItems.cursorFlower = new Raster(currentMenuChoice.src).scale(0.07)
+    screenItems.cursorFlower.opacity = 0.4 
+    screenItems.cursorFlower.visible = false;
+    
+    optionalArrows();
 }
 
 /*
@@ -439,12 +441,46 @@ createCursorFlower = function(){
 moveCursorFlower = function(event){
 //make it lag less on initial click
     if(event.point.x > 0  && event.point.y > 0){
-        cursorFlower.visible = true;
-        cursorFlower.position.x = event.point.x;
-        cursorFlower.position.y = event.point.y;
+        screenItems.cursorFlower.visible = true;
+        screenItems.cursorFlower.position.x = event.point.x;
+        screenItems.cursorFlower.position.y = event.point.y;
+        
+        makeArrowsVisible(event);
+        
     }
 }
 
+resetCursorFlower = function(){
+    if(screenItems.cursorFlower){
+        screenItems.cursorFlower.remove()
+    }
+    createCursorFlower();
+}
+
+/*
+ * Creates "guide arrows" for resize if there are no flowers on the screen - invisible on creation
+ */
+
+optionalArrows = function(){
+     if(Object.keys(canvasFlowers).length == 0){
+         screenItems.arrows = new Raster("www/img/PNG/arrows.PNG").scale(0.4)
+         screenItems.arrows.rotate(45);
+         screenItems.arrows.opacity = 0.4
+         screenItems.arrows.visible = false;
+     }
+}
+
+/*
+ * Makes arrows visible if they exist & there are no flowers on screen
+ * @param{mouseEvent} event - the mouse event to center the arrows at
+ */
+makeArrowsVisible = function(event){
+    if(screenItems.arrows && Object.keys(canvasFlowers).length == 0){
+             screenItems.arrows.visible = true;
+             screenItems.arrows.position.x = event.point.x;
+             screenItems.arrows.position.y = event.point.y; 
+    }
+}
 /*
  * Euclidean distance 
  */

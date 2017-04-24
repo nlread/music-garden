@@ -1,19 +1,19 @@
-/*This file contains the initial and state variables that are used in main.js - they exist here mostly to keep main.js to a usable length */
+paper.install(window); //make paper scope global by injecting it into window - from here http://blog.lindsayelia.com/post/128346565323/making-paperjs-work-in-an-external-file
+/* This file contains the initial and state variables that are used in main.js - they exist here mostly to keep main.js to a usable length */
 
 var resize = {
     initFlowerSize: 0.025
 }
 
-var mouseStates = {
+var appStates = {
     droppedFlower: false,
     currentFlower: null,
     resizeOldFlower: false,
     cursorFlower: false,
-    transparentFlowers: [],
-    prevItemHit: null
+    transparentFlowers: []
 };
 
-var modes = {
+var interactionModes = {
     plant: true,
     remove: false,
     orderLayers: false
@@ -27,11 +27,46 @@ var soundSources = {
     "succulent": {1:"www/mp3/mvpPlantSounds/plantD8.wav",2:"www/mp3/mvpPlantSounds/plantD7.wav",3:"www/mp3/mvpPlantSounds/plantD6.wav",4:"www/mp3/mvpPlantSounds/plantD5.wav",5:"www/mp3/mvpPlantSounds/plantD4.wav",6:"www/mp3/mvpPlantSounds/plantD3.wav",7:"www/mp3/mvpPlantSounds/plantD2.wav",8:"www/mp3/mvpPlantSounds/plantD1.wav"}
 };
 
+var plantDisplaySources = {
+    'green': 'www/img/greenflower.svg',
+    'jade': 'www/img/jadeflower.svg',
+    'red': 'www/img/redflower.svg',
+    'succulent': 'www/img/succulentflower.svg'
+}
+
+var plantDisplaySizes = {
+    'jade' : new Point(590, 868),
+    'red' : new Point(1000, 1000),
+    'succulent' :new Point(1000, 900),
+    'green': new Point(1000, 1040),
+}
+
+var plantBoundsRatios = {
+    'jade' : .18,
+    'red' : .175,
+    'succulent' : .2,
+    'green' : .175,
+}
+
+var plantDisplayOffsets = {
+    'jade' : new Point(50, 40),
+    'red' : new Point(500, 500), 
+    'succulent' : new Point(500, 450), 
+    'green': new Point(500, 520)
+}
+
+var loadedPlantRasters = {}
+
 var colors = {
     menuColor: "#81E5A9",
     menuSelectColor: "#90F0B3",
 };
 
+//namespace for things on screen that may or may not exist at a given time
+var screenItems = {
+    cursorFlower: null,
+    arrows: null
+}
 //Holds all the flower on the canvas at any time
 var canvasFlowers = {};
 
@@ -47,5 +82,3 @@ var currentMenuChoice = {
     name: "", //flower name - "pink", "blue", etc
 }
 
-var cursorFlower = null;
-var arrows = null;
