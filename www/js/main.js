@@ -48,7 +48,7 @@ window.onload = function(){
     myTool.onMouseDown = function(event){
         hitOptions = {
             match: function(result){
-                if(result.item == cursorFlower){
+                if(result.item == screenItems.cursorFlower){
                     return false;
                 }
                 if(result.item == arrows){
@@ -175,6 +175,7 @@ removeButtonClicked = function(){
     interactionModes.orderLayers = false;
     interactionModes.remove = true;  
     appStates.cursorFlower = false;
+    screenItems.cursorFlower.remove();
 }
 
 /*
@@ -185,6 +186,7 @@ sendToBackButtonClicked = function(){
     interactionModes.remove = false;
     interactionModes.orderLayers = true; 
     appStates.cursorFlower = false;
+    screenItems.cursorFlower.remove();
 }
 
 /*
@@ -380,9 +382,9 @@ startBackgroundSound = function(){
  * Create the "ghost" flower that tracks with the cursor
  */
 createCursorFlower = function(){
-    cursorFlower = new Raster(currentMenuChoice.src).scale(0.07)
-    cursorFlower.opacity = 0.4 
-    cursorFlower.visible = false;
+    screenItems.cursorFlower = new Raster(currentMenuChoice.src).scale(0.07)
+    screenItems.cursorFlower.opacity = 0.4 
+    screenItems.cursorFlower.visible = false;
 }
 
 /*
@@ -393,15 +395,15 @@ createCursorFlower = function(){
 moveCursorFlower = function(event){
 //make it lag less on initial click
     if(event.point.x > 0  && event.point.y > 0){
-        cursorFlower.visible = true;
-        cursorFlower.position.x = event.point.x;
-        cursorFlower.position.y = event.point.y;
+        screenItems.cursorFlower.visible = true;
+        screenItems.cursorFlower.position.x = event.point.x;
+        screenItems.cursorFlower.position.y = event.point.y;
     }
 }
 
 resetCursorFlower = function(){
-    if(cursorFlower){
-        cursorFlower.remove()
+    if(screenItems.cursorFlower){
+        screenItems.cursorFlower.remove()
     }
     createCursorFlower();
 }
