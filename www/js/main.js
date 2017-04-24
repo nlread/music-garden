@@ -64,13 +64,6 @@ window.onload = function() {
              }
             dropFlower(event);
         }
-        
-        
-     if(appStates.prevItemHit && hit != mouseStates.prevItemHit ){
-         mouseStates.prevItemHit.img.opacity = 1
-      }
-
-     appStates.prevItemHit = hit;
 }
     
     myTool.onMouseDrag = function(event) { 
@@ -90,17 +83,22 @@ window.onload = function() {
              var itemHit = hitTestFlowers(event.point);
              if(itemHit != screenItems.cursorFlower){
                  itemHit.img.opacity = 0.5;
-                 appStates.transparentFlower = itemHit;
+                 appStates.transparentFlowers.push(itemHit)
               }
           }
          
          //change it back once hit test no longer applies
-         else if(interactionModes.remove){
-             if(appStates.transparentFlower){
-                 appStates.transparentFlower.opacity = 1;
+         if(appStates.prevItemHit && itemHit != appStates.prevItemHit){
+             if(appStates.transparentFlowers){
+                 for(flower in appStates.transparentFlowers){
+                     appStates.transparentFlowers[flower].img.opacity = 1;
+                 }
             }
             
-    }
+        }
+        
+        appStates.prevItemHit = itemHit;
+        
     }
     
     myTool.onKeyDown = function(event) {
