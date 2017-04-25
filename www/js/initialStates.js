@@ -10,6 +10,7 @@ var appStates = {
     currentFlower: null,
     resizeOldFlower: false,
     cursorFlower: false,
+    prevItemHit: null,
     transparentFlowers: []
 };
 
@@ -25,8 +26,9 @@ var soundSources = {
     "red": {1:"www/mp3/mvpPlantSounds/plantB8.wav",2:"www/mp3/mvpPlantSounds/plantB7.wav",3:"www/mp3/mvpPlantSounds/plantB6.wav",4:"www/mp3/mvpPlantSounds/plantB5.wav",5:"www/mp3/mvpPlantSounds/plantB4.wav",6:"www/mp3/mvpPlantSounds/plantB3.wav",7:"www/mp3/mvpPlantSounds/plantB2.wav",8:"www/mp3/mvpPlantSounds/plantB1.wav"},
     "jade": {1:"www/mp3/mvpPlantSounds/plantC8.wav",2:"www/mp3/mvpPlantSounds/plantC7.wav",3:"www/mp3/mvpPlantSounds/plantC6.wav",4:"www/mp3/mvpPlantSounds/plantC5.wav",5:"www/mp3/mvpPlantSounds/plantC4.wav",6:"www/mp3/mvpPlantSounds/plantC3.wav",7:"www/mp3/mvpPlantSounds/plantC2.wav",8:"www/mp3/mvpPlantSounds/plantC1.wav"},
     "succulent": {1:"www/mp3/mvpPlantSounds/plantD8.wav",2:"www/mp3/mvpPlantSounds/plantD7.wav",3:"www/mp3/mvpPlantSounds/plantD6.wav",4:"www/mp3/mvpPlantSounds/plantD5.wav",5:"www/mp3/mvpPlantSounds/plantD4.wav",6:"www/mp3/mvpPlantSounds/plantD3.wav",7:"www/mp3/mvpPlantSounds/plantD2.wav",8:"www/mp3/mvpPlantSounds/plantD1.wav"},
-    "beet": {1:"www/mp3/mvpPlantSounds/plantE8.wav",2:"www/mp3/mvpPlantSounds/plantE7.wav",3:"www/mp3/mvpPlantSounds/plantE6.wav",4:"www/mp3/mvpPlantSounds/plantE5.wav",5:"www/mp3/mvpPlantSounds/plantE4.wav",6:"www/mp3/mvpPlantSounds/plantE3.wav",7:"www/mp3/mvpPlantSounds/plantE2.wav",8:"www/mp3/mvpPlantSounds/plantE1.wav"},
-    "sun": {1:"www/mp3/mvpPlantSounds/plantF8.wav",2:"www/mp3/mvpPlantSounds/plantF7.wav",3:"www/mp3/mvpPlantSounds/plantF6.wav",4:"www/mp3/mvpPlantSounds/plantF5.wav",5:"www/mp3/mvpPlantSounds/plantF4.wav",6:"www/mp3/mvpPlantSounds/plantF3.wav",7:"www/mp3/mvpPlantSounds/plantF2.wav",8:"www/mp3/mvpPlantSounds/plantF1.wav"}
+    "beet":  {1:"www/mp3/mvpPlantSounds/plantE8.wav",2:"www/mp3/mvpPlantSounds/plantE7.wav",3:"www/mp3/mvpPlantSounds/plantE6.wav",4:"www/mp3/mvpPlantSounds/plantE5.wav",5:"www/mp3/mvpPlantSounds/plantE4.wav",6:"www/mp3/mvpPlantSounds/plantE3.wav",7:"www/mp3/mvpPlantSounds/plantE2.wav",8:"www/mp3/mvpPlantSounds/plantE1.wav"},
+    "sunflower": {1:"www/mp3/mvpPlantSounds/plantF8.wav",2:"www/mp3/mvpPlantSounds/plantF7.wav",3:"www/mp3/mvpPlantSounds/plantF6.wav",4:"www/mp3/mvpPlantSounds/plantF5.wav",5:"www/mp3/mvpPlantSounds/plantF4.wav",6:"www/mp3/mvpPlantSounds/plantF3.wav",7:"www/mp3/mvpPlantSounds/plantF2.wav",8:"www/mp3/mvpPlantSounds/plantF1.wav"
+    }
 };
 
 var plantDisplaySources = {
@@ -43,9 +45,6 @@ var plantDisplaySizes = {
     'red' : new Point(1000, 1000),
     'succulent' :new Point(1000, 900),
     'green': new Point(1000, 1040),
-    
-    //'beet' :new Point(1000, 900),
-    //'sun': new Point(1000, 1040),
 }
 
 var plantBoundsRatios = {
@@ -53,9 +52,8 @@ var plantBoundsRatios = {
     'red' : .175,
     'succulent' : .2,
     'green' : .175,
-    
-    //'beet' : .175,
-    //'sun' : .175,
+    'beet' : .175,
+    'sunflower' : .175
 }
 
 var plantDisplayOffsets = {
@@ -63,9 +61,6 @@ var plantDisplayOffsets = {
     'red' : new Point(500, 500), 
     'succulent' : new Point(500, 450), 
     'green': new Point(500, 520),
-    
-    //'beet' : new Point(500, 450), 
-    //'sun': new Point(500, 520)
 }
 
 var loadedPlantRasters = {}

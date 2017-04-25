@@ -54,6 +54,7 @@ window.onload = function() {
 
         let hit = hitTestFlowers(event.point)
         if (hit) {
+            appStates.currentFlower = hit;
             interactWithPlant(hit);
             return;
         } 
@@ -64,7 +65,7 @@ window.onload = function() {
              }
             dropFlower(event);
         }
-    }
+}
     
     myTool.onMouseDrag = function(event) { 
         if(interactionModes.plant && (appStates.droppedFlower || appStates.resizeOldFlower)){
@@ -75,6 +76,30 @@ window.onload = function() {
         if(interactionModes.plant && appStates.cursorFlower){
             moveCursorFlower(event);
         }
+        
+        console.log(hitTestFlowers(event.point))
+        
+        //change opacity of flower that is moused over
+         if(interactionModes.remove && hitTestFlowers(event.point)){
+             var itemHit = hitTestFlowers(event.point);
+             if(itemHit != screenItems.cursorFlower){
+                 itemHit.img.opacity = 0.5;
+                 appStates.transparentFlowers.push(itemHit)
+              }
+          }
+         
+         //change it back once hit test no longer applies
+         if(appStates.prevItemHit && itemHit != appStates.prevItemHit){
+             if(appStates.transparentFlowers){
+                 for(flower in appStates.transparentFlowers){
+                     appStates.transparentFlowers[flower].img.opacity = 1;
+                 }
+            }
+            
+        }
+        
+        appStates.prevItemHit = itemHit;
+        
     }
     
     myTool.onKeyDown = function(event) {
@@ -183,7 +208,7 @@ makeMenuChoice = function(menuItemClicked){
     appStates.droppedFlower = false;
     
     appStates.cursorFlower = true;
-    resetCursorFlower();
+    resetCursorFlowerAndArrows();
 }
 
 
@@ -196,7 +221,7 @@ plantButtonClicked = function(){
     interactionModes.orderLayers = false; 
     interactionModes.plant = true;
     toggleButton(buttons.remove);
-    resetCursorFlower();
+    resetCursorFlowerAndArrows();
 }
 
 /*
@@ -256,7 +281,6 @@ toggleButton = function(button){
  * @param {event} clickEvent - event passed in from onMouseDown handler
  */
 interactWithPlant = function(plantClicked){
-    appStates.currentFlower = canvasFlowers;
     appStates.flowerCenter = appStates.currentFlower.img.position;
 
     if(interactionModes.remove){
@@ -423,9 +447,9 @@ startBackgroundSound = function(){
 }
 
 /*
- * Create the "ghost" flower that tracks with the cursor
+ * Create the "ghost" flower and arrows that tracks with the cursor
  */
-createCursorFlower = function(){
+createCursorFlowerAndArrows = function(){
     screenItems.cursorFlower = new Raster(currentMenuChoice.src).scale(0.07)
     screenItems.cursorFlower.opacity = 0.4 
     screenItems.cursorFlower.visible = false;
@@ -450,11 +474,16 @@ moveCursorFlower = function(event){
     }
 }
 
-resetCursorFlower = function(){
+resetCursorFlowerAndArrows = function(){
     if(screenItems.cursorFlower){
         screenItems.cursorFlower.remove()
     }
-    createCursorFlower();
+    
+    if(screenItems.arrows){
+        screenItems.arrows.remove()
+    }
+    
+    createCursorFlowerAndArrows();
 }
 
 /*
@@ -463,7 +492,7 @@ resetCursorFlower = function(){
 
 optionalArrows = function(){
      if(Object.keys(canvasFlowers).length == 0){
-         screenItems.arrows = new Raster("www/img/PNG/arrows.PNG").scale(0.4)
+         screenItems.arrows = new Raster("www/img/PNG/arrows.png").scale(0.4)
          screenItems.arrows.rotate(45);
          screenItems.arrows.opacity = 0.4
          screenItems.arrows.visible = false;
