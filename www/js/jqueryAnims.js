@@ -49,3 +49,7 @@ var menuAnims = {
     
 }
 
+var flowerAnims = {
+    
+}
+
