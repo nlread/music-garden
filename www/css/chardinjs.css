@@ -17,7 +17,7 @@
 
 /*p to dismiss the overlay added manually */
 .chardinjs-overlay .centerDismissButton {
-    font-size: 50px;
+    font-size: 5em;
     font-family: paperdaisy;
     color: white;
     margin-top: 5%;
@@ -25,7 +25,7 @@
 }
 
 .chardinjs-overlay .overlayPointer{
-    font-size: 30px;
+    font-size: 2em;
     width: 30%;
     margin-left: 45%;
     margin-top: 10%;
@@ -63,7 +63,7 @@
   max-width: 200px;
     /* Change font family and size to match app aesthetic */
     font-family: paperdaisy;
-    font-size: 30px;
+    font-size: 2em;
 }
   .chardinjs-tooltip.chardinjs-left {
     margin-left: -135px;
