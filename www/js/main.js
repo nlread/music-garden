@@ -77,8 +77,6 @@ window.onload = function() {
             moveCursorFlower(event);
         }
         
-        console.log(hitTestFlowers(event.point))
-        
         //change opacity of flower that is moused over
          if(interactionModes.remove && hitTestFlowers(event.point)){
              var itemHit = hitTestFlowers(event.point);
@@ -379,6 +377,10 @@ sendFlowerToBack = function(){
     appStates.currentFlower.img.sendToBack();    
 }
 
+
+//test variable
+var testRect = null;
+
 /*
  * Scale a flower based on whether mouse distance to flower center is increasing or 
  * decreasing
@@ -386,6 +388,12 @@ sendFlowerToBack = function(){
  */
 function scaleFlower (clickEvent) {
     //make sure old flowers don't jump to a smaller size if user drags in the middle of the
+    /*
+    if(testRect){
+        testRect.remove(); 
+    }
+    */
+    
     if(clickEvent.count > 10){
         
         //math that creates a square around the center of the flower. Side length of the square is 2*sqrt(x distance of mouse to flower center^2 + y distance of mouse to  flower center^2)
@@ -414,8 +422,14 @@ function scaleFlower (clickEvent) {
         //make sure flower is not going to be larger than 1/2 view width or smaller than 1/20 view width. If so, resize to fit bounds
         if(squareSideLength < 0.5*project.view.bounds.width && squareSideLength > 0.05*project.view.bounds.width){
             //resize image
-            var rect = new Rectangle(newUpperLeft, new Size(squareSideLength * appStates.currentFlower.boundsRatio, 
-                                                            squareSideLength * appStates.currentFlower.boundsRatio)); 
+            rect = new Rectangle(newUpperLeft, new Size(squareSideLength * appStates.currentFlower.boundsRatio, 
+            squareSideLength * appStates.currentFlower.boundsRatio)); 
+            
+            /*
+            testRect = new Path.Rectangle(rect)
+            testRect.fillColor = new Color("red");
+            */ 
+            
             appStates.currentFlower.img.fitBounds(rect);
             
             //handle loop length

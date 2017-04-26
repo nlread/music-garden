@@ -16,13 +16,19 @@
 }
 
 /*p to dismiss the overlay added manually */
-
-.chardinjs-overlay p {
+.chardinjs-overlay .centerDismissButton {
     font-size: 50px;
     font-family: paperdaisy;
     color: white;
-    margin-top: 30%;
+    margin-top: 5%;
     margin-left: 45%;
+}
+
+.chardinjs-overlay .overlayPointer{
+    font-size: 30px;
+    width: 30%;
+    margin-left: 45%;
+    margin-top: 10%;
 }
 
 .chardinjs-helper-layer {
@@ -55,6 +61,7 @@
   -o-transition: opacity 0.1s ease-out;
   transition: opacity 0.1s ease-out;
   max-width: 200px;
+    /* Change font family and size to match app aesthetic */
     font-family: paperdaisy;
     font-size: 30px;
 }
@@ -85,7 +92,7 @@
     height: 50px;
     left: 50%; }
   .chardinjs-tooltip.chardinjs-bottom:before {
-    top: -50px; }
+    top: -20px; }
   .chardinjs-tooltip.chardinjs-top:after {
     bottom: -50px; }
   .chardinjs-tooltip.chardinjs-right:before {
