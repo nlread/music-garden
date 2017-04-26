@@ -7,7 +7,13 @@
   -moz-transition: all 0.3s ease-out;
   -ms-transition: all 0.3s ease-out;
   -o-transition: all 0.3s ease-out;
-  transition: all 0.3s ease-out; }
+  transition: all 0.3s ease-out; 
+}
+
+/*Disable I-bar cursor */
+p:hover, .chardinjs-tooltip:hover{
+    cursor: default;
+}
 
 /*new font face for tooltips to match landing page */
 @font-face {
@@ -24,12 +30,14 @@
     margin-left: 45%;
 }
 
+/*Overlay text without the line for canvas explanation */
 .chardinjs-overlay .overlayPointer{
     font-size: 2em;
     width: 30%;
     margin-left: 45%;
     margin-top: 10%;
 }
+
 
 .chardinjs-helper-layer {
   position: absolute;
@@ -65,6 +73,7 @@
     font-family: paperdaisy;
     font-size: 2em;
 }
+
   .chardinjs-tooltip.chardinjs-left {
     margin-left: -135px;
     padding-right: 10px; }
