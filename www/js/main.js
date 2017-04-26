@@ -420,7 +420,7 @@ function scaleFlower (clickEvent) {
             
             //handle loop length
             //un-comment when our animations are working. 
-            //canvasFlowers[appStates.currentFlower.img.id].toggleSoundLength((squareDiagLength*5)/(canvas.width/2));          
+            canvasFlowers[appStates.currentFlower.img.id].toggleSoundLength((squareDiagLength*5)/(canvas.width/2));          
         }
     }
     

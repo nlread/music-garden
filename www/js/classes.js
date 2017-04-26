@@ -364,7 +364,7 @@ class Plant extends AnimatedComponent {
         //Need to restart the loop in order for the new length to be applied.
         this.toggleSoundLength = function(length){
             this.length = length + 1.5;
-            this.music.sound.soundLength(length);
+            this.music.sound.soundLength(this.length);
             this.music.sound.loop(false);
             this.music.sound.loop(true);
         };
