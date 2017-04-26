@@ -111,11 +111,10 @@
         $(dismiss).addClass("centerDismissButton")
         overlay_layer.appendChild(dismiss);
           
-          
         /*End adding new elements */
         
         
-        //Disable pointer events during overlay [ADDED]
+        /*Disable pointer events during overlay [ADDED]*/
         document.getElementById("menu").style.pointerEvents = "none";
         document.getElementById("bottomToolbarRow").style.pointerEvents = "none";
         
@@ -133,7 +132,7 @@
         this.$el.get()[0].appendChild(overlay_layer);
         overlay_layer.onclick = function() {
 
-            //reenable pointer events after overlay (first two lines) and trigger clicks immediately after overlay removal for proper highlighting behavior (next 5 lines) [ADDED]
+            /*reenable pointer events after overlay (first two lines) and trigger clicks immediately after overlay removal for proper highlighting behavior (next 5 lines) [ADDED] */
             document.getElementById("menu").style.pointerEvents = "auto";
             document.getElementById("bottomToolbarRow").style.pointerEvents = "auto";
             //manually trigger click on first menu item to auto-select it
