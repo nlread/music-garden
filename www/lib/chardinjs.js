@@ -102,7 +102,7 @@
         overlay_layer.appendChild(canvasExplain);
           
         var dismiss = document.createElement("p");
-        var dismisstext = document.createTextNode("Click here to dismiss");
+        var dismisstext = document.createTextNode("Click to dismiss");
         dismiss.appendChild(dismisstext);
         dismiss.style.backgroundColor = "#81E5A9";
         dismiss.style.padding = "10px";
