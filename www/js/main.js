@@ -345,6 +345,7 @@ function dropFlower(clickEvent) {
         });
         
         canvasFlowers[appStates.currentFlower.img.id] = newFlower;
+        resetCursorFlowerAndArrows();
     } 
 }
 
@@ -505,7 +506,7 @@ resetCursorFlowerAndArrows = function(){
  */
 
 optionalArrows = function(){
-     if(Object.keys(canvasFlowers).length == 0){
+     if(Object.keys(canvasFlowers).length < 4){
          screenItems.arrows = new Raster("www/img/PNG/arrows.png").scale(0.4)
          screenItems.arrows.rotate(45);
          screenItems.arrows.opacity = 0.4
@@ -518,7 +519,7 @@ optionalArrows = function(){
  * @param{mouseEvent} event - the mouse event to center the arrows at
  */
 makeArrowsVisible = function(event){
-    if(screenItems.arrows && Object.keys(canvasFlowers).length == 0){
+    if(screenItems.arrows && Object.keys(canvasFlowers).length < 4){
              screenItems.arrows.visible = true;
              screenItems.arrows.position.x = event.point.x;
              screenItems.arrows.position.y = event.point.y; 
