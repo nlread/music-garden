@@ -23,7 +23,11 @@ body {
 
 #invisibleRow{
     height: 0; /*this row is just for the overlay */
+    width: 20%;
+    position: absolute;
+    margin-left: 40%; 
 }
+
 #menuAndCanvasRow{
     height: 92%;
 }
