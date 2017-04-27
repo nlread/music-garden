@@ -84,19 +84,37 @@
         if (this._overlay_visible()) {
           return false;
         }
+          
+     
         overlay_layer = document.createElement("div");
         styleText = "";
         overlay_layer.className = "chardinjs-overlay";
+          
+        /* Added elements to overlay specific to this project because the canvas is weird [ADDED] */
+          
+        var canvasExplain = document.createElement("p");
+        var CEtext = document.createTextNode("Click in this area to plant flowers or click and drag to make them bigger");
+        canvasExplain.appendChild(CEtext);
+        canvasExplain.style.fontFamily = "paperdaisy";
+        canvasExplain.style.color = "white"
+        canvasExplain.style.display = "inline-block";
+        $(canvasExplain).addClass("overlayPointer");
+        overlay_layer.appendChild(canvasExplain);
+          
         var dismiss = document.createElement("p");
-        var dismisstext = document.createTextNode("Click here to dismiss");
+        var dismisstext = document.createTextNode("Click to dismiss");
         dismiss.appendChild(dismisstext);
         dismiss.style.backgroundColor = "#81E5A9";
         dismiss.style.padding = "10px";
         dismiss.style.borderRadius = "3px";
         dismiss.style.display = "inline-block";
+        $(dismiss).addClass("centerDismissButton")
         overlay_layer.appendChild(dismiss);
+          
+        /*End adding new elements */
         
-        //Disable pointer events
+        
+        /*Disable pointer events during overlay [ADDED]*/
         document.getElementById("menu").style.pointerEvents = "none";
         document.getElementById("bottomToolbarRow").style.pointerEvents = "none";
         
@@ -114,14 +132,14 @@
         this.$el.get()[0].appendChild(overlay_layer);
         overlay_layer.onclick = function() {
 
-            //NOTE: this code added to reenable pointer events after overlay (first two lines) and to trigger clicks immediately after overlay removal for proper highlighting behavior (next 5 lines)
+            /*reenable pointer events after overlay (first two lines) and trigger clicks immediately after overlay removal for proper highlighting behavior (next 5 lines) [ADDED] */
             document.getElementById("menu").style.pointerEvents = "auto";
             document.getElementById("bottomToolbarRow").style.pointerEvents = "auto";
             //manually trigger click on first menu item to auto-select it
             $(document.getElementById("choice1")).click();
             $(document.getElementById("choice1")).trigger("mouseleave");
             //manually trigger toggle on plant button to highlight it
-            $("#plantButton").button("toggle");
+            $("#plantButton").addClass("active");
         
           return _this.stop();
         };

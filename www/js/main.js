@@ -73,11 +73,9 @@ window.onload = function() {
         }
     }
     myTool.onMouseMove = function(event){
-        if(interactionModes.plant && appStates.cursorFlower){
+        if(interactionModes.plant && screenItems.cursorFlower){
             moveCursorFlower(event);
         }
-        
-        console.log(hitTestFlowers(event.point))
         
         //change opacity of flower that is moused over
          if(interactionModes.remove && hitTestFlowers(event.point)){
@@ -216,12 +214,11 @@ makeMenuChoice = function(menuItemClicked){
  * Resets states after plant button clicked
  */
 plantButtonClicked = function(){
-    ($(buttons.plant)).addClass("active");
     interactionModes.remove = false;
     interactionModes.orderLayers = false; 
     interactionModes.plant = true;
-    toggleButton(buttons.remove);
     resetCursorFlowerAndArrows();
+    toggleButton(buttons.remove);
 }
 
 /*
@@ -347,6 +344,7 @@ function dropFlower(clickEvent) {
         });
         
         canvasFlowers[appStates.currentFlower.img.id] = newFlower;
+        resetCursorFlowerAndArrows();
     } 
 }
 
@@ -379,6 +377,10 @@ sendFlowerToBack = function(){
     appStates.currentFlower.img.sendToBack();    
 }
 
+
+//test variable
+var testRect = null;
+
 /*
  * Scale a flower based on whether mouse distance to flower center is increasing or 
  * decreasing
@@ -386,6 +388,12 @@ sendFlowerToBack = function(){
  */
 function scaleFlower (clickEvent) {
     //make sure old flowers don't jump to a smaller size if user drags in the middle of the
+    /*
+    if(testRect){
+        testRect.remove(); 
+    }
+    */
+    
     if(clickEvent.count > 10){
         
         //math that creates a square around the center of the flower. Side length of the square is 2*sqrt(x distance of mouse to flower center^2 + y distance of mouse to  flower center^2)
@@ -414,13 +422,20 @@ function scaleFlower (clickEvent) {
         //make sure flower is not going to be larger than 1/2 view width or smaller than 1/20 view width. If so, resize to fit bounds
         if(squareSideLength < 0.5*project.view.bounds.width && squareSideLength > 0.05*project.view.bounds.width){
             //resize image
-            var rect = new Rectangle(newUpperLeft, new Size(squareSideLength * appStates.currentFlower.boundsRatio, 
-                                                            squareSideLength * appStates.currentFlower.boundsRatio)); 
+            rect = new Rectangle(newUpperLeft, new Size(squareSideLength * appStates.currentFlower.boundsRatio, 
+            squareSideLength * appStates.currentFlower.boundsRatio)); 
+            
+            /*
+            testRect = new Path.Rectangle(rect)
+            testRect.fillColor = new Color("red");
+            */ 
+            
             appStates.currentFlower.img.fitBounds(rect);
             
             //handle loop length
             //un-comment when our animations are working. 
-            //canvasFlowers[appStates.currentFlower.img.id].toggleSoundLength((squareDiagLength*5)/(canvas.width/2));          
+          console.log(Math.floor((squareDiagLength*4)/(canvas.width/2)));
+            canvasFlowers[appStates.currentFlower.img.id].toggleSoundLength(Math.floor((squareDiagLength*4)/(canvas.width/2)));          
         }
     }
     
@@ -491,7 +506,7 @@ resetCursorFlowerAndArrows = function(){
  */
 
 optionalArrows = function(){
-     if(Object.keys(canvasFlowers).length == 0){
+     if(Object.keys(canvasFlowers).length < 4){
          screenItems.arrows = new Raster("www/img/PNG/arrows.png").scale(0.4)
          screenItems.arrows.rotate(45);
          screenItems.arrows.opacity = 0.4
@@ -504,7 +519,7 @@ optionalArrows = function(){
  * @param{mouseEvent} event - the mouse event to center the arrows at
  */
 makeArrowsVisible = function(event){
-    if(screenItems.arrows && Object.keys(canvasFlowers).length == 0){
+    if(screenItems.arrows && Object.keys(canvasFlowers).length < 4){
              screenItems.arrows.visible = true;
              screenItems.arrows.position.x = event.point.x;
              screenItems.arrows.position.y = event.point.y; 
