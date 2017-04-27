@@ -73,7 +73,7 @@ window.onload = function() {
         }
     }
     myTool.onMouseMove = function(event){
-        if(interactionModes.plant && appStates.cursorFlower){
+        if(interactionModes.plant && screenItems.cursorFlower){
             moveCursorFlower(event);
         }
         
@@ -214,12 +214,11 @@ makeMenuChoice = function(menuItemClicked){
  * Resets states after plant button clicked
  */
 plantButtonClicked = function(){
-    ($(buttons.plant)).addClass("active");
     interactionModes.remove = false;
     interactionModes.orderLayers = false; 
     interactionModes.plant = true;
-    toggleButton(buttons.remove);
     resetCursorFlowerAndArrows();
+    toggleButton(buttons.remove);
 }
 
 /*
