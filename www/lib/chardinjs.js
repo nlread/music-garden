@@ -102,7 +102,7 @@
         overlay_layer.appendChild(canvasExplain);
           
         var dismiss = document.createElement("p");
-        var dismisstext = document.createTextNode("Click here to dismiss");
+        var dismisstext = document.createTextNode("Click to dismiss");
         dismiss.appendChild(dismisstext);
         dismiss.style.backgroundColor = "#81E5A9";
         dismiss.style.padding = "10px";
@@ -111,11 +111,10 @@
         $(dismiss).addClass("centerDismissButton")
         overlay_layer.appendChild(dismiss);
           
-          
         /*End adding new elements */
         
         
-        //Disable pointer events during overlay [ADDED]
+        /*Disable pointer events during overlay [ADDED]*/
         document.getElementById("menu").style.pointerEvents = "none";
         document.getElementById("bottomToolbarRow").style.pointerEvents = "none";
         
@@ -133,7 +132,7 @@
         this.$el.get()[0].appendChild(overlay_layer);
         overlay_layer.onclick = function() {
 
-            //reenable pointer events after overlay (first two lines) and trigger clicks immediately after overlay removal for proper highlighting behavior (next 5 lines) [ADDED]
+            /*reenable pointer events after overlay (first two lines) and trigger clicks immediately after overlay removal for proper highlighting behavior (next 5 lines) [ADDED] */
             document.getElementById("menu").style.pointerEvents = "auto";
             document.getElementById("bottomToolbarRow").style.pointerEvents = "auto";
             //manually trigger click on first menu item to auto-select it

@@ -7,29 +7,37 @@
   -moz-transition: all 0.3s ease-out;
   -ms-transition: all 0.3s ease-out;
   -o-transition: all 0.3s ease-out;
-  transition: all 0.3s ease-out; }
+  transition: all 0.3s ease-out; 
+}
 
-/*new font face for tooltips to match landing page */
+/*Disable I-bar cursor [ADDED]*/
+p:hover, .chardinjs-tooltip:hover{
+    cursor: default;
+}
+
+/*new font face for tooltips to match landing page [ADDED] */
 @font-face {
     font-family: paperdaisy;
     src: url(../font/paperdaisy-demo.ttf);
 }
 
-/*p to dismiss the overlay added manually */
+/*p to dismiss the overlay added manually [ADDED]*/
 .chardinjs-overlay .centerDismissButton {
-    font-size: 50px;
+    font-size: 5em;
     font-family: paperdaisy;
     color: white;
     margin-top: 5%;
     margin-left: 45%;
 }
 
+/*Overlay text without the line for canvas explanation [ADDED]*/
 .chardinjs-overlay .overlayPointer{
-    font-size: 30px;
+    font-size: 2em;
     width: 30%;
     margin-left: 45%;
     margin-top: 10%;
 }
+
 
 .chardinjs-helper-layer {
   position: absolute;
@@ -41,7 +49,7 @@
   -o-transition: all 0.3s ease-out;
   transition: all 0.3s ease-out; }
   .chardinjs-helper-layer.chardinjs-left {
-    /*border-left: solid white 1px;*/
+    /*border-left: solid white 1px; [ADDED] (all four of the side borders removed)*/
     margin-left: -10px; }
   .chardinjs-helper-layer.chardinjs-right {
     /*border-right: solid white 1px;*/
@@ -61,10 +69,11 @@
   -o-transition: opacity 0.1s ease-out;
   transition: opacity 0.1s ease-out;
   max-width: 200px;
-    /* Change font family and size to match app aesthetic */
+    /* Change font family and size to match app aesthetic [ADDED]*/
     font-family: paperdaisy;
-    font-size: 30px;
+    font-size: 2em;
 }
+
   .chardinjs-tooltip.chardinjs-left {
     margin-left: -135px;
     padding-right: 10px; }
