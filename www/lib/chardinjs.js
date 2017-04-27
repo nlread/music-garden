@@ -139,7 +139,7 @@
             $(document.getElementById("choice1")).click();
             $(document.getElementById("choice1")).trigger("mouseleave");
             //manually trigger toggle on plant button to highlight it
-            $("#plantButton").button("toggle");
+            $("#plantButton").addClass("active");
         
           return _this.stop();
         };
