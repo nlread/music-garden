@@ -269,7 +269,6 @@ trashButtonClicked = function(){
 
 toggleButton = function(button){
     if($(button).hasClass("active")){
-        console.log("button toggle");
         $(button).button("toggle");
     }
 }
