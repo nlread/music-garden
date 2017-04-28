@@ -672,10 +672,13 @@
       if (self._webAudio) {
         Howler._autoResume();
       }
+        
+      //The space of the sound to loop over.
+      sound._space = 2;//[ADDED]
 
       // Determine how long to play for and where to start playing.
       var seek = Math.max(0, sound._seek > 0 ? sound._seek : self._sprite[sprite][0] / 1000);
-      var duration = Math.max(0, ((self._sprite[sprite][0] + self._sprite[sprite][1]) / 1000) - seek);
+      var duration = Math.max(0, ((self._sprite[sprite][0]) / 1000) + sound._space - seek);
       var timeout = (duration * 1000) / Math.abs(sound._rate);
 
       // Update the parameters of the sound
@@ -685,8 +688,7 @@
       sound._seek = seek;
       sound._start = self._sprite[sprite][0] / 1000;
       //A space added to the loop in order to add sound length
-      sound._space = 0; //[ADDED]
-      sound._stop = (self._sprite[sprite][0]/ 1000) +1.5 + sound._space;
+      sound._stop = (self._sprite[sprite][0]/ 1000) + sound._space;
       sound._loop = !!(sound._loop || self._sprite[sprite][2]);
 
       // Begin the actual playback.
