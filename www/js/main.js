@@ -42,6 +42,10 @@ window.onload = function() {
         
     myTool.onMouseUp = function(event) {
         stopResize();
+        //ghost flower comes back after resize
+        if(screenItems.cursorFlower){
+            screenItems.cursorFlower.visible = true;
+        }
     };
 
     myTool.onMouseDown = function(event) {
@@ -59,12 +63,16 @@ window.onload = function() {
             return;
         } 
        if(currentMenuChoice && interactionModes.plant){
-            //make arrows invisible after first plant
-             if(screenItems.arrows){
-                screenItems.arrows.visible = false;
-             }
+
             dropFlower(event);
         }
+        
+        //don't show ghost flower during resize
+        if(screenItems.cursorFlower){
+            screenItems.cursorFlower.visible = false;
+        }
+        
+        console.log(screenItems.cursorFlower.visible)
 }
     
     myTool.onMouseDrag = function(event) { 
