@@ -269,7 +269,7 @@ toggleButton = function(button){
  * Determine whether to delete, send to back, or resize a plant that's been clicked on  * based on current mode
  * @param {event} clickEvent - event passed in from onMouseDown handler
  */
-interactWithPlant = function(plantClicked){
+function interactWithPlant(plantClicked) {
     appStates.flowerCenter = appStates.currentFlower.img.position;
 
     if(interactionModes.remove){
@@ -499,7 +499,7 @@ function scaleFlower (clickEvent) {
 
             //handle loop length
             //un-comment when our animations are working
-            flowerSprite.toggleSoundLength(Math.floor((squareDiagLength*4)/(canvas.width/2)));  
+            flowerSprite.toggleSoundLength(Math.floor((squareDiagLength * 4) / (canvas.width / 2)));  
             //flowerSprite.stopAnimate();
             //console.log(flowerSprite);
 //            flowerSprite.music.sound.on('play', flowerSprite.stopAnimate());
@@ -529,7 +529,7 @@ distanceToFlowerCenter = function(dragEvent){
     var flowerCenter = appStates.currentFlower.img.position;
     var mousePos = dragEvent.point;
     var dist = pointDistance(mousePos, flowerCenter);
-    return(dist);
+    return dist;
 }
 
 /*
