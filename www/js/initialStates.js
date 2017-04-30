@@ -31,13 +31,88 @@ var soundSources = {
     }
 };
 
+var plantAnimations = {
+    'green': function() {
+     
+            
+//            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
+            appStates.currentFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
+            appStates.currentFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
+            
+//            Animation 2: Does a little spin thing. Kinda fun. 
+//            newFlower.animate(new RotatingAnimation(-15,0.1,0));
+//            newFlower.animate(new RotatingAnimation(30,0.1,0.1));
+//            newFlower.animate(new RotatingAnimation(-15,0.1,0.2));
+        },
+    'jade': function() {
+     
+            
+//            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
+            appStates.currentFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
+            appStates.currentFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
+            
+//            Animation 2: Does a little spin thing. Kinda fun. 
+//            newFlower.animate(new RotatingAnimation(-15,0.1,0));
+//            newFlower.animate(new RotatingAnimation(30,0.1,0.1));
+//            newFlower.animate(new RotatingAnimation(-15,0.1,0.2));
+        },
+    'red': function() {
+     
+            
+//            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
+            appStates.currentFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
+            appStates.currentFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
+            
+//            Animation 2: Does a little spin thing. Kinda fun. 
+//            newFlower.animate(new RotatingAnimation(-15,0.1,0));
+//            newFlower.animate(new RotatingAnimation(30,0.1,0.1));
+//            newFlower.animate(new RotatingAnimation(-15,0.1,0.2));
+        },
+    'succulent': function() {
+     
+            
+//            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
+            appStates.currentFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
+            appStates.currentFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
+            
+//            Animation 2: Does a little spin thing. Kinda fun. 
+//            newFlower.animate(new RotatingAnimation(-15,0.1,0));
+//            newFlower.animate(new RotatingAnimation(30,0.1,0.1));
+//            newFlower.animate(new RotatingAnimation(-15,0.1,0.2));
+        },
+    'beet': function() {
+     
+            
+//            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
+            appStates.currentFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
+            appStates.currentFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
+            
+//            Animation 2: Does a little spin thing. Kinda fun. 
+//            newFlower.animate(new RotatingAnimation(-15,0.1,0));
+//            newFlower.animate(new RotatingAnimation(30,0.1,0.1));
+//            newFlower.animate(new RotatingAnimation(-15,0.1,0.2));
+        },
+    'sunflower': function() {
+     
+            
+//            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
+            appStates.currentFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
+            appStates.currentFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
+            
+//            Animation 2: Does a little spin thing. Kinda fun. 
+//            newFlower.animate(new RotatingAnimation(-15,0.1,0));
+//            newFlower.animate(new RotatingAnimation(30,0.1,0.1));
+//            newFlower.animate(new RotatingAnimation(-15,0.1,0.2));
+        }
+}
+
 var plantDisplaySources = {
     'green': 'www/img/greenflower.svg',
     'jade': 'www/img/jadeflower.svg',
     'red': 'www/img/redflower.svg',
     'succulent': 'www/img/succulentflower.svg',
     'beet': 'www/img/beet.svg',
-    'sun': 'www/img/sunflower.svg'
+    'sunflower': 'www/img/sunflower.svg'
 }
 
 var plantDisplaySizes = {

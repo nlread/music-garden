@@ -598,7 +598,7 @@
      * @param  {Boolean} internal Internal Use: true prevents event firing.
      * @return {Number}          Sound ID.
      */
-    play: function(sprite, internal) {
+    play: function(space, sprite, internal) {
       var self = this;
       var id = null;
 
@@ -649,7 +649,7 @@
         self._queue.push({
           event: 'play',
           action: function() {
-            self.play(self._soundById(sound._id) ? sound._id : undefined);
+            self.play(space,self._soundById(sound._id) ? sound._id : undefined);
           }
         });
 
@@ -674,7 +674,7 @@
       }
         
       //The space of the sound to loop over.
-      sound._space = 2;//[ADDED]
+      sound._space = space || 2;//[ADDED]
 
       // Determine how long to play for and where to start playing.
       var seek = Math.max(0, sound._seek > 0 ? sound._seek : self._sprite[sprite][0] / 1000);

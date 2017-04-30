@@ -115,9 +115,9 @@ window.onload = function() {
     paper.view.onFrame = globalOnFrame;
 }
 window.printHitTest = false;
+
 function globalOnFrame(frameEvent) {
     let dTime = frameEvent.delta;
-    
     for(let key in canvasFlowers){
         if (canvasFlowers.hasOwnProperty(key)) {
             let flower = canvasFlowers[key];
@@ -311,37 +311,39 @@ function dropFlower(clickEvent) {
         appStates.flowerCenter = appStates.currentFlower.img.position;
         appStates.currentFlower.img.scale(1.5);
         
-        newFlower.music.sound.on('play', function() {
-     
-            
-//            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
-            newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
-            newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
-            
-//            Animation 2: Does a little spin thing. Kinda fun. 
-//            newFlower.animate(new RotatingAnimation(-15,0.1,0));
-//            newFlower.animate(new RotatingAnimation(30,0.1,0.1));
-//            newFlower.animate(new RotatingAnimation(-15,0.1,0.2));
-        });
-        
-        newFlower.music.sound.on('play', function() {
-       
+        console.log('--------->onPlay');
+        newFlower.music.sound.on('play', plantAnimations[currentMenuChoice.name]);
+//        newFlower.music.sound.on('play', function() {
+//     
+//            console.log('--------->onPlay');
+////            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
+//            newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
+//            newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
 //            
-//        //Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
-            //test flower
-          // newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.2,-1));
-           //newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1.1,0.1));
-            //Red flower
-      //     newFlower.animate(new ScalingAnimation(new Point(1/1.3,1.3),0.8,0));
-      //     newFlower.animate(new ScalingAnimation(new Point(1.3,1/1.3),1.2,0));
-            
-//            Animation 2: Does a little spin thing. Kinda fun. 
-         //   newFlower.animate(new RotatingAnimation(-30,0.1,0));
-         //   newFlower.animate(new RotatingAnimation(15,0.1,0.1));
-         //   newFlower.animate(new RotatingAnimation(-5,0.1,0.2));
-         //   newFlower.animate(new RotatingAnimation(5,0.1,0.3));
-            
-        });
+////            Animation 2: Does a little spin thing. Kinda fun. 
+////            newFlower.animate(new RotatingAnimation(-15,0.1,0));
+////            newFlower.animate(new RotatingAnimation(30,0.1,0.1));
+////            newFlower.animate(new RotatingAnimation(-15,0.1,0.2));
+//        });
+        
+//        newFlower.music.sound.on('play', function() {
+//       
+////            
+////        //Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
+//            //test flower
+//          // newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.2,-1));
+//           //newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1.1,0.1));
+//            //Red flower
+//      //     newFlower.animate(new ScalingAnimation(new Point(1/1.3,1.3),0.8,0));
+//      //     newFlower.animate(new ScalingAnimation(new Point(1.3,1/1.3),1.2,0));
+//            
+////            Animation 2: Does a little spin thing. Kinda fun. 
+//         //   newFlower.animate(new RotatingAnimation(-30,0.1,0));
+//         //   newFlower.animate(new RotatingAnimation(15,0.1,0.1));
+//         //   newFlower.animate(new RotatingAnimation(-5,0.1,0.2));
+//         //   newFlower.animate(new RotatingAnimation(5,0.1,0.3));
+//            
+//        });
         
         canvasFlowers[appStates.currentFlower.img.id] = newFlower;
         resetCursorFlowerAndArrows();
@@ -432,10 +434,27 @@ function scaleFlower (clickEvent) {
             
             appStates.currentFlower.img.fitBounds(rect);
             
+            flowerSprite = canvasFlowers[appStates.currentFlower.img.id]
+
             //handle loop length
-            //un-comment when our animations are working. 
-          console.log(Math.floor((squareDiagLength*4)/(canvas.width/2)));
-            canvasFlowers[appStates.currentFlower.img.id].toggleSoundLength(Math.floor((squareDiagLength*4)/(canvas.width/2)));          
+            //un-comment when our animations are working
+            flowerSprite.toggleSoundLength(Math.floor((squareDiagLength*4)/(canvas.width/2)));  
+            //flowerSprite.stopAnimate();
+            //console.log(flowerSprite);
+//            flowerSprite.music.sound.on('play', flowerSprite.stopAnimate());
+            
+//           flowerSprite.music.sound.on('play', function() {
+//     
+//            
+////            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
+//            flowerSprite.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
+//            flowerSprite.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
+//            
+////            Animation 2: Does a little spin thing. Kinda fun. 
+////            newFlower.animate(new RotatingAnimation(-15,0.1,0));
+////            newFlower.animate(new RotatingAnimation(30,0.1,0.1));
+////            newFlower.animate(new RotatingAnimation(-15,0.1,0.2));
+//        });
         }
     }
     
