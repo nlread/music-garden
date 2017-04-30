@@ -279,6 +279,7 @@ interactWithPlant = function(plantClicked){
        sendFlowerToBack();
     }*/ else {
         appStates.resizeOldFlower = true;
+        appStates.currentFlower.stopSound();
     } 
 }
 
