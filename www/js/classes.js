@@ -262,27 +262,26 @@ class Plant extends AnimatedComponent {
         this.music = music;
         this.intervalID;
         this.sLength = 2;
-        
-        //plays the music of the plant, setting it to loop and the volume at 0.5
-        this.playSound = function(){
-            this.music.sound.play(2);
-            this.music.sound.loop(true);
-        };
-        
-        this.stopSound = function(){
-            this.music.sound.stop();
-        };
-        
-        //Changes the length that howler.js should loop which makes the sound longer or shorter
-        //Give it a length between 0-5
-        //Need to restart the loop in order for the new length to be applied.
-        this.toggleSoundLength = function(sLength){
-            this.sLength = sLength + 2;
-            this.music.sound.stop();
-            this.music.sound.play(this.sLength);
-            this.music.sound.loop(true);
-        };
-        
+    };
+
+    //plays the music of the plant, setting it to loop and the volume at 0.5
+    playSound() {
+        this.music.sound.play(2);
+        this.music.sound.loop(true);
+    };
+    
+    stopSound() {
+        this.music.sound.stop();
+    };
+
+    //Changes the length that howler.js should loop which makes the sound longer or shorter
+    //Give it a length between 0-5
+    //Need to restart the loop in order for the new length to be applied.
+    toggleSoundLength(sLength) {
+        this.sLength = sLength + 2;
+        this.music.sound.stop();
+        this.music.sound.play(this.sLength);
+        this.music.sound.loop(true);
     };
 }
 

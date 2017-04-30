@@ -174,13 +174,14 @@ initializeGlobals = function(){
 /*
  * Stops resizing plant + resets droppedFlower
  */
-stopResize = function(){
-    if(appStates.resizeOldFlower){
+function stopResize() {
+    if (appStates.resizeOldFlower) {
         appStates.resizeOldFlower = false;
     }
-    if(appStates.droppedFlower){
+    if (appStates.droppedFlower) {
         appStates.droppedFlower = false;
     }
+    resizeFinish();
 }
 
 /*
@@ -294,7 +295,7 @@ function dropFlower(clickEvent) {
 
         let newFlower = new Plant(flowerImg, flowerMusic);
         flowersGroup.addChild(flowerImg);
-        newFlower.playSound();
+        // newFlower.playSound();
 
         appStates.currentFlower = newFlower;
         appStates.droppedFlower = true;
@@ -450,7 +451,7 @@ var testRect = null;
  * decreasing
  * @param {event} clickEvent - event passed from onMouseDrag
  */
-function scaleFlower (clickEvent) {
+function scaleFlower(clickEvent) {
     //make sure old flowers don't jump to a smaller size if user drags in the middle of the
     /*
     if(testRect){
@@ -477,14 +478,14 @@ function scaleFlower (clickEvent) {
         var newUpperLeft = new Point(newULx, newULy);
         
         //make sure old flowers don't get super small if users drag inside of them
-        if(appStates.resizeOldFlower){
-            if(squareSideLength < appStates.currentFlower.img.bounds.width && clickEvent.count < 5){
+        if (appStates.resizeOldFlower) {
+            if (squareSideLength < appStates.currentFlower.img.bounds.width && clickEvent.count < 5) {
                 return;
             }
         }
 
         //make sure flower is not going to be larger than 1/2 view width or smaller than 1/20 view width. If so, resize to fit bounds
-        if(squareSideLength < 0.5*project.view.bounds.width && squareSideLength > 0.05*project.view.bounds.width){
+        if(squareSideLength < 0.5 * project.view.bounds.width && squareSideLength > 0.05 * project.view.bounds.width) {
             //resize image
             rect = new Rectangle(newUpperLeft, new Size(squareSideLength, squareSideLength)); 
             
@@ -497,10 +498,10 @@ function scaleFlower (clickEvent) {
             
             //handle loop length
             //un-comment when our animations are working
-            appStates.currentFlower.toggleSoundLength(Math.floor((squareDiagLength*4)/(canvas.width/2)));  
+           console.log('during ' + squareDiagLength);;
            
            
-            //flowerSprite.stopAnimate();
+            //flowerSprite.stopAnimate();s
             //console.log(flowerSprite);
 //            flowerSprite.music.sound.on('play', flowerSprite.stopAnimate());
             
@@ -521,11 +522,19 @@ function scaleFlower (clickEvent) {
     
 }
 
+function resizeFinish() {
+    let flower = appStates.currentFlower;
+    let squareDiag = Math.sqrt(Math.pow(Math.min(flower.img.bounds.width, flower.img.bounds.height), 2) * 2);
+    console.log('done '  + squareDiag);
+    
+    flower.toggleSoundLength(Math.floor((squareDiag * 4) / (canvas.width / 2)));  
+}
+
 /*
  * Helper function used by scaleFlower to determine the distance from the mouse to the flower center
  * @param {event} dragEvent - the mouse drag event passed from scaleFlower
  */
-distanceToFlowerCenter = function(dragEvent){
+function distanceToFlowerCenter(dragEvent) {
     var flowerCenter = appStates.currentFlower.img.position;
     var mousePos = dragEvent.point;
     var dist = pointDistance(mousePos, flowerCenter);
@@ -535,7 +544,7 @@ distanceToFlowerCenter = function(dragEvent){
 /*
  * Starts background sound if it's not already started
  */
-startBackgroundSound = function(){
+ function startBackgroundSound() {
     backgroundTrack.play();
     backgroundTrack.loop(true);
     backgroundTrack.volume(0.3);
@@ -544,7 +553,7 @@ startBackgroundSound = function(){
 /*
  * Create the "ghost" flower and arrows that tracks with the cursor
  */
-createCursorFlowerAndArrows = function(){
+function createCursorFlowerAndArrows() {
     screenItems.cursorFlower = new Raster(currentMenuChoice.src).scale(0.07)
     screenItems.cursorFlower.opacity = 0.4 
     screenItems.cursorFlower.visible = false;
@@ -556,9 +565,8 @@ createCursorFlowerAndArrows = function(){
  * Move the "ghost" flower that tracks with the cursor
  * @param{event} event - the mouseMouve event
  */ 
-
-moveCursorFlower = function(event){
-//make it lag less on initial click
+function moveCursorFlower(event){
+    //make it lag less on initial click
     if(event.point.x > 0  && event.point.y > 0){
         screenItems.cursorFlower.visible = true;
         screenItems.cursorFlower.position.x = event.point.x;
