@@ -31,40 +31,6 @@ var soundSources = {
     }
 };
 
-var plantDisplaySources = {
-    'green': 'www/img/greenflower.svg',
-    'jade': 'www/img/jadeflower.svg',
-    'red': 'www/img/redflower.svg',
-    'succulent': 'www/img/succulentflower.svg',
-    'beet': 'www/img/beet.svg',
-    'sunflower': 'www/img/sunflower.svg'
-}
-
-var plantDisplaySizes = {
-    'jade' : new Point(590, 868),
-    'red' : new Point(1000, 1000),
-    'succulent' :new Point(1000, 900),
-    'green': new Point(1000, 1040),
-}
-
-var plantBoundsRatios = {
-    'jade' : .18,
-    'red' : .175,
-    'succulent' : .2,
-    'green' : .175,
-    'beet' : .175,
-    'sunflower' : .175
-}
-
-var plantDisplayOffsets = {
-    'jade' : new Point(50, 40),
-    'red' : new Point(500, 500), 
-    'succulent' : new Point(500, 450), 
-    'green': new Point(500, 520),
-}
-
-var loadedPlantRasters = {}
-
 var colors = {
     menuColor: "#81E5A9",
     menuSelectColor: "#90F0B3",
@@ -90,3 +56,4 @@ var currentMenuChoice = {
     name: "", //flower name - "pink", "blue", etc
 }
 
+let flowersGroup = null;

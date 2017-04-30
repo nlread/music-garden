@@ -8,10 +8,10 @@ window.onload = function() {
     console.log("window loaded");
     
     setUpScreen(); 
-    setupPlants();
     initializeGlobals();
     startBackgroundSound();
-    
+    setupFlowerGroup();
+
     var myTool = new Tool();
     
     //plant button highlighted by default
@@ -48,7 +48,7 @@ window.onload = function() {
 
         if(window.printHitTest) {
             console.log('hit test at ' + event.point.x + ',' + event.point.y);
-            console.log(hitTestFlowers(event.point));;
+            console.log(hitTestFlowers(event.point));
             return;
         }
 
@@ -78,19 +78,22 @@ window.onload = function() {
         }
         
         //change opacity of flower that is moused over
-         if(interactionModes.remove && hitTestFlowers(event.point)){
+         if(interactionModes.remove){
              var itemHit = hitTestFlowers(event.point);
-             if(itemHit != screenItems.cursorFlower){
-                 itemHit.img.opacity = 0.5;
-                 appStates.transparentFlowers.push(itemHit)
-              }
+             if(itemHit && itemHit != screenItems.cursorFlower) {
+                itemHit.img.opacity = 0.5;
+                appStates.transparentFlowers.push(itemHit)
+             }
           }
          
          //change it back once hit test no longer applies
          if(appStates.prevItemHit && itemHit != appStates.prevItemHit){
              if(appStates.transparentFlowers){
-                 for(flower in appStates.transparentFlowers){
-                     appStates.transparentFlowers[flower].img.opacity = 1;
+                 for(flower of appStates.transparentFlowers){
+                     flower.img.opacity = 1;
+                 }
+                 if (appStates.transparentFlowers.length > 0) {
+                     appStates.transparentFlowers = [];
                  }
             }
             
@@ -114,6 +117,10 @@ window.onload = function() {
 
     paper.view.onFrame = globalOnFrame;
 }
+
+function setupFlowerGroup() {
+    flowersGroup = new Group();
+}
 window.printHitTest = false;
 
 function globalOnFrame(frameEvent) {
@@ -128,34 +135,19 @@ function globalOnFrame(frameEvent) {
     }
 }
 
+
 function hitTestFlowers(eventPoint) {
-    for(let flowerId in canvasFlowers) {
-        let flower = canvasFlowers[flowerId]
-        if(flower.isPresentAt(eventPoint)) {
-            return flower;
-        }
-    }
-    return undefined;
+    let hitResult = flowersGroup.hitTest(eventPoint);
+    if (hitResult) {
+        return canvasFlowers[hitResult.item.id];
+    } 
+    return null;
+
 }
 
-function setupPlants() {
-    for (let plant in plantDisplaySources) {
-        project.importSVG(plantDisplaySources[plant], 
-                          {insert: false, 
-                           onLoad: (loadedData) => plantSVGLoadSuccess(plant, loadedData),
-                           onError: plantSVGLoadFailure});
-    }
+function matchOpaqueFlowers(hitResult) {
+    return hitResult.color.alpha > .25;
 }
-
-function plantSVGLoadSuccess(plant, loadedData) {
-    let plantRaster = loadedData.rasterize();
-    loadedPlantRasters[plant] = plantRaster;
-}
-
-function plantSVGLoadFailure(error) {
-    console.log(error);
-}
-
 
 //HELPER FUNCTIONS
 
@@ -296,14 +288,13 @@ interactWithPlant = function(plantClicked){
  */
 function dropFlower(clickEvent) {
     if(project.view.bounds.contains(clickEvent)){
-        let flowerDisplay = new Raster(currentMenuChoice.src).scale(resize.initFlowerSize);
-        let flowerPitch = Math.floor((clickEvent.point.y*8)/canvas.height);
+        let flowerImg = new Raster(currentMenuChoice.src).scale(resize.initFlowerSize);
+        let flowerPitch = Math.floor((clickEvent.point.y * 8)/canvas.height);
         let flowerMusic = new Music(soundSources[currentMenuChoice.name], flowerPitch);
 
-        let newFlower = new Plant(flowerDisplay, flowerMusic);
+        let newFlower = new Plant(flowerImg, flowerMusic);
+        flowersGroup.addChild(flowerImg);
         newFlower.playSound();
-        newFlower.setCollisionRaster(loadedPlantRasters[currentMenuChoice.name])
-        newFlower.setBoundsRatio(plantBoundsRatios[currentMenuChoice.name])
 
         appStates.currentFlower = newFlower;
         appStates.droppedFlower = true;
@@ -427,8 +418,8 @@ function dropFlower(clickEvent) {
  */
 deleteFlower = function(){
     canvasFlowers[appStates.currentFlower.img.id].stopSound();
-    delete canvasFlowers[appStates.currentFlower.img.id];
     appStates.currentFlower.img.remove();
+    delete canvasFlowers[appStates.currentFlower.img.id];
 }
 
 /*
@@ -495,8 +486,7 @@ function scaleFlower (clickEvent) {
         //make sure flower is not going to be larger than 1/2 view width or smaller than 1/20 view width. If so, resize to fit bounds
         if(squareSideLength < 0.5*project.view.bounds.width && squareSideLength > 0.05*project.view.bounds.width){
             //resize image
-            rect = new Rectangle(newUpperLeft, new Size(squareSideLength * appStates.currentFlower.boundsRatio, 
-            squareSideLength * appStates.currentFlower.boundsRatio)); 
+            rect = new Rectangle(newUpperLeft, new Size(squareSideLength, squareSideLength)); 
             
             /*
             testRect = new Path.Rectangle(rect)
