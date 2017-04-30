@@ -8,14 +8,15 @@
 
     <!-- moved scripts up here because they weren't loading in the proper order -->
     <script type="text/javascript" src="www/lib/paper-full.js"></script>
-    <script type="text/javascript" src ="www/lib/jquery-3.1.1.js"></script>
-    <script type="text/javascript" src ="www/lib/jquery-ui.js"></script>
+    <script type="text/javascript" src="www/lib/jquery-3.1.1.js"></script>
+    <script type="text/javascript" src="www/lib/jquery-ui.js"></script>
     <script type="text/javascript" src="www/lib/howler.js"></script>
     <script type="text/javascript" src="www/lib/bootstrap.js"></script>
     <script type="text/javascript" src="www/lib/chardinjs.js"></script>
-    <script type="text/javascript" src ="www/js/initialStates.js"></script>
-    <script type="text/javascript" src ="www/js/jqueryAnims.js"></script>
-    <script type="text/javascript" src ="www/js/classes.js"></script>
+    <script type="text/javascript" src="www/js/initialStates.js"></script>
+    <script type="text/javascript" src="www/js/jqueryAnims.js"></script>
+    <script type="text/javascript" src="www/js/animator.js"></script>
+    <script type="text/javascript" src="www/js/classes.js"></script>
     <script type="text/javascript" src="www/js/main.js"></script>
 
 </head>
@@ -25,35 +26,30 @@
         <div id="menuAndCanvasRow" class = "row">
             <div id="menu">
                 <div id = "iconsContainer" data-intro = "These buttons choose which flower to plant" data-position = "right">
-                    <div id="choice1" class="menuChoice"><img src="www/img/jadeflower.svg" id="jade" draggable = "false"></div>
-                    <div id="choice3" class="menuChoice"><img src="www/img/redflower.svg" id="red" draggable = "false"> </div>
-                    <div id="choice2" class="menuChoice"><img src="www/img/succulentflower.svg" id="succulent" draggable = "false"> </div>
-                    <div id ="choice6" class="menuChoice"><img src="www/img/sunflower.svg" id ="sunflower" draggable="false"></div>
-                    <div id="choice4" class="menuChoice"><img src="www/img/greenflower.svg" id="green" draggable = "false"></div>
-                    <div id="choice5" class="menuChoice"><img src="www/img/beet.svg" id="beet" draggable = "false"></div>
+                    <div id="choice1" class="menuChoice"><img src="www/img/PNG/Jade.png" id="jade" draggable = "false"></div>
+                    <div id="choice3" class="menuChoice"><img src="www/img/PNG/redflower.png" id="red" draggable = "false"> </div>
+                    <div id="choice2" class="menuChoice"><img src="www/img/PNG/succulent.png" id="succulent" draggable = "false"> </div>
+                    <div id="choice6" class="menuChoice"><img src="www/img/PNG/Sunflower.png" id ="sunflower" draggable="false"></div>
+                    <div id="choice4" class="menuChoice"><img src="www/img/PNG/greenflower.png" id="green" draggable = "false"></div>
+                    <div id="choice5" class="menuChoice"><img src="www/img/PNG/Beet.png" id="beet" draggable = "false"></div>
                 </div>
             </div>
 
-            <canvas id="canvas" resize>
-                <img src="www/img/PNG/Jade.png" id="jade">
-                <img src="www/img/PNG/succulent.png" id="succulent">
-                <img src="www/img/PNG/redflower.png" id = "red">
-                <img src="www/img/PNG/greenflower.png" id="green">
-            </canvas>
+            <canvas id="canvas" resize></canvas>
         </div>
 
-        <div id = "bottomToolbarRow" class="row">
-            <div class = "col-md-2 col-sm-2 col-xs-2">
-                <div id = "modeButtonGroup" class = "btn-group left"  data-intro = "These buttons switch between planting mode and remove mode" data-position = "right">
+        <div id="bottomToolbarRow" class="row">
+            <div class="col-md-2 col-sm-2 col-xs-2">
+                <div id="modeButtonGroup" class="btn-group left"  data-intro="These buttons switch between planting mode and remove mode" data-position = "right">
                         <label id="plantButton" data-toggle = "button" class="btn btn-default toolbarButton left"><span class="align-helper"></span><img src="www/img/plantIcon.png"></label> 
                         <label id="removeButton" data-toggle = "button" class="btn btn-default toolbarButton left"><span class="align-helper"></span><img src="www/img/removeIcon.png"></label>
                         <!-- <div id ="sendToBackButton" class="toolbarButton"> <span class="align-helper"></span><img src="img/sendToBackIcon.png"></div> -->
                     </div>
                 </div>
-            <div class = "col-md-2 col-sm-2 col-xs-2 col-md-offset-8 col-sm-offset-8 col-xs-offset-8">
-                <div id = "toolsButtonGroup" class ="btn-group right" data-intro = "This button will show you the tutorial again" data-position = "left">
+            <div class="col-md-2 col-sm-2 col-xs-2 col-md-offset-8 col-sm-offset-8 col-xs-offset-8">
+                <div id="toolsButtonGroup" class="btn-group right" data-intro="This button will show you the tutorial again" data-position="left">
                     <label id="trashButton" data-toggle="button" class="btn btn-default toolbarButton right"><span class="align-helper"></span><img src="www/img/trashIcon.png"></label>
-                    <button id = "helpButton" class ="btn btn-default toolbarButton right"><span class="align-helper"></span><img src="www/img/helpIcon.png"></button>
+                    <button id="helpButton" class="btn btn-default toolbarButton right"><span class="align-helper"></span><img src="www/img/helpIcon.png"></button>
                 </div>
             </div>
         </div>

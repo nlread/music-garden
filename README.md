@@ -12,8 +12,7 @@ Fork us, and feel free to play around with the code. No installations needed - t
 We've made a few changes to Howler.js and Chardin.js to fit the needs of this project. This means you should NOT use a CDN or your own local copy for these libraries - you'll need to use the versions in this repo. If you want to use a CDN or your own copy, all the changes are marked in comments with [ADDED] at the end. If you search howler.js, chardinjs.js, and chardinjs.css, you'll find the exact lines where code was changed (and what they do). A brief summary is below.
 
 #### howler.js
-+ Added sound.\_space to keep track of the size of the loop for a flower's sound. 
-+ Added new function called soundLength to put more space in the looping mechanism. It uses sound.\_space to keep track of the current spacing.
++ Added sound.\_space as a parameter to the play function to keep track of the size of the loop for a flower's sound.
 
 #### chardinjs.js
 + Added two elements to the overlay, the center dismiss button and the text that explains what to do on the canvas ("Click in this area to...") because the Chardin positioning for those elements wasn't working right.
