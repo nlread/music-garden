@@ -320,6 +320,7 @@ function dropFlower(clickEvent) {
         appStates.currentFlower.img.scale(1.5);
         
         newFlower.music.sound.on('play', function() {
+//console.log("-------------------------> play 0");
      
             
 //            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
@@ -332,7 +333,7 @@ function dropFlower(clickEvent) {
 //            newFlower.animate(new RotatingAnimation(-15,0.1,0.2));
         });
         
-        newFlower.music.sound.on('play', function() {
+        //newFlower.music.sound.on('play', function() {
        
 //            
 //        //Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
@@ -349,7 +350,7 @@ function dropFlower(clickEvent) {
          //   newFlower.animate(new RotatingAnimation(-5,0.1,0.2));
          //   newFlower.animate(new RotatingAnimation(5,0.1,0.3));
             
-        });
+       // });
         
         canvasFlowers[appStates.currentFlower.img.id] = newFlower;
         resetCursorFlowerAndArrows();

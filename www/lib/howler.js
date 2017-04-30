@@ -688,6 +688,7 @@
       sound._seek = seek;
       sound._start = self._sprite[sprite][0] / 1000;
       //A space added to the loop in order to add sound length
+      console.log(self._sprite[sprite][0]);
       sound._stop = (self._sprite[sprite][0]/ 1000) + sound._space;
       sound._loop = !!(sound._loop || self._sprite[sprite][2]);
 
