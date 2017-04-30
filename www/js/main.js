@@ -495,11 +495,11 @@ function scaleFlower (clickEvent) {
             
             appStates.currentFlower.img.fitBounds(rect);
             
-            flowerSprite = canvasFlowers[appStates.currentFlower.img.id]
-
             //handle loop length
             //un-comment when our animations are working
-            flowerSprite.toggleSoundLength(Math.floor((squareDiagLength*4)/(canvas.width/2)));  
+            appStates.currentFlower.toggleSoundLength(Math.floor((squareDiagLength*4)/(canvas.width/2)));  
+           
+           
             //flowerSprite.stopAnimate();
             //console.log(flowerSprite);
 //            flowerSprite.music.sound.on('play', flowerSprite.stopAnimate());
