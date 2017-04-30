@@ -286,7 +286,7 @@ interactWithPlant = function(plantClicked){
 
 /*
  * Drop a plant on the screen
- * @param {event} clickEvent - click event passed from onMouseDown
+ * @param {ToolEvent} clickEvent - click event passed from onMouseDown
  */
 function dropFlower(clickEvent) {
     if(project.view.bounds.contains(clickEvent)){
@@ -304,110 +304,31 @@ function dropFlower(clickEvent) {
         appStates.flowerCenter = appStates.currentFlower.img.position;
         appStates.currentFlower.img.scale(1.5);
 
-        if(currentMenuChoice.name === "jade"){
-           newFlower.music.sound.on('play',  function() {
-
-
-    //            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
-                newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
-                newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
-
-    //            Animation 2: Does a little spin thing. Kinda fun. 
-    //            newFlower.animate(new RotatingAnimation(-15,0.1,0));
-    //            newFlower.animate(new RotatingAnimation(30,0.1,0.1));
-    //            newFlower.animate(new RotatingAnimation(-15,0.1,0.2));
-            });
-        }
-        else if (currentMenuChoice.name === "red"){
+        if(currentMenuChoice.name === "jade") {
             newFlower.music.sound.on('play',  function() {
-
-
-    //            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
-                newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
-                newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
-
-    //            Animation 2: Does a little spin thing. Kinda fun. 
-    //            newFlower.animate(new RotatingAnimation(-15,0.1,0));
-    //            newFlower.animate(new RotatingAnimation(30,0.1,0.1));
-    //            newFlower.animate(new RotatingAnimation(-15,0.1,0.2));
+                Animator.growShrink(newFlower);
             });
-        }
-        else if (currentMenuChoice.name === "succulent"){
+        } else if (currentMenuChoice.name === "red") {
             newFlower.music.sound.on('play',  function() {
-
-
-    //            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
-                newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
-                newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
-
-    //            Animation 2: Does a little spin thing. Kinda fun. 
-    //            newFlower.animate(new RotatingAnimation(-15,0.1,0));
-    //            newFlower.animate(new RotatingAnimation(30,0.1,0.1));
-    //            newFlower.animate(new RotatingAnimation(-15,0.1,0.2));
+                Animator.growShrink(newFlower);
             });
-        }
-        else if (currentMenuChoice.name === "sunflower"){
+        } else if (currentMenuChoice.name === "succulent") {
             newFlower.music.sound.on('play',  function() {
-
-
-    //            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
-                newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
-                newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
-
-    //            Animation 2: Does a little spin thing. Kinda fun. 
-    //            newFlower.animate(new RotatingAnimation(-15,0.1,0));
-    //            newFlower.animate(new RotatingAnimation(30,0.1,0.1));
-    //            newFlower.animate(new RotatingAnimation(-15,0.1,0.2));
+                Animator.growShrink(newFlower);
             });
-        }
-        else if (currentMenuChoice.name === "green"){
+        } else if (currentMenuChoice.name === "sunflower") {
             newFlower.music.sound.on('play',  function() {
-
-
-    //          Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
-                newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
-                newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
-
-    //            Animation 2: Does a little spin thing. Kinda fun. 
-    //            newFlower.animate(new RotatingAnimation(-15,0.1,0));
-    //            newFlower.animate(new RotatingAnimation(30,0.1,0.1));
-    //            newFlower.animate(new RotatingAnimation(-15,0.1,0.2));
+                Animator.growShrink(newFlower);
             });
-        }
-        else if (currentMenuChoice.name === "beet"){
+        } else if (currentMenuChoice.name === "green"){
             newFlower.music.sound.on('play',  function() {
-
-
-    //            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
-                newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
-                newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
-
-    //            Animation 2: Does a little spin thing. Kinda fun. 
-    //            newFlower.animate(new RotatingAnimation(-15,0.1,0));
-    //            newFlower.animate(new RotatingAnimation(30,0.1,0.1));
-    //            newFlower.animate(new RotatingAnimation(-15,0.1,0.2));
+                Animator.growShrink(newFlower);
+            });
+        } else if (currentMenuChoice.name === "beet"){
+            newFlower.music.sound.on('play',  function() {
+                Animator.growShrink(newFlower);
             });
         }
-
-        
-//        newFlower.music.sound.on('play', function() {
-//       
-////            
-////        //Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
-//            //test flower
-//          // newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.2,-1));
-//           //newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1.1,0.1));
-//            //Red flower
-//      //     newFlower.animate(new ScalingAnimation(new Point(1/1.3,1.3),0.8,0));
-//      //     newFlower.animate(new ScalingAnimation(new Point(1.3,1/1.3),1.2,0));
-//            
-////            Animation 2: Does a little spin thing. Kinda fun. 
-//         //   newFlower.animate(new RotatingAnimation(-30,0.1,0));
-//         //   newFlower.animate(new RotatingAnimation(15,0.1,0.1));
-//         //   newFlower.animate(new RotatingAnimation(-5,0.1,0.2));
-//         //   newFlower.animate(new RotatingAnimation(5,0.1,0.3));
-//            
-//        });
         
         canvasFlowers[appStates.currentFlower.img.id] = newFlower;
         resetCursorFlowerAndArrows();
@@ -418,16 +339,16 @@ function dropFlower(clickEvent) {
 /*
  * Delete a plant from screen and stop its associated sound
  */
-deleteFlower = function(){
+deleteFlower = function() {
     canvasFlowers[appStates.currentFlower.img.id].stopSound();
     appStates.currentFlower.img.remove();
     delete canvasFlowers[appStates.currentFlower.img.id];
 }
 
 /*
- * Deetes all flowers on screen
+ * Deletes all flowers on screen
  */
-deleteAllFlowers = function(){
+deleteAllFlowers = function() {
     for(var flower in canvasFlowers){
         canvasFlowers[flower].stopSound();
         canvasFlowers[flower].img.remove();
@@ -447,13 +368,13 @@ sendFlowerToBack = function(){
 //test variable
 var testRect = null;
 
-/*
+/**S
  * Scale a flower based on whether mouse distance to flower center is increasing or 
  * decreasing
- * @param {event} clickEvent - event passed from onMouseDrag
+ * @param {ToolEvent} clickEvent - event passed from onMouseDrag
  */
 function scaleFlower(clickEvent) {
-    //make sure old flowers don't jump to a smaller size if user drags in the middle of the
+    // Make sure old flowers don't jump to a smaller size if user drags in the middle of the
     /*
     if(testRect){
         testRect.remove(); 
@@ -462,7 +383,8 @@ function scaleFlower(clickEvent) {
     
     if(clickEvent.count > 10){
         
-        //math that creates a square around the center of the flower. Side length of the square is 2*sqrt(x distance of mouse to flower center^2 + y distance of mouse to  flower center^2)
+        // Math that creates a square around the center of the flower. 
+        // Side length of the square is 2*sqrt(x distance of mouse to flower center^2 + y distance of mouse to  flower center^2)
         var flowerCenter = appStates.flowerCenter
         var mousePos = clickEvent.point;
         
@@ -478,46 +400,18 @@ function scaleFlower(clickEvent) {
         var newULy = flowerCenter.y - halfSideLength;
         var newUpperLeft = new Point(newULx, newULy);
         
-        //make sure old flowers don't get super small if users drag inside of them
+        // Make sure old flowers don't get super small if users drag inside of them
         if (appStates.resizeOldFlower) {
             if (squareSideLength < appStates.currentFlower.img.bounds.width && clickEvent.count < 5) {
                 return;
             }
         }
 
-        //make sure flower is not going to be larger than 1/2 view width or smaller than 1/20 view width. If so, resize to fit bounds
+        // Make sure flower is not going to be larger than 1/2 view width or smaller than 1/20 view width. If so, resize to fit bounds
         if(squareSideLength < 0.5 * project.view.bounds.width && squareSideLength > 0.05 * project.view.bounds.width) {
             //resize image
             rect = new Rectangle(newUpperLeft, new Size(squareSideLength, squareSideLength)); 
-            
-            /*
-            testRect = new Path.Rectangle(rect)
-            testRect.fillColor = new Color("red");
-            */ 
-            
             appStates.currentFlower.img.fitBounds(rect);
-            
-            //handle loop length
-            //un-comment when our animations are working
-           console.log('during ' + squareDiagLength);;
-           
-           
-            //flowerSprite.stopAnimate();s
-            //console.log(flowerSprite);
-//            flowerSprite.music.sound.on('play', flowerSprite.stopAnimate());
-            
-//           flowerSprite.music.sound.on('play', function() {
-//     
-//            
-////            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
-//            flowerSprite.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
-//            flowerSprite.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
-//            
-////            Animation 2: Does a little spin thing. Kinda fun. 
-////            newFlower.animate(new RotatingAnimation(-15,0.1,0));
-////            newFlower.animate(new RotatingAnimation(30,0.1,0.1));
-////            newFlower.animate(new RotatingAnimation(-15,0.1,0.2));
-//        });
         }
     }
     
