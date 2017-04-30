@@ -258,13 +258,11 @@ class Plant extends AnimatedComponent {
 
         this.img = png;
 
-        //in the future this could be set automatically depending on plant type
         this.music = music;
         this.intervalID;
         this.sLength = 2;
     };
 
-    //plays the music of the plant, setting it to loop and the volume at 0.5
     playSound() {
         this.music.sound.play(2);
         this.music.sound.loop(true);
@@ -274,21 +272,32 @@ class Plant extends AnimatedComponent {
         this.music.sound.stop();
     };
 
-    //Changes the length that howler.js should loop which makes the sound longer or shorter
-    //Give it a length between 0-5
-    //Need to restart the loop in order for the new length to be applied.
+    /**
+     * @public
+     * Changes the length of the sound of the flower. 
+     * Takes an sLength that is between 0-5. 
+     * @param {Number} sLength
+     * @public
+     */
     toggleSoundLength(sLength) {
-        this.sLength = sLength + 2;
-        this.music.sound.stop();
-        this.music.sound.play(this.sLength);
-        this.music.sound.loop(true);
+        if(sLength >= 0 && sLength <= 5){
+            this.sLength = sLength + 2;
+            this.music.sound.stop();
+            this.music.sound.play(this.sLength);
+            this.music.sound.loop(true);
+        }
     };
 }
 
 
-//Music class is given to Plant to associate a sound with it.
 class Music {
 
+    /**
+     * Class that creates our sound object. 
+     * @constructor
+     * @param {String} source - The sound applied to this flower group
+     * @param {Number} pitch - The specific pitch for this sound
+     */
     constructor(source, pitch){
         this.source = source;
         this.pitch = pitch+1;
