@@ -58,6 +58,8 @@ canvas[resize] {
 
 #menu div{
     height:40%;
+    width: 90%;
+    margin: auto;
 }
 
 /*make menu images centered and the width of their parent div */

@@ -12,20 +12,19 @@ window.onload = function() {
     startBackgroundSound();
     setupFlowerGroup();
 
-    var myTool = new Tool();
     
     //plant button highlighted by default
     $(buttons.plant).trigger("click");
    
     $('.menuChoice').on('click', makeMenuChoice);
 
-    $('.menuChoice').on('mouseenter', function(){
+    $('.menuChoice').on('mouseenter', function() {
         choice = this;
-        $(this).stop(); //prevent double-bounce
+        $(choice).stop(); //prevent double-bounce
         menuAnims.animateMenuChoice(choice);
     });
 
-     $('.menuChoice').on('mouseleave', function(){
+     $('.menuChoice').on('mouseleave', function() { 
         choice = this;
         menuAnims.unHighlightMenuChoice(choice);
     });
@@ -40,24 +39,24 @@ window.onload = function() {
     
     $("#trashButton").on("click", trashButtonClicked);
         
-    myTool.onMouseUp = function(event) {
+    let inputs = new Tool();
+
+    inputs.onMouseUp = function(event) {
         stopResize();
+        //ghost flower comes back after resize
+        if(screenItems.cursorFlower){
+            screenItems.cursorFlower.visible = true;
+        }
     };
 
-    myTool.onMouseDown = function(event) {
-
-        if(window.printHitTest) {
-            console.log('hit test at ' + event.point.x + ',' + event.point.y);
-            console.log(hitTestFlowers(event.point));
-            return;
-        }
-
+    inputs.onMouseDown = function(event) {
         let hit = hitTestFlowers(event.point)
         if (hit) {
             appStates.currentFlower = hit;
             interactWithPlant(hit);
             return;
         } 
+
        if(currentMenuChoice && interactionModes.plant){
             //make arrows invisible after first plant
              if(screenItems.arrows){
@@ -65,14 +64,21 @@ window.onload = function() {
              }
             dropFlower(event);
         }
+        
+        //don't show ghost flower during resize
+        if(screenItems.cursorFlower){
+            screenItems.cursorFlower.visible = false;
+        }
+        
 }
     
-    myTool.onMouseDrag = function(event) { 
+    inputs.onMouseDrag = function(event) { 
         if(interactionModes.plant && (appStates.droppedFlower || appStates.resizeOldFlower)){
             scaleFlower(event);
         }
     }
-    myTool.onMouseMove = function(event){
+
+    inputs.onMouseMove = function(event) {
         if(interactionModes.plant && screenItems.cursorFlower){
             moveCursorFlower(event);
         }
@@ -92,6 +98,7 @@ window.onload = function() {
                  for(flower of appStates.transparentFlowers){
                      flower.img.opacity = 1;
                  }
+
                  if (appStates.transparentFlowers.length > 0) {
                      appStates.transparentFlowers = [];
                  }
@@ -100,19 +107,6 @@ window.onload = function() {
         }
         
         appStates.prevItemHit = itemHit;
-        
-    }
-    
-    myTool.onKeyDown = function(event) {
-        if (event.key == 'p') {
-            printHitTest = true;            
-        }
-    }
-
-    myTool.onKeyUp = function(event) {
-        if (event.key == 'p') {
-            printHitTest = false;            
-        }
     }
 
     paper.view.onFrame = globalOnFrame;
@@ -121,13 +115,12 @@ window.onload = function() {
 function setupFlowerGroup() {
     flowersGroup = new Group();
 }
-window.printHitTest = false;
 
 function globalOnFrame(frameEvent) {
     let dTime = frameEvent.delta;
-    for(let key in canvasFlowers){
-        if (canvasFlowers.hasOwnProperty(key)) {
-            let flower = canvasFlowers[key];
+    for (let flowerId in canvasFlowers) {
+        if (canvasFlowers.hasOwnProperty(flowerId)) {
+            let flower = canvasFlowers[flowerId];
             if (flower instanceof AnimatedComponent) {
                 flower.update(dTime);
             }
@@ -145,49 +138,45 @@ function hitTestFlowers(eventPoint) {
 
 }
 
-function matchOpaqueFlowers(hitResult) {
-    return hitResult.color.alpha > .25;
-}
-
 //HELPER FUNCTIONS
 
-/*
+/**
  * Sets up Paper.js screen
  */
-setUpScreen = function(){
+function setUpScreen() {
     paper.setup('canvas')
-    var canvas = document.getElementById('canvas');
     view.draw();  
 }
 
-/*
+/**
  * Initializes global namespaces that we don't have access to until onload() but need 
  * globally
  */
-initializeGlobals = function(){
+function initializeGlobals() {
     buttons.remove = document.getElementById("removeButton");
     buttons.plant = document.getElementById("plantButton");
     buttons.sendToBack = document.getElementById("sendToBackButton");
     buttons.help = document.getElementById("helpButton");  
 }
 
-/*
+/**
  * Stops resizing plant + resets droppedFlower
  */
-stopResize = function(){
-    if(appStates.resizeOldFlower){
+function stopResize() {
+    if (appStates.resizeOldFlower) {
         appStates.resizeOldFlower = false;
     }
-    if(appStates.droppedFlower){
+    if (appStates.droppedFlower) {
         appStates.droppedFlower = false;
     }
+    resizeFinish();
 }
 
-/*
+/**
  * Switches current flower being dropped and resets state variables
- * @param {event} menuItemClicked - flower selected from menu
+ * @param {Event} menuItemClicked - flower selected from menu
  */
-makeMenuChoice = function(menuItemClicked){
+ function makeMenuChoice(menuItemClicked) {
     menuAnims.animateMenuChoice(this);
     
     plantButtonClicked();
@@ -202,10 +191,10 @@ makeMenuChoice = function(menuItemClicked){
 }
 
 
-/*
+/**
  * Resets states after plant button clicked
  */
-plantButtonClicked = function(){
+function plantButtonClicked() {
     interactionModes.remove = false;
     interactionModes.orderLayers = false; 
     interactionModes.plant = true;
@@ -213,10 +202,10 @@ plantButtonClicked = function(){
     toggleButton(buttons.remove);
 }
 
-/*
+/**
  * Resets states after remove button clicked
  */
-removeButtonClicked = function(){
+function removeButtonClicked() {
     interactionModes.plant = false;
     interactionModes.orderLayers = false;
     interactionModes.remove = true;
@@ -225,10 +214,10 @@ removeButtonClicked = function(){
     screenItems.cursorFlower.remove();
 }
 
-/*
+/**
  * Resets states after send to back button clicked
  */
-sendToBackButtonClicked = function(){
+function sendToBackButtonClicked() {
     interactionModes.plant = false;
     interactionModes.remove = false;
     interactionModes.orderLayers = true; 
@@ -236,17 +225,17 @@ sendToBackButtonClicked = function(){
     screenItems.cursorFlower.remove();
 }
 
-/*
+/**
  * Brings tutorial back up when help button is clicked
  */
-helpButtonClicked = function(){
+function helpButtonClicked() {
     $('body').chardinJs('start');
 }
 
-/*
+/**
  * Dialog box to confirm deletion of all flowers
  */
-trashButtonClicked = function(){
+function trashButtonClicked() {
     var trash = confirm("Are you sure you want to delete all flowers?");
     if (trash) {
         deleteAllFlowers();
@@ -254,20 +243,19 @@ trashButtonClicked = function(){
     $("#trashButton").button("toggle");
 }
 
-/*
+/**
  * Toggles a button's active class
- * @param{HTML button} button - the button to toggle
+ * @param {HTML button} button - the button to toggle
  */
-
-toggleButton = function(button){
+function toggleButton(button) {
     if($(button).hasClass("active")){
         $(button).button("toggle");
     }
 }
 
-/*
+/**
  * Determine whether to delete, send to back, or resize a plant that's been clicked on  * based on current mode
- * @param {event} clickEvent - event passed in from onMouseDown handler
+ * @param {ToolEvent} clickEvent - event passed in from onMouseDown handler
  */
 function interactWithPlant(plantClicked) {
     appStates.flowerCenter = appStates.currentFlower.img.position;
@@ -278,13 +266,14 @@ function interactWithPlant(plantClicked) {
        sendFlowerToBack();
     }*/ else {
         appStates.resizeOldFlower = true;
+        appStates.currentFlower.stopSound();
     } 
 }
 
 
-/*
+/**
  * Drop a plant on the screen
- * @param {event} clickEvent - click event passed from onMouseDown
+ * @param {ToolEvent} clickEvent - click event passed from onMouseDown
  */
 function dropFlower(clickEvent) {
     if(project.view.bounds.contains(clickEvent)){
@@ -294,7 +283,7 @@ function dropFlower(clickEvent) {
 
         let newFlower = new Plant(flowerImg, flowerMusic);
         flowersGroup.addChild(flowerImg);
-        newFlower.playSound();
+        // newFlower.playSound();
 
         appStates.currentFlower = newFlower;
         appStates.droppedFlower = true;
@@ -302,165 +291,77 @@ function dropFlower(clickEvent) {
         appStates.flowerCenter = appStates.currentFlower.img.position;
         appStates.currentFlower.img.scale(1.5);
 
-        if(currentMenuChoice.name === "jade"){
-           newFlower.music.sound.on('play',  function() {
-
-
-    //            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
-                newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
-                newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
-
-    //            Animation 2: Does a little spin thing. Kinda fun. 
-    //            newFlower.animate(new RotatingAnimation(-15,0.1,0));
-    //            newFlower.animate(new RotatingAnimation(30,0.1,0.1));
-    //            newFlower.animate(new RotatingAnimation(-15,0.1,0.2));
-            });
-        }
-        else if (currentMenuChoice.name === "red"){
+        if(currentMenuChoice.name === "jade") {
             newFlower.music.sound.on('play',  function() {
-
-
-    //            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
-                newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
-                newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
-
-    //            Animation 2: Does a little spin thing. Kinda fun. 
-    //            newFlower.animate(new RotatingAnimation(-15,0.1,0));
-    //            newFlower.animate(new RotatingAnimation(30,0.1,0.1));
-    //            newFlower.animate(new RotatingAnimation(-15,0.1,0.2));
+                Animator.growShrink(newFlower);
             });
-        }
-        else if (currentMenuChoice.name === "succulent"){
+        } else if (currentMenuChoice.name === "red") {
             newFlower.music.sound.on('play',  function() {
-
-
-    //            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
-                newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
-                newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
-
-    //            Animation 2: Does a little spin thing. Kinda fun. 
-    //            newFlower.animate(new RotatingAnimation(-15,0.1,0));
-    //            newFlower.animate(new RotatingAnimation(30,0.1,0.1));
-    //            newFlower.animate(new RotatingAnimation(-15,0.1,0.2));
+                Animator.growShrink(newFlower);
             });
-        }
-        else if (currentMenuChoice.name === "sunflower"){
+        } else if (currentMenuChoice.name === "succulent") {
             newFlower.music.sound.on('play',  function() {
-
-
-    //            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
-                newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
-                newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
-
-    //            Animation 2: Does a little spin thing. Kinda fun. 
-    //            newFlower.animate(new RotatingAnimation(-15,0.1,0));
-    //            newFlower.animate(new RotatingAnimation(30,0.1,0.1));
-    //            newFlower.animate(new RotatingAnimation(-15,0.1,0.2));
+                Animator.growShrink(newFlower);
             });
-        }
-        else if (currentMenuChoice.name === "green"){
+        } else if (currentMenuChoice.name === "sunflower") {
             newFlower.music.sound.on('play',  function() {
-
-
-    //          Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
-                newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
-                newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
-
-    //            Animation 2: Does a little spin thing. Kinda fun. 
-    //            newFlower.animate(new RotatingAnimation(-15,0.1,0));
-    //            newFlower.animate(new RotatingAnimation(30,0.1,0.1));
-    //            newFlower.animate(new RotatingAnimation(-15,0.1,0.2));
+                Animator.growShrink(newFlower);
             });
-        }
-        else if (currentMenuChoice.name === "beet"){
+        } else if (currentMenuChoice.name === "green"){
             newFlower.music.sound.on('play',  function() {
-
-
-    //            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
-                newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
-                newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
-
-    //            Animation 2: Does a little spin thing. Kinda fun. 
-    //            newFlower.animate(new RotatingAnimation(-15,0.1,0));
-    //            newFlower.animate(new RotatingAnimation(30,0.1,0.1));
-    //            newFlower.animate(new RotatingAnimation(-15,0.1,0.2));
+                Animator.growShrink(newFlower);
+            });
+        } else if (currentMenuChoice.name === "beet"){
+            newFlower.music.sound.on('play',  function() {
+                Animator.growShrink(newFlower);
             });
         }
 
-        
-//        newFlower.music.sound.on('play', function() {
-//       
-////            
-////        //Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
-//            //test flower
-//          // newFlower.animate(new ScalingAnimation(new Point(1.3,1.3),0.2,-1));
-//           //newFlower.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1.1,0.1));
-//            //Red flower
-//      //     newFlower.animate(new ScalingAnimation(new Point(1/1.3,1.3),0.8,0));
-//      //     newFlower.animate(new ScalingAnimation(new Point(1.3,1/1.3),1.2,0));
-//            
-////            Animation 2: Does a little spin thing. Kinda fun. 
-//         //   newFlower.animate(new RotatingAnimation(-30,0.1,0));
-//         //   newFlower.animate(new RotatingAnimation(15,0.1,0.1));
-//         //   newFlower.animate(new RotatingAnimation(-5,0.1,0.2));
-//         //   newFlower.animate(new RotatingAnimation(5,0.1,0.3));
-//            
-//        });
         
         canvasFlowers[appStates.currentFlower.img.id] = newFlower;
         resetCursorFlowerAndArrows();
     } 
 }
 
-
-/*
+/**
  * Delete a plant from screen and stop its associated sound
  */
-deleteFlower = function(){
+function deleteFlower() {
     canvasFlowers[appStates.currentFlower.img.id].stopSound();
     appStates.currentFlower.img.remove();
     delete canvasFlowers[appStates.currentFlower.img.id];
 }
 
-/*
- * Deetes all flowers on screen
+/**
+ * Deletes all flowers on screen
  */
-deleteAllFlowers = function(){
-    for(var flower in canvasFlowers){
-        canvasFlowers[flower].stopSound();
-        canvasFlowers[flower].img.remove();
+function deleteAllFlowers() {
+    for(var flowerId in canvasFlowers){
+        canvasFlowers[flowerId].stopSound();
+        canvasFlowers[flowerId].img.remove();
     }
     
     canvasFlowers = {}
 }
 
-/*
+/**
  * Send to back - not currently used
  */
-sendFlowerToBack = function(){
+function sendFlowerToBack() {
     appStates.currentFlower.img.sendToBack();    
 }
 
-
-//test variable
-var testRect = null;
-
-/*
+/**
  * Scale a flower based on whether mouse distance to flower center is increasing or 
  * decreasing
- * @param {event} clickEvent - event passed from onMouseDrag
+ * @param {ToolEvent} clickEvent - event passed from onMouseDrag
  */
-function scaleFlower (clickEvent) {
-    //make sure old flowers don't jump to a smaller size if user drags in the middle of the
-    /*
-    if(testRect){
-        testRect.remove(); 
-    }
-    */
-    
+function scaleFlower(clickEvent) {
+    // Make sure old flowers don't jump to a smaller size if user drags in the middle of the
     if(clickEvent.count > 10){
         
-        //math that creates a square around the center of the flower. Side length of the square is 2*sqrt(x distance of mouse to flower center^2 + y distance of mouse to  flower center^2)
+        // Math that creates a square around the center of the flower. 
+        // Side length of the square is 2*sqrt(x distance of mouse to flower center^2 + y distance of mouse to  flower center^2)
         var flowerCenter = appStates.flowerCenter
         var mousePos = clickEvent.point;
         
@@ -476,75 +377,58 @@ function scaleFlower (clickEvent) {
         var newULy = flowerCenter.y - halfSideLength;
         var newUpperLeft = new Point(newULx, newULy);
         
-        //make sure old flowers don't get super small if users drag inside of them
-        if(appStates.resizeOldFlower){
-            if(squareSideLength < appStates.currentFlower.img.bounds.width && clickEvent.count < 5){
+        // Make sure old flowers don't get super small if users drag inside of them
+        if (appStates.resizeOldFlower) {
+            if (squareSideLength < appStates.currentFlower.img.bounds.width && clickEvent.count < 5) {
                 return;
             }
         }
 
-        //make sure flower is not going to be larger than 1/2 view width or smaller than 1/20 view width. If so, resize to fit bounds
-        if(squareSideLength < 0.5*project.view.bounds.width && squareSideLength > 0.05*project.view.bounds.width){
+        // Make sure flower is not going to be larger than 1/2 view width or smaller than 1/20 view width. If so, resize to fit bounds
+        if(squareSideLength < 0.5 * project.view.bounds.width && squareSideLength > 0.05 * project.view.bounds.width) {
             //resize image
             rect = new Rectangle(newUpperLeft, new Size(squareSideLength, squareSideLength)); 
-            
-            /*
-            testRect = new Path.Rectangle(rect)
-            testRect.fillColor = new Color("red");
-            */ 
-            
             appStates.currentFlower.img.fitBounds(rect);
-            
-            flowerSprite = canvasFlowers[appStates.currentFlower.img.id]
-
-            //handle loop length
-            //un-comment when our animations are working
-            flowerSprite.toggleSoundLength(Math.floor((squareDiagLength * 4) / (canvas.width / 2)));  
-            //flowerSprite.stopAnimate();
-            //console.log(flowerSprite);
-//            flowerSprite.music.sound.on('play', flowerSprite.stopAnimate());
-            
-//           flowerSprite.music.sound.on('play', function() {
-//     
-//            
-////            Animation 1: Gets bigger then smaller, kind of like a pop. Could also reverse it.
-//            flowerSprite.animate(new ScalingAnimation(new Point(1.3,1.3),0.5,0));
-//            flowerSprite.animate(new ScalingAnimation(new Point(1/1.3,1/1.3),1,0));
-//            
-////            Animation 2: Does a little spin thing. Kinda fun. 
-////            newFlower.animate(new RotatingAnimation(-15,0.1,0));
-////            newFlower.animate(new RotatingAnimation(30,0.1,0.1));
-////            newFlower.animate(new RotatingAnimation(-15,0.1,0.2));
-//        });
         }
     }
     
 }
 
-/*
- * Helper function used by scaleFlower to determine the distance from the mouse to the flower center
- * @param {event} dragEvent - the mouse drag event passed from scaleFlower
+/**
+ * Triggers after the resizing of a plant finishes. 
+ * Toggles the sound length of the resized flower based on the new size. 
  */
-distanceToFlowerCenter = function(dragEvent){
+function resizeFinish() {
+    let flower = appStates.currentFlower;
+    let squareDiag = Math.sqrt(Math.pow(Math.min(flower.img.bounds.width, flower.img.bounds.height), 2) * 2);
+    
+    flower.toggleSoundLength(Math.floor((squareDiag * 4) / (canvas.width / 2)));  
+}
+
+/**
+ * Helper function used by scaleFlower to determine the distance from the mouse to the flower center
+ * @param {ToolEvent} dragEvent - the mouse drag event passed from scaleFlower
+ */
+function distanceToFlowerCenter(dragEvent) {
     var flowerCenter = appStates.currentFlower.img.position;
     var mousePos = dragEvent.point;
     var dist = pointDistance(mousePos, flowerCenter);
     return dist;
 }
 
-/*
+/**
  * Starts background sound if it's not already started
  */
-startBackgroundSound = function(){
+ function startBackgroundSound() {
     backgroundTrack.play();
     backgroundTrack.loop(true);
     backgroundTrack.volume(0.3);
 }
 
-/*
+/**
  * Create the "ghost" flower and arrows that tracks with the cursor
  */
-createCursorFlowerAndArrows = function(){
+function createCursorFlowerAndArrows() {
     screenItems.cursorFlower = new Raster(currentMenuChoice.src).scale(0.07)
     screenItems.cursorFlower.opacity = 0.4 
     screenItems.cursorFlower.visible = false;
@@ -552,29 +436,30 @@ createCursorFlowerAndArrows = function(){
     optionalArrows();
 }
 
-/*
+/**
  * Move the "ghost" flower that tracks with the cursor
- * @param{event} event - the mouseMouve event
+ * @param {ToolEvent} event - The mouseMove event
  */ 
-
-moveCursorFlower = function(event){
-//make it lag less on initial click
+function moveCursorFlower(event){
+    //make it lag less on initial click
     if(event.point.x > 0  && event.point.y > 0){
         screenItems.cursorFlower.visible = true;
         screenItems.cursorFlower.position.x = event.point.x;
         screenItems.cursorFlower.position.y = event.point.y;
         
         makeArrowsVisible(event);
-        
     }
 }
 
-resetCursorFlowerAndArrows = function(){
-    if(screenItems.cursorFlower){
+/**
+ * Removes and recreates the cursor flower and expand arrows
+ */
+function resetCursorFlowerAndArrows() {
+    if (screenItems.cursorFlower) {
         screenItems.cursorFlower.remove()
     }
     
-    if(screenItems.arrows){
+    if (screenItems.arrows) {
         screenItems.arrows.remove()
     }
     
@@ -584,8 +469,7 @@ resetCursorFlowerAndArrows = function(){
 /*
  * Creates "guide arrows" for resize if there are no flowers on the screen - invisible on creation
  */
-
-optionalArrows = function(){
+function optionalArrows() {
      if(Object.keys(canvasFlowers).length < 4){
          screenItems.arrows = new Raster("www/img/PNG/arrows.png").scale(0.4)
          screenItems.arrows.rotate(45);
@@ -594,21 +478,24 @@ optionalArrows = function(){
      }
 }
 
-/*
+/**
  * Makes arrows visible if they exist & there are no flowers on screen
- * @param{mouseEvent} event - the mouse event to center the arrows at
+ * @param {ToolEvent} event - the mouse event to center the arrows at
  */
-makeArrowsVisible = function(event){
+function makeArrowsVisible(event) {
     if(screenItems.arrows && Object.keys(canvasFlowers).length < 4){
              screenItems.arrows.visible = true;
              screenItems.arrows.position.x = event.point.x;
              screenItems.arrows.position.y = event.point.y; 
     }
 }
-/*
- * Euclidean distance 
+
+/**
+ * Calculates the euclidean distance between the provided points
+ * @param {Point} point1 - First point
+ * @param {Point} point2 - Second point
  */
-pointDistance = function(point1, point2){
+function pointDistance(point1, point2) {
     distance = Math.sqrt(Math.pow((point2.x - point1.x), 2) + Math.pow((point2.y - point1.y), 2));
     return(distance);
 }

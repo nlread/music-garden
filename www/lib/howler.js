@@ -594,6 +594,7 @@
 
     /**
      * Play a sound or resume previous playback.
+     * @param {Number} space The amount of space/time the sound will be played for.
      * @param  {String/Number} sprite   Sprite name for sprite playback or sound id to continue previous.
      * @param  {Boolean} internal Internal Use: true prevents event firing.
      * @return {Number}          Sound ID.
@@ -673,7 +674,7 @@
         Howler._autoResume();
       }
         
-      //The space of the sound to loop over.
+      //The space of time for the sound to loop over.
       sound._space = space || 2;//[ADDED]
 
       // Determine how long to play for and where to start playing.
@@ -688,6 +689,7 @@
       sound._seek = seek;
       sound._start = self._sprite[sprite][0] / 1000;
       //A space added to the loop in order to add sound length
+      console.log(self._sprite[sprite][0]);
       sound._stop = (self._sprite[sprite][0]/ 1000) + sound._space;
       sound._loop = !!(sound._loop || self._sprite[sprite][2]);
 
@@ -774,32 +776,6 @@
       }
 
       return sound._id;
-    },
-      
-    //Here we added a method to be able to change the length of the loops in order to create longer spaces between the sounds [ADDED]
-    soundLength: function(length,id) {
-      var self = this;
-      // If the sound hasn't loaded, add it to the load queue to pause when capable.
-      if (self._state !== 'loaded') {
-        self._queue.push({
-          event: 'soundLength',
-          action: function() {
-            self.soundLength(length,id);
-          }
-        });
-
-        return self;
-      }
-        
-      
-      var ids = self._getSoundIds(id);
-      for (var i=0; i<ids.length; i++) {
-        var sound = self._soundById(ids[i]);
-        //Adds length in order to put more space before the loop restarts.
-        sound._stop = sound._stop - sound._space + length;
-        sound._space = length;
-      }
-      return self;
     },
 
     /**
