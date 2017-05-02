@@ -1,7 +1,7 @@
 /* Classes used in main.js - Plant, Music, and Animation are the most relevant/directly used in main.js */
 
 class Component {
-    
+
     /**
      * Class which wraps a paper.js Group or Path and gives it the ability
      * to set the rotation and scaling, instead } only changing the rotation
@@ -10,9 +10,9 @@ class Component {
      */
     constructor(paperRepresentation) {
         //null check enables having components with only Rasters and not Paths
-        if(paperRepresentation != null){
+        if (paperRepresentation != null) {
             this.paperRepresentation = paperRepresentation;
-        
+
             this._position = paperRepresentation.getPosition().clone();
             this._orientation = paperRepresentation.getRotation();
             this._scaleFactor = paperRepresentation.getScaling().clone();
@@ -50,11 +50,11 @@ class Component {
     _setPositionCoords(x, y) {
         this._position.x = x;
         this._position.y = y;
-        
+
         let deltaPos = this._position.subtract(this._currentPosition);
         this.paperRepresentation.translate(deltaPos.x, deltaPos.y);
     }
-    
+
 
     /**
      * @public
@@ -68,7 +68,7 @@ class Component {
             this._translateCoords(args[0], args[1]);
         }
     }
-    
+
     /**
      * @private
      * Changes the position of the group by the provided point
@@ -86,22 +86,22 @@ class Component {
      * @param {Number} x - Amount to move group in x coord
      * @param {Number} y - Amount to move group in y coord
      */
-    _translateCoords(x, y) {   
+    _translateCoords(x, y) {
         this._translatePoint(new Point(x, y));
     }
-    
+
     /**
      * @public
      * Sets the rotation of the path relative to its starting 
      * rotation when it was created. 
      * @param {Number} angle 
      */
-    setRotation(angle) {        
+    setRotation(angle) {
         let deltaAngle = angle - this._orientation
         this.paperRepresentation.rotate(deltaAngle);
         this._orientation = angle;
     }
-    
+
     /**
      * @public
      * Changes the rotation of the group by the provided amount. 
@@ -111,7 +111,7 @@ class Component {
         this.paperRepresentation.rotate(deltaAngle);
         this._orientation += deltaAngle;
     }
-    
+
     /**
      * @public
      * Scales the group to match the provided values, relative to its
@@ -121,7 +121,7 @@ class Component {
     setScaleFactor(...args) {
         if (args.length === 1) {
             this._setScaleFactorPoint(args[0]);
-        } else if(args.length === 2) {
+        } else if (args.length === 2) {
             this._setScaleFactorXY(args[0], args[1]);
         }
     }
@@ -141,7 +141,7 @@ class Component {
         }
 
         this.paperRepresentation.scale(deltaScale);
-        
+
         this._scaleFactor.x = deltaScale.x;
         this._scaleFactor.y = deltaScale.y;
     }
@@ -166,7 +166,7 @@ class Component {
     scale(...args) {
         if (args.length === 1) {
             this._scalePoint(args[0]);
-        } else if(args.length === 2) {
+        } else if (args.length === 2) {
             this._scaleXY(args[0], args[1]);
         }
     }
@@ -181,7 +181,7 @@ class Component {
         let deltaScale = new Point(factorX, factorY);
         this.setScaleFactor(deltaScale);
     }
-    
+
     /**
      * @private
      * Scales the group by the provided amounts. 
@@ -240,11 +240,11 @@ class AnimatedComponent extends Component {
      * @param {Number} dTime - Amount of time passed since last update
      */
     update(dTime) {
-        for(let i=0; i < this.animations.length; i++) {
+        for (let i = 0; i < this.animations.length; i++) {
             let anim = this.animations[i];
             anim.update(dTime, this);
-            
-            if(!anim.isValid()) {
+
+            if (!anim.isValid()) {
                 this.animations.splice(i, 1);
             }
         }
@@ -253,7 +253,7 @@ class AnimatedComponent extends Component {
 
 class Plant extends AnimatedComponent {
 
-    constructor(png, music){
+    constructor(png, music) {
         super(png)
 
         this.img = png;
@@ -267,7 +267,7 @@ class Plant extends AnimatedComponent {
         this.music.sound.play(2);
         this.music.sound.loop(true);
     };
-    
+
     stopSound() {
         this.music.sound.stop();
     };
@@ -280,7 +280,7 @@ class Plant extends AnimatedComponent {
      * @public
      */
     toggleSoundLength(sLength) {
-        if(sLength >= 0 && sLength <= 5){
+        if (sLength >= 0 && sLength <= 5) {
             this.sLength = sLength + 2;
             this.music.sound.stop();
             this.music.sound.play(this.sLength);
@@ -298,14 +298,14 @@ class Music {
      * @param {String} source - The sound applied to this flower group
      * @param {Number} pitch - The specific pitch for this sound
      */
-    constructor(source, pitch){
+    constructor(source, pitch) {
         this.source = source;
-        this.pitch = pitch+1;
+        this.pitch = pitch + 1;
         this.sound = new Howl({
             src: [this.source[this.pitch]],
         });
     };
-    
+
 }
 
 class Animation {
@@ -341,7 +341,7 @@ class Animation {
         if (!this.active) { // Change to delayRemaining <= 0 ?
             if (this.delayRemaining - dTime <= 0) {
                 // Apply changes for correct amount of time
-                dTime = dTime - this.delayRemaining; 
+                dTime = dTime - this.delayRemaining;
                 this.active = true;
                 this.delayRemaining = 0;
             } else {
@@ -354,7 +354,7 @@ class Animation {
             dTime = this.duration - this.elapsed;
         }
         this.elapsed += dTime;
-        
+
         this.applyChange(dTime, component);
     }
 
@@ -370,7 +370,7 @@ class Animation {
 }
 
 class ScalingAnimation extends Animation {
-    
+
     /**
      * Animation which tweens the size of a component. 
      * @constructor
@@ -404,7 +404,7 @@ class ScalingAnimation extends Animation {
         }
 
         if (this.scaleRatio.y >= 1) {
-            if(deltaScale.y + this.scaledBy.y >= this.scaleRatio.y) {
+            if (deltaScale.y + this.scaledBy.y >= this.scaleRatio.y) {
                 deltaScale.y = this.scaleRatio.y - this.scaledBy.y;
             }
         } else {
@@ -430,7 +430,7 @@ class ScalingAnimation extends Animation {
         }
 
         actualScaleFactor = actualScaleFactor.divide(this.scaledBy);
-        
+
         component.scale(actualScaleFactor.x, actualScaleFactor.y);
 
         if (this.scaleRatio.x > 1) {
@@ -472,7 +472,7 @@ class RotatingAnimation extends Animation {
      */
     applyChange(dTime, component) {
         let deltaRotation = this.degreeChange * dTime / this.duration;
-        
+
         if (Math.abs(deltaRotation + this.rotatedBy) >= Math.abs(this.degreeChange)) {
             deltaRotation = this.degreeChange - this.rotatedBy;
         }
@@ -495,7 +495,7 @@ class TranslationAnimation extends Animation {
         super(duration);
         this.distChange = distChange;
         this.translatedBy = new Point(0, 0);
-        
+
     }
 
     /**
@@ -507,7 +507,7 @@ class TranslationAnimation extends Animation {
     applyChange(dTime, component) {
         let deltaPos = this.distChange.multiply(dTime / this.duration);
 
-        if(this.translatedBy.x + deltaPos.x  > this.distChange.y) {
+        if (this.translatedBy.x + deltaPos.x > this.distChange.y) {
             deltaPos.x = this.distChange.x - this.translatedBy.x;
         }
 
@@ -516,7 +516,7 @@ class TranslationAnimation extends Animation {
         }
 
         component.translate(deltaPos);
-        
+
         this.translatedBy = this.translatedBy.add(deltaPos);
     }
 }
