@@ -32,7 +32,7 @@ p:hover, .chardinjs-tooltip:hover{
 
 /*Overlay text without the line for canvas explanation [ADDED]*/
 .chardinjs-overlay .overlayPointer{
-    font-size: 2em;
+    font-size: 2.2em;
     width: 30%;
     margin-left: 45%;
     margin-top: 10%;
@@ -71,7 +71,7 @@ p:hover, .chardinjs-tooltip:hover{
   max-width: 200px;
     /* Change font family and size to match app aesthetic [ADDED]*/
     font-family: paperdaisy;
-    font-size: 2em;
+    font-size: 2.2em;
 }
 
   .chardinjs-tooltip.chardinjs-left {
