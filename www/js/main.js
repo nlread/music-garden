@@ -48,6 +48,7 @@ window.onload = function () {
         //ghost flower comes back after resize
         if (screenItems.cursorFlower) {
             screenItems.cursorFlower.visible = true;
+            screenItems.cursorFlower.position = event.point;
         }
     };
 
