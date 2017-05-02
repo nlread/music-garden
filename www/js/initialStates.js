@@ -32,8 +32,8 @@ var soundSources = {
 };
 
 var colors = {
-    menuColor: "#81E5A9",
-    menuSelectColor: "#90F0B3",
+    menuColor: "#74B49B",
+    menuSelectColor: "#90C4AF",
 };
 
 //namespace for things on screen that may or may not exist at a given time
@@ -45,7 +45,7 @@ var screenItems = {
 var canvasFlowers = {};
 
 var backgroundTrack = new Howl({
-    src: ["www/mp3/track1Individuals/au1_louder.wav"]    
+    src: ["www/mp3/track1Individuals/au1_louder.mp3"]
 });
 
 
