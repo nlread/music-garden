@@ -34,7 +34,7 @@ body {
 
 #bottomToolbarRow{
     height: 8%;
-    background-color: #aaeec5;
+    background-color: #74B49B;
 }
 
 /* Scale canvas with resize attribute to full size */
@@ -43,23 +43,25 @@ canvas[resize] {
     height: 100%;
     float: right;
     background: repeating-linear-gradient(
-    180deg,#C9FFDD,
-    #C9FFDD 12.5%,
-    #E2FFEC 12.5%,
-    #E2FFEC 25%);
+    180deg,#D3F6D1,
+    #D3F6D1 12.5%,
+    #A7D7C5 12.5%,
+    #A7D7C5 25%);
 }
 
 #menu{
     width: 10%;
     height: 100%;
     float: left;
-    background-color: #81E5A7; 
+    background-color: #74B49B; 
 }
 
 #menu div{
     height:40%;
     width: 90%;
     margin: auto;
+    border-radius: 10px;
+        
 }
 
 /*make menu images centered and the width of their parent div */
@@ -104,19 +106,22 @@ canvas[resize] {
     margin-left: 20%; /*make the right-hand button group flush with the edge of the page */
 }
 .btn{
-    background-color: #aaeec5;
+    background-color: #74B49B;
     border-radius: 0;
     border: none;
     padding: 0;
 }
 
 .btn:hover, .btn:focus, .btn:active, .btn:active:focus{
-    background-color: #55dd8b; /*change default bootstrap color for button highlight to match color scheme */
+    background-color: #5C8D89; /*change default bootstrap color for button highlight to match color scheme */
     box-shadow: none;
 }
 
-.btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .btn-default:active.focus{
-    background-color: #55dd8b
+/*
+.btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .btn-default:active:focus{
+    background-color: #A7D7C5;
+    box-shadow: none;
 }
+*/
 
 
