@@ -18,13 +18,13 @@ window.onload = function () {
 
     $('.menuChoice').on('click', makeMenuChoice);
 
-    $('.menuChoice').on('mouseenter', function () {
+    $('.menuChoice').on('mouseenter', function() {
         choice = this;
         $(choice).stop(); //prevent double-bounce
         menuAnims.animateMenuChoice(choice);
     });
 
-    $('.menuChoice').on('mouseleave', function () {
+    $('.menuChoice').on('mouseleave', function() {
         choice = this;
         menuAnims.unHighlightMenuChoice(choice);
     });
