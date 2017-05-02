@@ -7,8 +7,8 @@ class Animator {
      * @param {Number} yGrowth Amount to grow in the y direction by
      * @param {Number} timing Time in seconds to increase size, twice as long to shrink
      */
-    static growShrink(animComp, xGrowth=1.3, yGrowth=1.3, timing=0.5) {
-        animComp.animate(new ScalingAnimation(new Point(xGrowth,yGrowth), timing, 0));
+    static growShrink(animComp, xGrowth = 1.3, yGrowth = 1.3, timing = 0.5) {
+        animComp.animate(new ScalingAnimation(new Point(xGrowth, yGrowth), timing, 0));
         animComp.animate(new ScalingAnimation(new Point(1 / xGrowth, 1 / yGrowth), timing * 2, 0));
     }
 
@@ -19,7 +19,7 @@ class Animator {
      * @param {Number} degreeChange Degree to rock left and right by (per side)
      * @param {Number} timing Time (in seconds) per turn
      */
-    static sideToSide(animComp, degreeChange=15, timing=0.1) {
+    static sideToSide(animComp, degreeChange = 15, timing = 0.1) {
         animComp.animate(new RotatingAnimation(-degreeChange, timing, 0));
         animComp.animate(new RotatingAnimation(degreeChange * 2, timing, timing));
         animComp.animate(new RotatingAnimation(-degreeChange, timing, timing * 2));
@@ -48,7 +48,7 @@ class Animator {
 
 // ------------------- > Scale Flower
 //            flowerSprite.music.sound.on('play', flowerSprite.stopAnimate());
-            
+
 //           flowerSprite.music.sound.on('play', function() {
 //     
 //            

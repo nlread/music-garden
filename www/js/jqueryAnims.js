@@ -10,7 +10,7 @@ var menuAnims = {
 
         $(oldMenuChoice.firstChild).animate({
             height: "95%",
-            width: "95%",
+            // width: "95%",
             backgroundColor: colors.menuColor
                 }, 100
             );
@@ -18,7 +18,7 @@ var menuAnims = {
 
         $(choice.firstChild).animate({
             height: "100%",
-            width: "100%"
+            // width: "100%"
             }, 100
         );
 
@@ -35,7 +35,7 @@ var menuAnims = {
     unHighlightMenuChoice: function(choice){
         $(choice.firstChild).animate({
             height: "95%",
-            width: "95%"
+            // width: "95%"
             }, 100
         );
 

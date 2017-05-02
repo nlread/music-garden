@@ -49,47 +49,49 @@ canvas[resize] {
     #A7D7C5 25%);
 }
 
-#menu{
+#menu {
     width: 10%;
     height: 100%;
     float: left;
     background-color: #74B49B; 
 }
 
-#menu div{
-    height:40%;
-    width: 90%;
+#menu div {
+    height: 40.5%;
+    width: auto;
     margin: auto;
     border-radius: 10px;
         
 }
 
 /*make menu images centered and the width of their parent div */
-#menu div img{
+#menu div img {
     height: 95%;
-    width: 95%;
+    width: auto;
+    display: block;
     margin: auto;
 }
 
 
 /*alignment helper to get images to center vertically - from here http://jsfiddle.net/kizu/4RPFa/4570/ */
-.align-helper{
+.align-helper {
     display: inline-block;
     height: 100%;
     vertical-align: middle;
 }
 
 /*left and right toolbar buttons are separated because there are different #s of buttons on each side */
-.toolbarButton.left{
+.toolbarButton.left {
     height: 100%;
     width: 35%;
 }
 
-.toolbarButton.right{
+.toolbarButton.right {
     height: 100%;
     width: 35%;
 }
-.toolbarButton img{
+
+.toolbarButton img {
     height: 80%;
     width: 80%;
     vertical-align: middle;
@@ -102,18 +104,29 @@ canvas[resize] {
     width: 100%;
 }
 
-.btn-group.right{
+.btn-group.right {
     margin-left: 20%; /*make the right-hand button group flush with the edge of the page */
 }
+<<<<<<< HEAD
 .btn{
     background-color: #74B49B;
+=======
+
+.btn {
+    background-color: #aaeec5;
+>>>>>>> e21f3023fca43423aa6c7ad0962c9f8e5591b78c
     border-radius: 0;
     border: none;
     padding: 0;
 }
 
+<<<<<<< HEAD
 .btn:hover, .btn:focus, .btn:active, .btn:active:focus{
     background-color: #5C8D89; /*change default bootstrap color for button highlight to match color scheme */
+=======
+.btn:hover, .btn:focus, .btn:active, .btn:active:focus {
+    background-color: #55dd8b; /*change default bootstrap color for button highlight to match color scheme */
+>>>>>>> e21f3023fca43423aa6c7ad0962c9f8e5591b78c
     box-shadow: none;
 }
 
