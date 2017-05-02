@@ -2,7 +2,7 @@ paper.install(window); //make paper scope global by injecting it into window - f
 /* This file contains the initial and state variables that are used in main.js - they exist here mostly to keep main.js to a usable length */
 
 var resize = {
-    initFlowerSize: 0.025
+    initFlowerSize: 0.05
 }
 
 var appStates = {
