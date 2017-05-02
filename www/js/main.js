@@ -42,7 +42,9 @@ window.onload = function () {
     let inputs = new Tool();
 
     inputs.onMouseUp = function (event) {
-        stopResize();
+        if (interactionModes.plant) {
+            stopResize();
+        }
         //ghost flower comes back after resize
         if (screenItems.cursorFlower) {
             screenItems.cursorFlower.visible = true;
