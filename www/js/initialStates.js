@@ -44,11 +44,7 @@ var screenItems = {
 var canvasFlowers = {};
 
 var backgroundTrack = new Howl({
-<<<<<<< HEAD
     src: ["www/mp3/track1Individuals/au1_louder.mp3"]
-=======
-    src: ["www/mp3/track1Individuals/au1_louder.wav"]
->>>>>>> e21f3023fca43423aa6c7ad0962c9f8e5591b78c
 });
 
 
