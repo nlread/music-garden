@@ -434,7 +434,7 @@ function distanceToFlowerCenter(dragEvent) {
  * Starts background sound if it's not already started
  */
 function startBackgroundSound() {
-    backgroundTrack.play();
+    backgroundTrack.play(72);
     backgroundTrack.loop(true);
     backgroundTrack.volume(0.3);
 }
