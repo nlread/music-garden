@@ -3059,25 +3059,25 @@ fieldset[disabled] a.btn {
 .btn-default {
   color: #333;
   background-color: #A7D7C5;
-  border-color: #ccc;
+/*  border-color: #ccc;*/
 }
 .btn-default:focus,
 .btn-default.focus {
   color: #333;
   background-color: #A7D7C5;
-  border-color: #8c8c8c;
+/*  border-color: #8c8c8c;*/
 }
 .btn-default:hover {
   color: #333;
   background-color: #A7D7C5;
-  border-color: #adadad;
+/*  border-color: #adadad;*/
 }
 .btn-default:active,
 .btn-default.active,
 .open > .dropdown-toggle.btn-default {
   color: #333;
-  background-color: #e6e6e6;
-  border-color: #adadad;
+  background-color: #5C8D89;
+/*  border-color: #adadad;*/
 }
 .btn-default:active:hover,
 .btn-default.active:hover,
