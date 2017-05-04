@@ -32,7 +32,7 @@ var soundSources = {
 
 var colors = {
     menuColor: "#74B49B",
-    menuSelectColor: "#90C4AF",
+    menuSelectColor: "#82BCA5",
 };
 
 //namespace for things on screen that may or may not exist at a given time
