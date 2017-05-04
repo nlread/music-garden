@@ -3058,18 +3058,18 @@ fieldset[disabled] a.btn {
 }
 .btn-default {
   color: #333;
-  background-color: #A7D7C5;
+  background-color: #82BCA5;
 /*  border-color: #ccc;*/
 }
 .btn-default:focus,
 .btn-default.focus {
   color: #333;
-  background-color: #A7D7C5;
+  background-color: #82BCA5;
 /*  border-color: #8c8c8c;*/
 }
 .btn-default:hover {
   color: #333;
-  background-color: #A7D7C5;
+  background-color: #82BCA5;
 /*  border-color: #adadad;*/
 }
 .btn-default:active,
