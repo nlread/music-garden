@@ -1,10 +1,13 @@
 paper.install(window); //make paper scope global by injecting it into window - from here http://blog.lindsayelia.com/post/128346565323/making-paperjs-work-in-an-external-file
+
 /* This file contains the initial and state variables that are used in main.js - they exist here mostly to keep main.js to a usable length */
+
 
 var resize = {
     initFlowerSize: 0.05
 }
 
+/*state variables used to handle user actions*/
 var appStates = {
     droppedFlower: false,
     currentFlower: null,
@@ -14,13 +17,13 @@ var appStates = {
     transparentFlowers: []
 };
 
+
 var interactionModes = {
     plant: true,
-    remove: false,
-    orderLayers: false
+    remove: false
 }
 
-//For each flower there is a dictionary for its different pitches
+/*For each flower there is a dictionary for its different pitches*/
 var soundSources = {
     green: { 1: "www/mp3/mvpPlantSounds/plantA8.mp3", 2: "www/mp3/mvpPlantSounds/plantA7.mp3", 3: "www/mp3/mvpPlantSounds/plantA6.mp3", 4: "www/mp3/mvpPlantSounds/plantA5.mp3", 5: "www/mp3/mvpPlantSounds/plantA4.mp3", 6: "www/mp3/mvpPlantSounds/plantA3.mp3", 7: "www/mp3/mvpPlantSounds/plantA2.mp3", 8: "www/mp3/mvpPlantSounds/plantA1.mp3" },
     red: { 1: "www/mp3/mvpPlantSounds/plantB8.mp3", 2: "www/mp3/mvpPlantSounds/plantB7.mp3", 3: "www/mp3/mvpPlantSounds/plantB6.mp3", 4: "www/mp3/mvpPlantSounds/plantB5.mp3", 5: "www/mp3/mvpPlantSounds/plantB4.mp3", 6: "www/mp3/mvpPlantSounds/plantB3.mp3", 7: "www/mp3/mvpPlantSounds/plantB2.mp3", 8: "www/mp3/mvpPlantSounds/plantB1.mp3" },
@@ -40,6 +43,7 @@ var screenItems = {
     cursorFlower: null,
     arrows: null
 }
+
 //Holds all the flower on the canvas at any time
 var canvasFlowers = {};
 
@@ -47,9 +51,10 @@ var backgroundTrack = new Howl({
     src: ["www/mp3/track1Individuals/au1_louder.mp3"]
 });
 
-
+/*namespace for toolbar buttons*/
 var buttons = {}
 
+/*keep track of currently selected flower*/
 var currentMenuChoice = {
     src: "", //actual image source
     name: "", //flower name - "pink", "blue", etc

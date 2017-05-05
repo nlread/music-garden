@@ -276,9 +276,7 @@ function interactWithPlant(plantClicked) {
 
     if (interactionModes.remove) {
         deleteFlower();
-    } /*else if(interactionModes.orderLayers){
-       sendFlowerToBack();
-    }*/ else {
+    }  else {
         appStates.resizeOldFlower = true;
         appStates.currentFlower.stopSound();
     }
@@ -297,7 +295,6 @@ function dropFlower(clickEvent) {
 
         let newFlower = new Plant(flowerImg, flowerMusic);
         flowersGroup.addChild(flowerImg);
-        // newFlower.playSound();
 
         appStates.currentFlower = newFlower;
         appStates.droppedFlower = true;
@@ -400,7 +397,6 @@ function scaleFlower(clickEvent) {
 
         // Make sure flower is not going to be larger than 1/2 view width or smaller than 1/20 view width. If so, resize to fit bounds
         if (squareSideLength < 0.5 * project.view.bounds.width && squareSideLength > 0.05 * project.view.bounds.width) {
-            //resize image
             rect = new Rectangle(newUpperLeft, new Size(squareSideLength, squareSideLength));
             appStates.currentFlower.img.fitBounds(rect);
         }
