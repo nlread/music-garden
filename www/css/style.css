@@ -107,34 +107,18 @@ canvas[resize] {
 .btn-group.right {
     margin-left: 20%; /*make the right-hand button group flush with the edge of the page */
 }
+
 <<<<<<< HEAD
 .btn{
     background-color: #74B49B;
-=======
-
-.btn {
-    background-color: #aaeec5;
->>>>>>> e21f3023fca43423aa6c7ad0962c9f8e5591b78c
     border-radius: 0;
     border: none;
     padding: 0;
 }
 
-<<<<<<< HEAD
 .btn:hover, .btn:focus, .btn:active, .btn:active:focus{
     background-color: #5C8D89; /*change default bootstrap color for button highlight to match color scheme */
-=======
-.btn:hover, .btn:focus, .btn:active, .btn:active:focus {
-    background-color: #55dd8b; /*change default bootstrap color for button highlight to match color scheme */
->>>>>>> e21f3023fca43423aa6c7ad0962c9f8e5591b78c
     box-shadow: none;
 }
-
-/*
-.btn-default:hover, .btn-default:focus, .btn-default:active, .btn-default.active, .btn-default:active:focus{
-    background-color: #A7D7C5;
-    box-shadow: none;
-}
-*/
 
 

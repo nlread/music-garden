@@ -304,27 +304,27 @@ function dropFlower(clickEvent) {
 
         if (currentMenuChoice.name === "jade") {
             newFlower.music.sound.on('play', function () {
-                Animator.growShrink(newFlower);
+                Animator.boink(newFlower);
             });
         } else if (currentMenuChoice.name === "red") {
             newFlower.music.sound.on('play', function () {
-                Animator.growShrink(newFlower);
+                Animator.swell(newFlower);
             });
         } else if (currentMenuChoice.name === "succulent") {
             newFlower.music.sound.on('play', function () {
-                Animator.growShrink(newFlower);
+                Animator.zoom(newFlower);
             });
         } else if (currentMenuChoice.name === "sunflower") {
             newFlower.music.sound.on('play', function () {
-                Animator.growShrink(newFlower);
+                Animator.sideToSideRight(newFlower);
             });
         } else if (currentMenuChoice.name === "green") {
             newFlower.music.sound.on('play', function () {
-                Animator.growShrink(newFlower);
+                Animator.squish(newFlower);
             });
         } else if (currentMenuChoice.name === "beet") {
             newFlower.music.sound.on('play', function () {
-                Animator.growShrink(newFlower);
+                Animator.pop(newFlower);
             });
         }
 

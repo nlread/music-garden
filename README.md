@@ -1,11 +1,13 @@
 # Music Garden
-Plant flowers to create a "garden" that produces ambient music. JavaScript/HTML5 web app, built with Paper.js (graphics) and Howler.js (audio). Check out our [demo here ] (https://nlread.github.io/music-garden/)
+Plant flowers to create a "garden" that produces ambient music. JavaScript/HTML5 web app, built with Paper.js (graphics) and Howler.js (audio). Check out our [demo here](https://nlread.github.io/music-garden/)
 
 ## How does it work? 
 Each flower has a different sound associated with it. Depending on where you place your flower along the y-axis, the pitch will be different. You can resize flowers by clicking and dragging - larger flowers will loop over their sound slower, and smaller ones will loop faster. Have fun creating your own unique mini-garden/musical piece!
 
+Note that this app is currently only supported in desktop versions of Chrome.
+
 ## Want to play with code?
-Fork us, and feel free to play around with the code. No installations needed - the libraries are all in the repo - though you will need a web server to test your code. We used Brackets, which has a web server built in and a nice live update feature, but feel free to use whatever you're comfortable with. Take a look at the technical notes below for a few important notes about the code.
+Fork us, and feel free to play around with the code. No installations needed - the libraries are all in the repo - though you will need a web server to test your code. We used [Brackets](http://brackets.io/), which has a web server built in and a nice live update feature, but feel free to use whatever you're comfortable with. Take a look at the technical notes below for a few important notes about the code.
 
 ## Technical Notes
 ### Changes to Libraries

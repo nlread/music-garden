@@ -104,7 +104,7 @@
         var dismiss = document.createElement("p");
         var dismisstext = document.createTextNode("Click to dismiss");
         dismiss.appendChild(dismisstext);
-        dismiss.style.backgroundColor = "#81E5A9";
+        dismiss.style.backgroundColor = "#74B49B";
         dismiss.style.padding = "10px";
         dismiss.style.borderRadius = "3px";
         dismiss.style.display = "inline-block";
