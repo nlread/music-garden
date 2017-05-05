@@ -55,7 +55,6 @@
       };
 
       chardinJs.prototype.stop = function() {
-        console.log("stop")
         this.$el.find(".chardinjs-overlay").fadeOut(function() {
           return $(this).remove();
         });
